@@ -2,112 +2,107 @@
 <html>
 
 <head>
-    <title>Sample Page</title>
-    <style type="text/css">
-    body {
-        font-family: sans-serif;
-        background-color: black;
-        color: whitesmoke;
-        line-height: 1.275em
-    }
-
-    .container,
-    .page-content-container {
-        display: flex;
-        flex-direction: row
-    }
-    .page-container {
-        flex-direction: column
-    }
-
-    .page-container {
-        padding: 8px
-    }
-    .page-content-container > .side {
-    	margin-left: 26px;
-    	margin-right: 26px
-    }
-    .content-footer {
-    	margin-top: 8px
-    }
-
-    .module.paragraph-container {
-    	padding-top: 18px
-    }
-    .module.paragraph-container > .sub-module.paragraph {
-    	font-size: 15px
-    }
-    .module.title > span {
-    	font-size: 32px
-    }
-    .sub-module {
-    	margin-bottom: 18px
-    }
-
-    .side-content-table {
-    	max-width: 375px;
-    	min-width: 250px;
-    	border: 1px solid white;
-    	text-align: center;
-    	margin-top: 12px
-    }
-    .side-content-table tr:first-child > td > * {
-    	margin-top: 8px
-    }
-    .side-content-table tr > td > * {
-    	margin-bottom: 8px
-    }
-    img.side-main {
-    	max-width: 200px;
-    	height: auto
-    }
-    td.heading > div,
-    td.sub-heading > div {
-    	height: 22px;
-    	max-width: 280px;
-    	background-color: #3f3f3f;
-    	margin-left: auto;
-    	margin-right: auto;
-    	display: flex;
-    	align-items: center;
-    	justify-content: center
-    }
-    td.heading > div {
-    	height: 32px;
-    	background-color: initial
-    }
-    td.heading > div > span {
-    	font-size: 18px;
-    	font-weight: bold
-    }
-    td.sub-heading > div > span {
-    	font-size: 14px
-    }
-    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample - Pegasus</title>
+    <link href="style.css" rel="stylesheet" type="text/css">
+    <!-- Disable cache because Edge doesn't handle it well -->
+    <meta http-equiv="cache-control" content="no-cache" />
+    <!-- Stop Chrome from trying to translate the lorem ipsum -->
+    <meta name="google" content="notranslate" />
 </head>
 
 <body>
     <div class="page-container container">
         <div class="page-content-container">
             <div class="main">
-                <div class="module title"><span>Sample Page</span></div>
+                <div class="module title">Federal government of the United States</div>
                 <div class="module paragraph-container">
-                    <div class="sub-module paragraph"><span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec egestas est ac orci semper elementum. Phasellus imperdiet ut sem lacinia feugiat. Nunc dignissim tincidunt eros lacinia accumsan. Maecenas pharetra velit libero, sed dignissim sapien dignissim et. Donec a molestie lectus. Integer aliquam efficitur tempor. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.</span></div>
-                    <div class="sub-module paragraph"><span>Fusce et bibendum neque. Morbi bibendum libero nisi, a vulputate eros tempus eget. Mauris pulvinar neque enim, a placerat metus pellentesque a. Phasellus in congue ex. Suspendisse vitae aliquam quam, a interdum felis. Etiam lobortis nisl nunc, vitae tincidunt urna lobortis nec. Praesent et tempor metus. Pellentesque sagittis ultricies justo, sit amet suscipit nulla semper et. Quisque dapibus ultrices arcu, in mollis dolor fermentum sed. Pellentesque ligula libero, convallis in molestie ut, vestibulum eget nisl.</span></div>
+                    <div class="sub-module paragraph"><span>The Federal Government of the United States (U.S. Federal Government) is the national government of the United States, a federal republic in North America, composed of 50 states, one district—Washington, D.C., and several territories. The federal government is composed of three distinct branches: legislative, executive, and judicial, whose powers are vested by the U.S. Constitution in the Congress, the president, and the federal courts, respectively. The powers and duties of these branches are further defined by acts of Congress, including the creation of executive departments and courts inferior to the Supreme Court.</span></div>
+                    <div class="sub-module paragraph"><span>The full name of the republic is "United States of America". No other name appears in the Constitution, and this is the name that appears on money, in treaties, and in legal cases to which it is a party (e.g. Charles T. Schenck v. United States). The terms "Government of the United States of America" or "United States Government" are often used in official documents to represent the federal government as distinct from the states collectively. In casual conversation or writing, the term "Federal Government" is often used, and the term "National Government" is sometimes used. The terms "Federal" and "National" in government agency or program names generally indicate affiliation with the federal government (Federal Bureau of Investigation, National Oceanic and Atmospheric Administration, National Park Service). Because the seat of government is in Washington, D.C., "Washington" is commonly used as a metonym for the federal government.</span></div>
                 </div>
             </div>
             <div class="side">
-            	<table class="side-content-table">
-            		<tr>
-            			<td class="heading"><div><span>Sample Page</span></div></td>
-            		</tr>
-            		<tr>
-            			<td class="image"><img src="image.png" class="side-main"></td>
-            		</tr>
-            		<tr>
-            			<td class="sub-heading"><div><span>Sub Heading</span></div></td>
-            		</tr>
-            	</table>
+                <table class="side-content-table">
+                    <tbody>
+                        <tr class="heading">
+                            <td colspan="2"><div class="bold-text" class="bold-text">US Federal Government</div></td>
+                        </tr>
+                        <tr class="main-image">
+                            <td colspan="2">
+                                <span class="flex-centered">
+                            		<table>
+                            			<tbody>
+                            				<tr><td><img src="seal.svg"></td></tr>
+                            				<tr><td class="small-text" id="caption">Great Seal of the United States</td></tr>
+                            			</tbody>
+                            		</table>
+                            	</span>
+                            </td>
+                        </tr>
+                        <tr class="property">
+                            <th scope="row">Formation</th>
+                            <td id="value">1789; 229 years ago</td>
+                        </tr>
+                        <tr class="property">
+                            <th scope="row">Founding document</th>
+                            <td id="value">United States Constitution</td>
+                        </tr>
+                        <tr class="property">
+                            <th scope="row">Jurisdiction</th>
+                            <td id="value">United States of America</td>
+                        </tr>
+                        <tr class="property">
+                            <th scope="row">Website</th>
+                            <td id="value">www.usa.gov</td>
+                        </tr>
+                        <tr class="sub-heading">
+                            <td colspan="2"><div class="bold-text">Legislative branch</div></td>
+                        </tr>
+                        <tr class="property">
+                            <th scope="row">Legislature</th>
+                            <td id="value">Congress</td>
+                        </tr>
+                        <tr class="property">
+                            <th scope="row">Meeting place</th>
+                            <td id="value">Capitol</td>
+                        </tr>
+                        <tr class="sub-heading">
+                            <td colspan="2"><div class="bold-text">Executive branch</div></td>
+                        </tr>
+                        <tr class="property">
+                            <th scope="row">Leader</th>
+                            <td id="value">President</td>
+                        </tr>
+                        <tr class="property">
+                            <th scope="row">Appointer</th>
+                            <td id="value">Electoral College</td>
+                        </tr>
+                        <tr class="property">
+                            <th scope="row">Headquarters</th>
+                            <td id="value">The White House</td>
+                        </tr>
+                        <tr class="property">
+                            <th scope="row">Main organ</th>
+                            <td id="value">Cabinet</td>
+                        </tr>
+                        <tr class="property">
+                            <th scope="row">Departments</th>
+                            <td id="value">15</td>
+                        </tr>
+                        <tr class="sub-heading">
+                            <td colspan="2"><div class="bold-text">Judicial branch</div></td>
+                        </tr>
+                        <tr class="property">
+                            <th scope="row">Court</th>
+                            <td id="value">Supreme Court</td>
+                        </tr>
+                        <tr class="property">
+                            <th scope="row">Seat</th>
+                            <td id="value">Washington, D.C.</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
         <div class="content-footer"><span>Copyright 2018</span></div>

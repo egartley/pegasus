@@ -1,0 +1,102 @@
+body {
+    font-family: sans-serif;
+    background-color: black;
+    color: whitesmoke;
+    line-height: 1.275em
+}
+
+.bold-text {
+    font-weight: bold
+}
+.small-text {
+    font-size: 12px
+}
+span.flex-centered {
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+
+.container,
+.page-content-container {
+    display: flex;
+    flex-direction: row
+}
+
+.page-container {
+    flex-direction: column
+}
+
+.page-container {
+    padding: 8px
+}
+
+.page-content-container > .side {
+    margin-left: 26px;
+    margin-right: 26px
+}
+
+.content-footer {
+    margin-top: 8px
+}
+
+.module.paragraph-container {
+    padding-top: 18px
+}
+
+.module.paragraph-container > .sub-module.paragraph {
+    font-size: 15px
+}
+
+.module.title {
+    font-size: 32px;
+    line-height: 1.2em
+}
+
+.sub-module {
+    margin-bottom: 18px
+}
+
+.side-content-table {
+    max-width: 400px;
+    min-width: 270px;
+    border: 1px solid grey;
+    text-align: center;
+    margin-top: 12px;
+    background-color: #111;
+    padding: 0.2em
+}
+
+.side-content-table tbody tr:first-child > td > * {
+    margin-top: 4px
+}
+.side-content-table > tbody > tr > td > * {
+    margin-bottom: 4px
+}
+.side-content-table tr {
+    padding-left: 4px;
+    padding-right: 4px
+}
+
+.side-content-table tr.main-image img {
+    width: 150px;
+    height: auto
+}
+.side-content-table tr.sub-heading > td > div {
+    height: 24px;
+    background-color: #333;
+    font-size: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+.side-content-table tr.heading {
+    font-size: 18px
+}
+
+.side-content-table tr.property td,
+.side-content-table tr.property th {
+    font-size: 12px;
+    text-align: left;
+    line-height: 1.8em
+}
