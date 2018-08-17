@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Sample Page</title>
+    <style type="text/css">
+    body {
+        font-family: sans-serif;
+        background-color: black;
+        color: whitesmoke;
+        line-height: 1.275em
+    }
+
+    .container,
+    .page-content-container {
+        display: flex;
+        flex-direction: row
+    }
+    .page-container {
+        flex-direction: column
+    }
+
+    .page-container {
+        padding: 8px
+    }
+    .page-content-container > .side {
+    	margin-left: 26px;
+    	margin-right: 26px
+    }
+    .content-footer {
+    	margin-top: 8px
+    }
+
+    .module.paragraph-container {
+    	padding-top: 18px
+    }
+    .module.paragraph-container > .sub-module.paragraph {
+    	font-size: 15px
+    }
+    .module.title > span {
+    	font-size: 32px
+    }
+    .sub-module {
+    	margin-bottom: 18px
+    }
+
+    .side-content-table {
+    	max-width: 375px;
+    	min-width: 250px;
+    	border: 1px solid white;
+    	text-align: center;
+    	margin-top: 12px
+    }
+    .side-content-table tr:first-child > td > * {
+    	margin-top: 8px
+    }
+    .side-content-table tr > td > * {
+    	margin-bottom: 8px
+    }
+    img.side-main {
+    	max-width: 200px;
+    	height: auto
+    }
+    td.heading > div,
+    td.sub-heading > div {
+    	height: 22px;
+    	max-width: 280px;
+    	background-color: #3f3f3f;
+    	margin-left: auto;
+    	margin-right: auto;
+    	display: flex;
+    	align-items: center;
+    	justify-content: center
+    }
+    td.heading > div {
+    	height: 32px;
+    	background-color: initial
+    }
+    td.heading > div > span {
+    	font-size: 18px;
+    	font-weight: bold
+    }
+    td.sub-heading > div > span {
+    	font-size: 14px
+    }
+    </style>
+</head>
+
+<body>
+    <div class="page-container container">
+        <div class="page-content-container">
+            <div class="main">
+                <div class="module title"><span>Sample Page</span></div>
+                <div class="module paragraph-container">
+                    <div class="sub-module paragraph"><span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec egestas est ac orci semper elementum. Phasellus imperdiet ut sem lacinia feugiat. Nunc dignissim tincidunt eros lacinia accumsan. Maecenas pharetra velit libero, sed dignissim sapien dignissim et. Donec a molestie lectus. Integer aliquam efficitur tempor. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.</span></div>
+                    <div class="sub-module paragraph"><span>Fusce et bibendum neque. Morbi bibendum libero nisi, a vulputate eros tempus eget. Mauris pulvinar neque enim, a placerat metus pellentesque a. Phasellus in congue ex. Suspendisse vitae aliquam quam, a interdum felis. Etiam lobortis nisl nunc, vitae tincidunt urna lobortis nec. Praesent et tempor metus. Pellentesque sagittis ultricies justo, sit amet suscipit nulla semper et. Quisque dapibus ultrices arcu, in mollis dolor fermentum sed. Pellentesque ligula libero, convallis in molestie ut, vestibulum eget nisl.</span></div>
+                </div>
+            </div>
+            <div class="side">
+            	<table class="side-content-table">
+            		<tr>
+            			<td class="heading"><div><span>Sample Page</span></div></td>
+            		</tr>
+            		<tr>
+            			<td class="image"><img src="image.png" class="side-main"></td>
+            		</tr>
+            		<tr>
+            			<td class="sub-heading"><div><span>Sub Heading</span></div></td>
+            		</tr>
+            	</table>
+            </div>
+        </div>
+        <div class="content-footer"><span>Copyright 2018</span></div>
+    </div>
+</body>
+
+</html>
