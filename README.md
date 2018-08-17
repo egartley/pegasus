@@ -1,1 +1,3 @@
-# pegasus
+# Pegasus
+
+Lightweight alternative to Wikipedia
