@@ -1,0 +1,14 @@
+div.all-pages-list-scroller {
+	max-height: 500px;
+	overflow-x: none;
+	overflow-y: auto
+}
+
+div.all-pages-list-scroller div.all-pages-list div.listing > span {
+	display: inline-block;
+	color: skyblue
+}
+
+div.all-pages-list-scroller div.all-pages-list div.listing:not(:last-child) > span {
+	margin-bottom: 12px
+}
