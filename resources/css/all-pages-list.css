@@ -1,14 +1,29 @@
 div.all-pages-list-scroller {
+	max-width: 350px;
 	max-height: 500px;
-	overflow-x: none;
 	overflow-y: auto
 }
 
 div.all-pages-list-scroller div.all-pages-list div.listing > span {
-	display: inline-block;
-	color: skyblue
+	display: inline-block
 }
 
-div.all-pages-list-scroller div.all-pages-list div.listing:not(:last-child) > span {
-	margin-bottom: 12px
+div.all-pages-list-scroller div.all-pages-list div.listing > span > a,
+div.all-pages-list-scroller div.all-pages-list div.listing > span > a:hover,
+div.all-pages-list-scroller div.all-pages-list div.listing > span > a:visited {
+	color: skyblue;
+	text-decoration: none
+}
+div.all-pages-list-scroller div.all-pages-list div.listing > span > a:hover {
+	text-decoration: underline
+}
+
+div.all-pages-list-scroller div.all-pages-list div.listing > span {
+	margin-top: 14px;
+	margin-bottom: 14px;
+	padding-left: 8px
+}
+
+div.all-pages-list-scroller div.all-pages-list div.listing:nth-child(even) {
+	background-color: #0a0a0a
 }

@@ -6,8 +6,9 @@
 
 function getListingHTML($pagetitle = 'Untitled Page') {
 	// probably some parameter for what page to get or something like that
+	static $iterator = 0;
 	return "
-			<div class=\"listing\"><span>" . $pagetitle . "</span></div>";
+			<div class=\"listing\"><span><a rel=\"noopener\" href=\"/page-editor/?id=" . $iterator++ . "\">" . $pagetitle . "</a></span></div>";
 }
 
 function getAllPagesListHTML() {
