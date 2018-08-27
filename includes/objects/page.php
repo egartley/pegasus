@@ -1,6 +1,12 @@
 <?php
 
 class Page {
+	public static $storageFilePath = "../data-storage/pages";
+
+	public $filePath = "";
+	public $metaFilePath = "";
+	public $contentFilePath = "";
+
 	public $title = "Untitled";
 	public $id = 0;
 
@@ -14,13 +20,20 @@ class Page {
 	function __construct($id, $load) {
 		$this->id = $id;
 		if ($load) {
+			$this->updateFilePaths();
 			$this->load();
 		}
 	}
 
+	private function updateFilePaths() {
+		$this->filePath = "../data-storage/pages/" . $this->id;
+		$this->metaFilePath = $this->filePath . "/meta.json";
+		$this->contentFilePath = $this->filePath . "/content.json";
+	}
+
 	private function load() {
 		// meta (title, dates/times, etc.)
-		if ($rawmetajson = file_get_contents("../data-storage/pages/" . $this->id . "/meta.json")) {
+		if ($rawmetajson = file_get_contents($this->metaFilePath)) {
 			$meta = json_decode($rawmetajson, true);
 			$this->title = $meta["title"];
 			$this->created = $meta["created"];
@@ -31,14 +44,22 @@ class Page {
 		}
 	}
 
+	function getContentJSON() {
+		if (!file_exists($this->contentFilePath)) {
+			return null;
+		} else {
+			return file_get_contents($this->contentFilePath);
+		}
+	}
+
 	function asPrettyString_created() {
 		// TODO: convert from unix to pretty
-		return $created;
+		return $this->created;
 	}
 
 	function asPrettyString_updated() {
 		// TODO: convert from unix to pretty
-		return $updated;
+		return $this->updated;
 	}
 }
 
