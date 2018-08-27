@@ -8,6 +8,6 @@
 	<title>Test - Pegasus</title>
 </head>
 <body>
-	<p><?php echo getPageContentHTML(getPageByID(0)); ?></p>
+	<?php echo getPageContentHTML(getPageByID(0)); ?>
 </body>
 </html>

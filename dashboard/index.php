@@ -5,7 +5,7 @@
 	<title>Dashboard - Pegasus</title>
 </head>
 <body>
-	<?php require_once '../includes/pages/get.php'; html_allPagesList(); ?>
+	<?php require_once '../includes/html-builder/all-pages-list.php'; echo getAllPagesListHTML(); ?>
 	<h2 style="margin-top:48px;margin-left:8px"><a rel="noopener" href="/editor/?action=new">Create new page</a></h2>
 </body>
 </html>
