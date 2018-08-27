@@ -8,14 +8,14 @@ function getListingHTML($pagetitle = 'Untitled Page') {
 	// probably some parameter for what page to get or something like that
 	static $iterator = 0;
 	return "
-			<div class=\"listing\"><span><a rel=\"noopener\" href=\"/page-editor/?id=" . $iterator++ . "\">" . $pagetitle . "</a></span></div>";
+			<div class=\"listing\"><span><a rel=\"noopener\" href=\"/editor/?action=edit&id=" . $iterator++ . "\">" . $pagetitle . "</a></span></div>";
 }
 
 function getAllPagesListHTML() {
 	// for now just hardcode it
 	return "
 	<div class=\"all-pages-list-scroller\">
-		<div class=\"all-pages-list\">" . getListingHTML('Federal government of the United States') . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . "
+		<div class=\"all-pages-list\">" . getListingHTML('Federal government of the United States') . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . "
 		</div>
 	</div>
 	";

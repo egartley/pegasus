@@ -2,9 +2,9 @@
 <!DOCTYPE html>
 <head>
 	<?php require '../includes/management/min-header.php'; ?>
-	<title>Edit "<?php echo $page->title; ?>" - Pegasus</title>
+	<title>Editor - Pegasus</title>
 </head>
 <body>
-	<p>Page ID: <?php echo $page->id; ?></p>
+	<?php outputEditorHTML(); ?>
 </body>
 </html>
