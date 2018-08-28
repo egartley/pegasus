@@ -7,9 +7,9 @@ function contentHTML($content, $page) {
 		$r .= file_get_contents("../resources/css/page-content.css");
 	} else {
 		// css file no found!
-		$r .= "div.page-content-container:before{content:\"Could not find the CSS file!\"}";
+		$r .= "div.page-content:before{content:\"Could not find the CSS file!\"}";
 	}
-	$r .= "</style><div class=\"page-content-container\"><div class=\"container\"><div class=\"page-content\">";
+	$r .= "</style><div class=\"page-content\"><div class=\"content\">";
 	// page title
 	$r .= "<div class=\"module page-title\">" . $page->title . "</div>";
 	// modules (paragraphs, inline images, data tables, etc.)
@@ -47,7 +47,7 @@ function contentHTML($content, $page) {
 	// footer (hardcoded for now)
 	$r .= "<div class=\"module footer\">Copyright 2018</div>";
 	// end modules
-	$r .= "</div></div>";
+	$r .= "</div>";
 
 	// infobox
 	$infobox = $content["infobox"];
@@ -56,7 +56,7 @@ function contentHTML($content, $page) {
 	foreach ($infobox["items"] as $item) {
 		$r .= "<tr class=\"";
 		if ($item["type"] == "property") {
-			$r .= "property\"><th scope=\"row\">" . $item["label"] . "</th><td id=\"value\">" . $item["value"] . "</td>";
+			$r .= "property\"><th>" . $item["label"] . "</th><td id=\"value\">" . $item["value"] . "</td>";
 		} else if ($item["type"] == "sub-heading") {
 			$r .= "sub-heading\"><td colspan=\"2\"><div class=\"bold-text\">" . $item["value"] . "</div></td>";
 		} else {
