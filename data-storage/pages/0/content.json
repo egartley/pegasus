@@ -58,6 +58,7 @@
 	"infobox": {
 		"heading": "US Federal Government",
 		"main-image": {
+			"file": "/resources/images/seal.svg",
 			"caption": "Great Seal of the United States"
 		},
 		"items": [

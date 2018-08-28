@@ -20,28 +20,52 @@ function contentHTML($content, $page) {
 			$r .= "paragraph-container\">";
 			foreach ($module["value"] as $submodule) {
 				$r .= "<div class=\"sub-module ";
-				// content of sub-module paragraph div
+				// content of sub-module div
 				if ($submodule["type"] == "paragraph") {
 					$r .= "paragraph\">";
 					foreach ($submodule["value"] as $pmodule) {
 						if ($pmodule["type"] == "text") {
 							$r .= $pmodule["value"];
+						} else {
+							$r .= "Unknown type!";
 						}
 					}
+				} else {
+					$r .= "\">Unknown type!";
 				}
-				// end sub-module paragraph div
+				// end sub-module div
 				$r .= "</div>";
 			}
 		} else if($module["type"] == "heading") {
 			$r .= "heading\">" . $module["value"];
 		} else {
-			$r .= "\">";
+			$r .= "\">Unknown type!";
 		}
 		// end module div
 		$r .= "</div>";
 	}
+	// footer (hardcoded for now)
+	$r .= "<div class=\"module footer\">Copyright 2018</div>";
+	// end modules
+	$r .= "</div></div>";
 
-	return $r . "</div></div></div>";
+	// infobox
+	$infobox = $content["infobox"];
+	$r .= "<table class=\"infobox\"><tbody><tr class=\"heading\"><td colspan=\"2\"><div class=\"bold-text\">" . $infobox["heading"] . "</div></td></tr><tr class=\"main-image\"><td colspan=\"2\"><span class=\"flex-centered\"><table><tbody><tr><td><img src=\"" . $infobox["main-image"]["file"] . "\"></td></tr><tr><td class=\"small-text\" id=\"caption\">" . $infobox["main-image"]["caption"] . "</td></tr></tbody></table></span></td></tr>";
+	// properties
+	foreach ($infobox["items"] as $item) {
+		$r .= "<tr class=\"";
+		if ($item["type"] == "property") {
+			$r .= "property\"><th scope=\"row\">" . $item["label"] . "</th><td id=\"value\">" . $item["value"] . "</td>";
+		} else if ($item["type"] == "sub-heading") {
+			$r .= "sub-heading\"><td colspan=\"2\"><div class=\"bold-text\">" . $item["value"] . "</div></td>";
+		} else {
+			$r .= "\"><td>Unknown type!</td>";
+		}
+		$r .= "</tr>";
+	}
+
+	return $r . "</tbody></table></div>";
 } 
 
 function getPageContentHTML($page) {
