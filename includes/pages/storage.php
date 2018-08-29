@@ -3,12 +3,11 @@
 require_once '../includes/objects/page.php';
 require_once '../includes/util.php';
 
-function getPageDirectories($relative) {
+function get_page_dirs($relative) {
 	$r = [];
 	if ($handle = opendir(Page::$storageFilePath)) {
     	while (false !== ($entry = readdir($handle))) {
     		$path = Page::$storageFilePath . "/" . $entry;
-
     		if ($entry != "." && $entry != ".." && is_dir($path)) {
     			if ($relative) {
     				$r[] = $entry;
@@ -24,14 +23,14 @@ function getPageDirectories($relative) {
 	return $r;
 }
 
-function numberOfPages() {
-	return count(getPageDirectories(true));
+function num_pages() {
+	return count(get_page_dirs(true));
 }
 
-function getPageByID($id) {
-	if (in_array($id, getPageDirectories(true))) {
+function get_page($id) {
+	if (file_exists(Page::$storageFilePath . "/" . $id) && is_dir(Page::$storageFilePath . "/" . $id)) {
 		// page with that id exists
-		return new Page($id, true);
+		return new Page($id);
 	} else {
 		// id was fine, but there is no page with it
 		return null;

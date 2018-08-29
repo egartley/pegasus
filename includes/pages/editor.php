@@ -3,22 +3,22 @@
 require_once '../includes/objects/page.php';
 require_once '../includes/pages/storage.php';
 require_once '../includes/html-builder/page-content.php';
+require_once '../includes/html-builder/page-editor.php';
 
 // most things here are just for testing
-$page = null;
+$workingpage = null;
 
-function getAction() {
+function get_action() {
 	if (isset($_GET["action"])) {
-		// something like "new" or "edit"
 		return $_GET["action"];
 	}
-	// "edit" by default
+	// "edit" if not specified in URL
 	return "edit";
 }
 
-function editor_html() {
+function editor() {
 	// ex. "/editor/?action=edit&id=0"
-	if (getAction() == "edit") {
+	if (get_action() == "edit") {
 		// make sure there's an id to work with
 		if (!isset($_GET["id"])) {
 			echo "<p>ERROR: Please provide a page ID</p>";
@@ -31,20 +31,26 @@ function editor_html() {
 		}
 
 		// get page with id
-		$page = getPageByID($_GET["id"]);
+		$workingpage = get_page($_GET["id"]);
 
-		if ($page == null) {
+		if ($workingpage == null) {
 			// there is not a page by that id
-			echo "<p>ERROR: No page with ID of " . $_GET["id"] . "</p>";
+			echo "<p>ERROR: No page with ID of " . $_GET["id"] . " (make a <a rel=\"noopener\" href=\"/editor/?action=new\">new page</a>)</p>";
 			return;
 		}
-	} else if (getAction() == "new") {
+	} else if (get_action() == "new") {
 		// ex. "/editor/?action=new"	
-		// extra stuff for when making a new page (that doesn't exist yet)
-		// $page = new Page();
+		$workingpage = new Page(-1);
+	} else if (get_action() == "save") {
+		Page::action_save($_GET);
+		header("Location: /editor/?action=edit&id=" . $_GET["id"]);
+		return;
+	} else {
+		// unknown action
 	}
+
 	// output editor html
-	echo "<h2>" . $page->title . "</h2><p>Page ID: " . $page->id . "</p><p>Created: " . $page->created . "</p><p>Updated: " . $page->updated . "</p>";
+	echo get_editor_html($workingpage, get_action());
 }
 
 ?>

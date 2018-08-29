@@ -1,6 +1,6 @@
 <?php
 
-function contentHTML($content, $page) {
+function page_content_html($content, $page) {
 	// inline styling for now
 	$r = "<style type=\"text/css\">";
 	if (file_exists("../resources/css/page-content.css")) {
@@ -68,11 +68,11 @@ function contentHTML($content, $page) {
 	return $r . "</tbody></table></div>";
 } 
 
-function getPageContentHTML($page) {
-	$rawjsonstring = $page->getContentJSON();
+function get_page_content_html($page) {
+	$rawjsonstring = $page->get_content();
 	if ($rawjsonstring != null) {
 		// O.K. in getting raw json from content.json
-		return contentHTML(json_decode($rawjsonstring, true), $page);
+		return page_content_html(json_decode($rawjsonstring, true), $page);
 	} else {
 		// could not get raw json
 		return "";
