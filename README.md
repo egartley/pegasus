@@ -9,7 +9,7 @@ Focusing on functionality and modularity, rather than making everything look nic
 ## Goals
 
 - Create, edit and view pages
-  - These can include contain text, images, graphs, and other media
+  - These can include text, images, graphs, and other media
 - Maintain certain elements of Wikipedia
   - General look and feel
   - Basic functionality
