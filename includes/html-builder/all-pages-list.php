@@ -1,24 +1,18 @@
 <?php
 
-// need way to access however pages are stored (haven't decided between SQL database(s) or plain-text JSON that is publicly accessible as opposed to a SQL database which is protected server-side and with credentials)
+require_once '../includes/pages/storage.php';
 
-// hardcoded HTML has whitespace, for now, so that the final HTML on whatever page it's displayed on looks somewhat formatted (even though it doesn't really matter)
-
-function getListingHTML($pagetitle = 'Untitled Page') {
-	// probably some parameter for what page to get or something like that
-	static $iterator = 0;
-	return "
-			<div class=\"listing\"><span><a rel=\"noopener\" href=\"/editor/?action=edit&id=" . $iterator++ . "\">" . $pagetitle . "</a></span></div>";
+function get_page_list_item_html($page) {
+	return "<div class=\"listing\"><span><a rel=\"noopener\" href=\"/editor/?action=edit&id=" . $page->id . "\">" . $page->title . "</a></span></div>";
 }
 
 function getAllPagesListHTML() {
-	// for now just hardcode it
-	return "
-	<div class=\"all-pages-list-scroller\">
-		<div class=\"all-pages-list\">" . getListingHTML('Federal government of the United States') . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . getListingHTML() . "
-		</div>
-	</div>
-	";
+	$r = "<div class=\"all-pages-list-scroller\"><div class=\"all-pages-list\">";
+	$pagedirs = get_page_dirs(true);
+	for ($i = 0; $i < count($pagedirs); $i++) {
+		$r .= get_page_list_item_html(get_page($i));
+	}
+	return $r . "</div></div>";
 }
 
 ?>

@@ -45,7 +45,7 @@ class Page {
 		if (isset($get["isnew"]) == "no") {
 			$m = Page::get_meta_normal($get["id"]);
 			Page::save_meta_normal(array(
-				"title" => $m["title"],
+				"title" => $get["title"],
 				"id" => $m["id"],
 				"created" => $m["created"],
 				"updated" => strtotime("now")

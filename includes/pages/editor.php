@@ -42,6 +42,7 @@ function editor() {
 		// ex. "/editor/?action=new"	
 		$workingpage = new Page(-1);
 	} else if (get_action() == "save") {
+		// ex. "/editor/?action=save&id=2&title=Untitled&isnew=no"
 		Page::action_save($_GET);
 		header("Location: /editor/?action=edit&id=" . $_GET["id"]);
 		return;
