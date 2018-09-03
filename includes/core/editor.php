@@ -7,30 +7,41 @@ require_once '../includes/html-builder/page-editor.php';
 
 // most things here are just for testing
 $workingpage = null;
+$invalidreason = "";
 
 function get_action() {
 	if (isset($_GET["action"])) {
 		return $_GET["action"];
+	} else if (isset($_POST["action"])) {
+		return $_POST["action"];
 	}
 	// "edit" if not specified in URL
 	return "edit";
 }
 
+function valid_id($checkid) {
+	if (!isset($checkid)){
+		$invalidreason = "Page ID not specified";
+		return false;
+	} else if (!is_numeric($checkid)) {
+		$invalidreason = "Page ID must be a number";
+		return false;
+	} else if ($checkid <= -1 || $checkid >= Page::$maxNumberOfPages) {
+		$invalidreason = "Page ID must be between 0 and " . (Page::$maxNumberOfPages - 1) . ", inclusive";
+		return false;
+	}
+	return true;
+}
+
 function editor() {
-	// ex. "/editor/?action=edit&id=0"
 	if (get_action() == "edit") {
-		// make sure there's an id to work with
-		if (!isset($_GET["id"])) {
-			echo "<p>ERROR: Please provide a page ID</p>";
-			return;
-		}
-		// sanitize input
-		if (!is_numeric($_GET["id"])) {
-			echo "<p>ERROR: Invalid page ID (must be a number)</p>";
+		// ex. "/editor/?action=edit&id=0"
+		if (!valid_id($_GET["id"])) {
+			echo "<p>" . $invalidreason . "</p>";
 			return;
 		}
 
-		// get page with id
+		// get page
 		$workingpage = get_page($_GET["id"]);
 
 		if ($workingpage == null) {
@@ -42,12 +53,22 @@ function editor() {
 		// ex. "/editor/?action=new"	
 		$workingpage = new Page(-1);
 	} else if (get_action() == "save") {
-		// ex. "/editor/?action=save&id=2&title=Untitled&isnew=no"
-		Page::action_save($_GET);
-		header("Location: /editor/?action=edit&id=" . $_GET["id"]);
+		// ex. "/editor/?action=save&id=2&isnew=no"
+		if (!valid_id($_POST["id"])) {
+			echo "<p>" . $invalidreason . "</p>";
+			return;
+		}
+
+		if (Page::action_save($_POST)) {
+			header("Location: /editor/?action=edit&id=" . $_POST["id"]);
+		} else {
+			// the classic Microsoft "something went wrong" ;)
+			echo "<p>Something went wrong while trying to save the page</p>";
+		}
+
 		return;
 	} else {
-		// unknown action
+		// unknown action specified
 	}
 
 	// output editor html

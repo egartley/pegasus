@@ -7,7 +7,7 @@ function page_content_html($content, $page) {
 		$r .= file_get_contents("../resources/css/page-content.css");
 	} else {
 		// css file no found!
-		$r .= "div.page-content:before{content:\"Could not find the CSS file!\"}";
+		$r .= "div.page-content:before{content:\"Could not find \\\"/resources/page-content.css\\\"\"}";
 	}
 	$r .= "</style><div class=\"page-content\"><div class=\"content\">";
 	// page title
@@ -69,13 +69,13 @@ function page_content_html($content, $page) {
 } 
 
 function get_page_content_html($page) {
-	$rawjsonstring = $page->get_content();
+	$rawjsonstring = $page->get_content_rawjson();
 	if ($rawjsonstring != null) {
 		// O.K. in getting raw json from content.json
 		return page_content_html(json_decode($rawjsonstring, true), $page);
 	} else {
 		// could not get raw json
-		return "";
+		return "Could not retrieve content HTML (make sure the page exists and has content)";
 	}
 }
 
