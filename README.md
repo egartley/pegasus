@@ -6,6 +6,10 @@ Lightweight, simpler alternative to Wikipedia
 
 Focusing on functionality and modularity, rather than making everything look nice (that comes later).
 
+## Demo
+
+You can view an example page [here](https://go.egartley.net/pegasusexamplepage/?via=githubreadme1809)
+
 ## Goals
 
 - Create, edit and view pages
