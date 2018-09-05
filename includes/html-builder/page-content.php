@@ -1,6 +1,6 @@
 <?php
 
-function page_content_html($content, $page) {
+function page_content_html($content, $page, $edit) {
 	// inline styling for now
 	$r = "<style type=\"text/css\">";
 	if (file_exists("../resources/css/page-content.css")) {
@@ -9,17 +9,18 @@ function page_content_html($content, $page) {
 		// css file no found!
 		$r .= "div.page-content:before{content:\"Could not find \\\"/resources/page-content.css\\\"\"}";
 	}
-	$r .= "</style><div class=\"page-content\"><div class=\"content\">";
+	$r .= "</style><script src=\"../resources/js/jquery.js\" type=\"text/javascript\"></script><script src=\"../resources/js/viewer-edit.js\" type=\"text/javascript\"></script><button class=\"save-changes\">Save Changes</button><div class=\"page-content\"><div class=\"content\">";
 	// page title
-	$r .= "<div class=\"module page-title\">" . $page->title . "</div>";
+	$r .= "<div class=\"module page-title\" contenteditable=\"true\">" . $page->title . "</div>";
 	// modules (paragraphs, inline images, data tables, etc.)
+	$moduleindex = 0;
 	foreach ($content["modules"] as $module) {
-		$r .= "<div class=\"module ";
+		$r .= "<div class=\"module mod-" . $moduleindex . " ";
 		// content of module div
 		if ($module["type"] == "paragraph-container") {
 			$r .= "paragraph-container\">";
 			foreach ($module["value"] as $submodule) {
-				$r .= "<div class=\"sub-module ";
+				$r .= "<div contenteditable=\"true\" class=\"sub-module ";
 				// content of sub-module div
 				if ($submodule["type"] == "paragraph") {
 					$r .= "paragraph\">";
@@ -37,12 +38,16 @@ function page_content_html($content, $page) {
 				$r .= "</div>";
 			}
 		} else if($module["type"] == "heading") {
-			$r .= "heading\">" . $module["value"];
+			$r .= "heading\" contenteditable=\"true\">" . $module["value"];
+			/*if ($edit) {
+				$r .= "<sup class=\"edit\">Edit</sup>";
+			}*/
 		} else {
 			$r .= "\">Unknown type!";
 		}
 		// end module div
 		$r .= "</div>";
+		$moduleindex++;
 	}
 	// footer (hardcoded for now)
 	$r .= "<div class=\"module footer\">Copyright 2018</div>";
@@ -68,11 +73,11 @@ function page_content_html($content, $page) {
 	return $r . "</tbody></table></div>";
 } 
 
-function get_page_content_html($page) {
+function get_page_content_html($page, $edit) {
 	$rawjsonstring = $page->get_content_rawjson();
 	if ($rawjsonstring != null) {
 		// O.K. in getting raw json from content.json
-		return page_content_html(json_decode($rawjsonstring, true), $page);
+		return page_content_html(json_decode($rawjsonstring, true), $page, $edit);
 	} else {
 		// could not get raw json
 		return "Could not retrieve content HTML (make sure the page exists and has content)";

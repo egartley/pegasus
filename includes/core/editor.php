@@ -62,7 +62,7 @@ function editor() {
 		if (Page::action_save($_POST)) {
 			header("Location: /editor/?action=edit&id=" . $_POST["id"]);
 		} else {
-			// the classic Microsoft "something went wrong" ;)
+			// the typical Microsoft "something went wrong" ;)
 			echo "<p>Something went wrong while trying to save the page</p>";
 		}
 

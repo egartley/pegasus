@@ -21,7 +21,7 @@ function get_editor_html($page, $action) {
 	$html .= "</style>";
 
 	// page meta (broken into seperate lines for better readability)
-	$html .= "<div class=\"page-meta\">";
+	$html .= "<div><h2>Meta</h2></div><div class=\"page-meta\">";
 	$html .= "<form method=\"post\" action=\"/editor/\">";
 	$html .= "<input type=\"hidden\" name=\"action\" value=\"save\">";
 	$html .= "<input type=\"hidden\" name=\"isnew\" value=\"" . $page->isnew . "\">";
@@ -37,7 +37,7 @@ function get_editor_html($page, $action) {
 
 	if ($action == "edit") {
 		require_once '../includes/html-builder/page-content.php';
-		$html .= "<iframe class=\"viewer\" src=\"/viewer/?id=" . $page->id . "\" width=\"1250\" height=\"900\">" . "</iframe>";
+		$html .= "<div><h2>Content Editor</h2></div><iframe class=\"viewer\" src=\"/viewer/?id=" . $page->id . "&edit=yes\" width=\"1250\" height=\"900\">" . "</iframe>";
 	}
 
 	return $html;
