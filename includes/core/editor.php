@@ -53,7 +53,7 @@ function editor() {
 		// ex. "/editor/?action=new"	
 		$workingpage = new Page(-1);
 	} else if (get_action() == "save") {
-		// ex. "/editor/?action=save&id=2&isnew=no"
+		// ex. "/editor/?action=save&id=2&isnew=no&contentjson=blahblah&title=My%20Page" (POST method)
 		if (!valid_id($_POST["id"])) {
 			echo "<p>" . $invalidreason . "</p>";
 			return;

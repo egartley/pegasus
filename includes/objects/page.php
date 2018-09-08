@@ -68,14 +68,14 @@ class Page {
 		return true;
 	}
 
-	private static function save_content_to_temp() {
+	private static function save_content_to_temp($post) {
 		$contentfile = fopen(Page::$tempStorageFilePath . "/content.json", "w");
 		if ($contentfile === false) {
 			// not found or has wrong permissions
 			return false;
 		}
 
-		fwrite($contentfile, Page::$emptyContentRawJSON);
+		fwrite($contentfile, $post["contentjson"]);
 		fclose($contentfile);
 
 		return true;
@@ -92,6 +92,19 @@ class Page {
 		return true;
 	}
 
+	private static function save_content_normal($post) {
+		$contentfile = fopen(Page::$storageFilePath . "/" . $post["id"] . "/content.json", "w");
+		if ($contentfile === false) {
+			// not found or has wrong permissions
+			return false;
+		}
+
+		fwrite($contentfile, urldecode($post["contentjson"]));
+		fclose($contentfile);
+
+		return true;
+	}
+
 	// called from /core/editor.php when action is "save"
 	// ex. "/editor/?action=save&id=2&isnew=no"
 	public static function action_save($post) {
@@ -102,7 +115,7 @@ class Page {
 			Page::check_temporary_page_directory();
 			
 			// save files to temp
-			if (Page::save_meta_to_temp($post) && Page::save_content_to_temp()) {
+			if (Page::save_meta_to_temp($post) && Page::save_content_to_temp($post)) {
 				// create its "normal" storage directory
 				$normalPath = Page::$storageFilePath . "/" . $post["id"];
 				if (!file_exists($normalPath)) {
@@ -127,7 +140,7 @@ class Page {
 				"id" => $oldmeta["id"], // id doesn't change
 				"created" => $oldmeta["created"], // created doesn't change
 				"updated" => strtotime("now") // update just now
-			));
+			)) && Page::save_content_normal($post);
 		}
 	}
 	

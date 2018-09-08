@@ -25,7 +25,7 @@ function get_editor_html($page, $action) {
 	$html .= "<form method=\"post\" action=\"/editor/\">";
 	$html .= "<input type=\"hidden\" name=\"action\" value=\"save\">";
 	$html .= "<input type=\"hidden\" name=\"isnew\" value=\"" . $page->isnew . "\">";
-	$html .= "<p>Title: <input type=\"text\" name=\"title\" value=\"" . $page->title . "\" placeholder=\"Untitled\"></p>";
+	$html .= "<input type=\"hidden\" name=\"title\" value=\"" . $page->title . "\">";
 	$html .= "<p>Page ID: <input type=\"text\" name=\"id\" value=\"" . $page->id . "\" readonly></p>";
 	$html .= "<p>Created: <input type=\"text\" name=\"created\" value=\"" . $page->created . "\" readonly></p>";
 	$html .= "<p>Updated: <input type=\"text\" name=\"updated\" value=\"" . $page->updated . "\" readonly></p>";
