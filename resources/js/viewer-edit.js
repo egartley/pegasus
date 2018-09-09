@@ -55,6 +55,6 @@ $(document).ready(function() {
             }
         });
 
-        $.post("/editor/", { contentjson: encodeURIComponent(JSON.stringify(content)), id: $('span#hiddenpageid').html(), title: $('div.page-title').html(), action: "save" });
+        $.post("/editor/", { contentjson: encodeURIComponent(JSON.stringify(content)), id: $('span#hiddenpageid').html(), isnew: $('span#hiddenpageisnew').html(), title: $('div.page-title').html(), action: "save" });
     });
 });

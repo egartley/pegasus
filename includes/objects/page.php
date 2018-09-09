@@ -4,7 +4,7 @@ class Page {
 	public static $storageFilePath = "../data-storage/pages";
 	public static $tempStorageFilePath = "../data-storage/temporary-page";
 	public static $maxNumberOfPages = 5000;
-	public static $emptyContentRawJSON = "{\"modules\":[],\"infobox\":{\"heading\":\"\",\"main-image\":{\"file\":\"\",\"caption\":\"\"},\"items\":[]}}";
+	public static $emptyContentRawJSON = "{\"modules\":[{\"type\":\"paragraph-container\",\"value\":[{\"type\":\"paragraph\",\"value\":[{\"type\":\"text\",\"value\":\"This is a paragraph. Click or tap to change its text.\"}]}]},{\"type\":\"heading\",\"value\":\"Example Heading\"}],\"infobox\":{\"heading\":\"\",\"image\":{\"file\":\"\",\"caption\":\"\"},\"items\":[]}}";
 
 	public $filePath = "";
 	public $metaFilePath = "";
@@ -35,11 +35,16 @@ class Page {
 			// update paths and meta
 			$this->update_paths();
 			$this->set_meta();
+			$this->set_empty_content();
 		} else {
 			// previously saved page (assuming)
 			$this->update_paths();
 			$this->load_meta_from_file();
 		}
+	}
+
+	public static function get_temp_page() {
+		return new Page(-1);
 	}
 
 	private static function get_meta_temp($key) {
@@ -75,7 +80,7 @@ class Page {
 			return false;
 		}
 
-		fwrite($contentfile, $post["contentjson"]);
+		fwrite($contentfile, urldecode($post["contentjson"]));
 		fclose($contentfile);
 
 		return true;
@@ -194,6 +199,18 @@ class Page {
 		}
 		fwrite($metafile, json_encode($meta));
 		fclose($metafile);
+	}
+
+	private function set_empty_content() {
+		$file = false;
+		$this->check_temporary_page_directory();
+		$file = fopen(Page::$tempStorageFilePath . "/content.json", "w");
+		if ($file === false) {
+			// not found or has wrong permissions
+			return;
+		}
+		fwrite($file, Page::$emptyContentRawJSON);
+		fclose($file);
 	}
 
 	function get_content_rawjson() {

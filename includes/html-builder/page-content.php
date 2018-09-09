@@ -9,7 +9,7 @@ function page_content_html($content, $page, $edit) {
 		// css file no found!
 		$r .= "div.page-content:before{content:\"Could not find \\\"/resources/page-content.css\\\"\"}";
 	}
-	$r .= "</style><script src=\"../resources/js/jquery.js\" type=\"text/javascript\"></script><script src=\"../resources/js/viewer-edit.js\" type=\"text/javascript\"></script><button class=\"save-changes\">Save Changes</button><span style=\"display:none\" id=\"hiddenpageid\">" . $page->id . "</span><div class=\"page-content\"><div class=\"content\">";
+	$r .= "</style><script src=\"../resources/js/jquery.js\" type=\"text/javascript\"></script><script src=\"../resources/js/viewer-edit.js\" type=\"text/javascript\"></script><button class=\"save-changes\">Save Changes</button><span style=\"display:none\" id=\"hiddenpageid\">" . $page->id . "</span><span style=\"display:none\" id=\"hiddenpageisnew\">" . $page->isnew . "</span><div class=\"page-content\"><div class=\"content\">";
 	// page title
 	$r .= "<div class=\"module page-title\" contenteditable=\"true\">" . $page->title . "</div>";
 	// modules (paragraphs, inline images, data tables, etc.)
@@ -78,8 +78,13 @@ function page_content_html($content, $page, $edit) {
 	return $r . "</tbody></table></div>";
 } 
 
-function get_page_content_html($page, $edit) {
-	$rawjsonstring = $page->get_content_rawjson();
+function get_page_content_html($page, $edit, $temp) {
+	$rawjsonstring = null;
+	if (isset($temp) && $temp == "yes") {
+		$rawjsonstring = Page::$emptyContentRawJSON;
+	} else {
+		$rawjsonstring = $page->get_content_rawjson();
+	}
 	if ($rawjsonstring != null) {
 		// O.K. in getting raw json from content.json
 		return page_content_html(json_decode($rawjsonstring, true), $page, $edit);

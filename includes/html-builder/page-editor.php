@@ -1,8 +1,5 @@
 <?php
 
-function get_editable_meta_textbox() {
-}
-
 function get_editor_html($page, $action) {
 	if ($page == null) {
 		return "<p>Specified page is invalid</p>";
@@ -15,30 +12,30 @@ function get_editor_html($page, $action) {
 	if (file_exists("../resources/css/page-editor.css")) {
 		$html .= file_get_contents("../resources/css/page-editor.css");
 	} else {
-		// css file no found!
+		// css file not found!
 		$html .= "body:before{content:\"Could not find \\\"/resources/page-editor.css\\\"\"}";
 	}
 	$html .= "</style>";
 
 	// page meta (broken into seperate lines for better readability)
-	$html .= "<div><h2>Meta</h2></div><div class=\"page-meta\">";
-	$html .= "<form method=\"post\" action=\"/editor/\">";
-	$html .= "<input type=\"hidden\" name=\"action\" value=\"save\">";
-	$html .= "<input type=\"hidden\" name=\"isnew\" value=\"" . $page->isnew . "\">";
-	$html .= "<input type=\"hidden\" name=\"title\" value=\"" . $page->title . "\">";
-	$html .= "<p>Page ID: <input type=\"text\" name=\"id\" value=\"" . $page->id . "\" readonly></p>";
-	$html .= "<p>Created: <input type=\"text\" name=\"created\" value=\"" . $page->created . "\" readonly></p>";
-	$html .= "<p>Updated: <input type=\"text\" name=\"updated\" value=\"" . $page->updated . "\" readonly></p>";
-	$html .= "<p><input type=\"submit\" value=\"Save\"></p>";
-	$html .= "</form></div>";
+	$html .= "<h2>Meta</h2>";
+	$html .= "<div class=\"page-meta\">";
+	$html .= "<p>Page ID: " . $page->id . "</p>";
+	$html .= "<p>Created: " . $page->created . "</p>";
+	$html .= "<p>Updated: " . $page->updated . "</p>";
+	$html .= "</div>";
 
 	// page options
 	$html .= "<div class=\"page-options\"><p><a rel=\"noopener\" href=\"/dashboard/\">Back to Dashboard</a></p></div>";
 
+	// the actual editor
+	$html .= "<div><h2>Editor</h2></div><iframe class=\"viewer\" src=\"/viewer/?id=" . $page->id;
 	if ($action == "edit") {
-		require_once '../includes/html-builder/page-content.php';
-		$html .= "<div><h2>Content Editor</h2></div><iframe class=\"viewer\" src=\"/viewer/?id=" . $page->id . "&edit=yes\" width=\"1250\" height=\"900\">" . "</iframe>";
+		$html .= "&edit=yes";
+	} else if ($action == "new") {
+		$html .= "&edit=yes&temp=yes";
 	}
+	$html .= "\" width=\"1250\" height=\"900\"></iframe>";
 
 	return $html;
 }
