@@ -18,15 +18,15 @@ function get_editor_html($page, $action) {
 	$html .= "</style>";
 
 	// page meta (broken into seperate lines for better readability)
-	$html .= "<h2>Meta</h2>";
-	$html .= "<div class=\"page-meta\">";
+	$html .= "<h2 style=\"display:none\">Meta</h2>";
+	$html .= "<div class=\"page-meta\" style=\"display:none\">";
 	$html .= "<p>Page ID: " . $page->id . "</p>";
 	$html .= "<p>Created: " . $page->created . "</p>";
 	$html .= "<p>Updated: " . $page->updated . "</p>";
 	$html .= "</div>";
 
 	// page options
-	$html .= "<div class=\"page-options\"><p><a rel=\"noopener\" href=\"/dashboard/\">Back to Dashboard</a></p></div>";
+	$html .= "<div class=\"page-options\" style=\"display:none\"><p><a rel=\"noopener\" href=\"/dashboard/\">Back to Dashboard</a></p></div>";
 
 	// the actual editor
 	$html .= "<div><h2>Editor</h2></div><iframe class=\"viewer\" src=\"/viewer/?id=" . $page->id;

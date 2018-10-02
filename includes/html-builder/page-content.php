@@ -9,7 +9,7 @@ function page_content_html($content, $page, $edit) {
 		// css file no found!
 		$html .= "div.page-content:before{content:\"Could not find \\\"/resources/page-content.css\\\"\"}";
 	}
-	$html .= "</style><script src=\"../resources/js/jquery.js\" type=\"text/javascript\"></script><script src=\"../resources/js/viewer.js\" type=\"text/javascript\"></script><button class=\"save-changes\">Save Changes</button><span style=\"display:none\" id=\"hiddenpageid\">" . $page->id . "</span><span style=\"display:none\" id=\"hiddenpageisnew\">" . $page->isnew . "</span><div class=\"page-content\"><div class=\"content\">";
+	$html .= "</style><script src=\"../resources/js/jquery.js\" type=\"text/javascript\"></script><script src=\"../resources/js/viewer.js\" type=\"text/javascript\"></script><button class=\"save-changes\">Save Changes</button><button class=\"new-paragraph\">New Paragraph</button><span style=\"display:none\" id=\"hiddenpageid\">" . $page->id . "</span><span style=\"display:none\" id=\"hiddenpageisnew\">" . $page->isnew . "</span><div class=\"page-content\"><div class=\"content\">";
 	// page title
 	$html .= "<div class=\"module page-title\"";
 	if ($edit) {
@@ -20,7 +20,7 @@ function page_content_html($content, $page, $edit) {
 	// modules (paragraphs, inline images, data tables, etc.)
 	$moduleindex = 0;
 	foreach ($content["modules"] as $module) {
-		$html .= "<div class=\"module module-" . $moduleindex . " ";
+		$html .= "<div tabindex=\"". $moduleindex . "\" class=\"module ";
 		// content of module div
 		if ($module["type"] == "paragraph-container") {
 			$html .= "paragraph-container\">";
@@ -45,10 +45,6 @@ function page_content_html($content, $page, $edit) {
 				}
 				// end sub-module div
 				$html .= "</div>";
-				// if last, then append add new paragraph button
-				if (!next($module["value"])) {
-					$html .= "<div class=\"add-new-paragraph\"><button>New Paragraph</button></div>";
-				}
 			}
 		} else if($module["type"] == "heading") {
 			$html .= "heading\"";

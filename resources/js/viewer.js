@@ -10,9 +10,58 @@ jQuery.fn.insertAt = function(index, element) {
     }
     return this;
 }
+// https://github.com/accursoft/caret
+jQuery.fn.caret = function() {
+    var target = this[0];
+    var isContentEditable = target && target.contentEditable === 'true';
+    if (target) {
+        if (window.getSelection) {
+            if (isContentEditable) {
+                target.focus();
+                var range1 = window.getSelection().getRangeAt(0),
+                    range2 = range1.cloneRange();
+                range2.selectNodeContents(target);
+                range2.setEnd(range1.endContainer, range1.endOffset);
+                return range2.toString().length;
+            }
+            return target.selectionStart;
+        }
+        if (target.selectionStart)
+            return target.selectionStart;
+    }
+    return;
+}
+
+var inFocusParagraph;
+
+function registerEvents() {
+    $('div.module.paragraph-container div.paragraph').focusin(function() {
+        inFocusParagraph = $(this)
+    });
+    $('div.paragraph').keyup(function(e) {
+        if ($(this).html().length == 0 || $(this).html().indexOf('<br') == 0) {
+            $(this).remove()
+        }
+    });
+}
+
+function addNewParagraph() {
+    inFocusParagraph.parent().insertAt(inFocusParagraph.parent().children().length, "<div contenteditable=\"true\" class=\"sub-module paragraph\"></div>");
+    inFocusParagraph.parent().children().eq(inFocusParagraph.parent().children().length - 1).focus();
+    // added new paragraph, need to register events for it
+    registerEvents()
+}
+
+function enableButton(button) {
+    $(button).removeAttr('disabled')
+}
+
+function disableButton(button) {
+    $(button).prop("disabled", true)
+}
 
 $(document).ready(function() {
-    // EDIT
+    // BUTTONS
     $('button.save-changes').click(function() {
         var content = {
             modules: [],
@@ -71,13 +120,9 @@ $(document).ready(function() {
 
         $.post("/editor/", { contentjson: encodeURIComponent(JSON.stringify(content)), id: $('span#hiddenpageid').html(), isnew: $('span#hiddenpageisnew').html(), title: $('div.page-title').html(), action: "save" })
     });
-    $('div.add-new-paragraph button').click(function() {
-        var pcontainer = $(this).parent().parent();
-        pcontainer.insertAt(pcontainer.children().length - 1, "<div contenteditable=\"true\" class=\"sub-module paragraph\">Here is your new paragraph!</div>")
+    $('button.new-paragraph').click(function() {
+        addNewParagraph()
     });
-    $('div.sub-module.paragraph').keyup(function(){
-        if ($(this).html().length == 0) {
-            $(this).remove()
-        }
-    })
+
+    registerEvents()
 });
