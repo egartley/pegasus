@@ -1,81 +1,90 @@
 <?php
 
 function page_content_html($content, $page, $edit) {
-	// inline styling for now
-	$r = "<style type=\"text/css\">";
+	// styling
+	$html = "<style type=\"text/css\">";
 	if (file_exists("../resources/css/page-content.css")) {
-		$r .= file_get_contents("../resources/css/page-content.css");
+		$html .= file_get_contents("../resources/css/page-content.css");
 	} else {
 		// css file no found!
-		$r .= "div.page-content:before{content:\"Could not find \\\"/resources/page-content.css\\\"\"}";
+		$html .= "div.page-content:before{content:\"Could not find \\\"/resources/page-content.css\\\"\"}";
 	}
-	$r .= "</style><script src=\"../resources/js/jquery.js\" type=\"text/javascript\"></script><script src=\"../resources/js/viewer-edit.js\" type=\"text/javascript\"></script><button class=\"save-changes\">Save Changes</button><span style=\"display:none\" id=\"hiddenpageid\">" . $page->id . "</span><span style=\"display:none\" id=\"hiddenpageisnew\">" . $page->isnew . "</span><div class=\"page-content\"><div class=\"content\">";
+	$html .= "</style><script src=\"../resources/js/jquery.js\" type=\"text/javascript\"></script><script src=\"../resources/js/viewer.js\" type=\"text/javascript\"></script><button class=\"save-changes\">Save Changes</button><span style=\"display:none\" id=\"hiddenpageid\">" . $page->id . "</span><span style=\"display:none\" id=\"hiddenpageisnew\">" . $page->isnew . "</span><div class=\"page-content\"><div class=\"content\">";
 	// page title
-	$r .= "<div class=\"module page-title\" contenteditable=\"true\">" . $page->title . "</div>";
+	$html .= "<div class=\"module page-title\"";
+	if ($edit) {
+		$html .= " contenteditable=\"true\"";
+	}
+	$html .= ">" . $page->title . "</div>";
+
 	// modules (paragraphs, inline images, data tables, etc.)
 	$moduleindex = 0;
 	foreach ($content["modules"] as $module) {
-		$r .= "<div class=\"module module-" . $moduleindex . " ";
+		$html .= "<div class=\"module module-" . $moduleindex . " ";
 		// content of module div
 		if ($module["type"] == "paragraph-container") {
-			$r .= "paragraph-container\">";
+			$html .= "paragraph-container\">";
 			foreach ($module["value"] as $submodule) {
-				$r .= "<div ";
+				$html .= "<div ";
 				if ($edit) {
-					$r .= "contenteditable=\"true\" ";
+					$html .= "contenteditable=\"true\" ";
 				}
-				$r .= "class=\"sub-module ";
+				$html .= "class=\"sub-module ";
 				// content of sub-module div
 				if ($submodule["type"] == "paragraph") {
-					$r .= "paragraph\">";
+					$html .= "paragraph\">";
 					foreach ($submodule["value"] as $pmodule) {
 						if ($pmodule["type"] == "text") {
-							$r .= $pmodule["value"];
+							$html .= $pmodule["value"];
 						} else {
-							$r .= "Unknown type!";
+							$html .= "Unknown type!";
 						}
 					}
 				} else {
-					$r .= "\">Unknown type!";
+					$html .= "\">Unknown type!";
 				}
 				// end sub-module div
-				$r .= "</div>";
+				$html .= "</div>";
+				// if last, then append add new paragraph button
+				if (!next($module["value"])) {
+					$html .= "<div class=\"add-new-paragraph\"><button>New Paragraph</button></div>";
+				}
 			}
 		} else if($module["type"] == "heading") {
-			$r .= "heading\"";
+			$html .= "heading\"";
 			if ($edit) {
-				$r .= " contenteditable=\"true\"";
+				$html .= " contenteditable=\"true\"";
 			}
-			$r .= ">" . $module["value"];
+			$html .= ">" . $module["value"];
 		} else {
-			$r .= "\">Unknown type!";
+			$html .= "\">Unknown type!";
 		}
 		// end module div
-		$r .= "</div>";
+		$html .= "</div>";
 		$moduleindex++;
 	}
 	// footer (hardcoded for now)
-	$r .= "<div class=\"module footer\">Copyright 2018</div>";
+	$html .= "<div class=\"module footer\">Copyright 2018</div>";
 	// end modules
-	$r .= "</div>";
+	$html .= "</div>";
 
 	// infobox
 	$infobox = $content["infobox"];
-	$r .= "<table class=\"infobox\"><tbody><tr class=\"heading\"><td colspan=\"2\"><div class=\"bold-text\">" . $infobox["heading"] . "</div></td></tr><tr class=\"main-image\"><td colspan=\"2\"><span class=\"flex-centered\"><table><tbody><tr><td><img src=\"" . $infobox["image"]["file"] . "\"></td></tr><tr><td class=\"small-text\" id=\"caption\">" . $infobox["image"]["caption"] . "</td></tr></tbody></table></span></td></tr>";
+	$html .= "<table class=\"infobox\"><tbody><tr class=\"heading\"><td colspan=\"2\"><div class=\"bold-text\">" . $infobox["heading"] . "</div></td></tr><tr class=\"main-image\"><td colspan=\"2\"><span class=\"flex-centered\"><table><tbody><tr><td><img src=\"" . $infobox["image"]["file"] . "\"></td></tr><tr><td class=\"small-text\" id=\"caption\">" . $infobox["image"]["caption"] . "</td></tr></tbody></table></span></td></tr>";
 	// properties
 	foreach ($infobox["items"] as $item) {
-		$r .= "<tr class=\"";
+		$html .= "<tr class=\"";
 		if ($item["type"] == "property") {
-			$r .= "property\"><th>" . $item["label"] . "</th><td id=\"value\">" . $item["value"] . "</td>";
+			$html .= "property\"><th>" . $item["label"] . "</th><td id=\"value\">" . $item["value"] . "</td>";
 		} else if ($item["type"] == "sub-heading") {
-			$r .= "sub-heading\"><td colspan=\"2\"><div class=\"bold-text\">" . $item["value"] . "</div></td>";
+			$html .= "sub-heading\"><td colspan=\"2\"><div class=\"bold-text\">" . $item["value"] . "</div></td>";
 		} else {
-			$r .= "\"><td>Unknown type!</td>";
+			$html .= "\"><td>Unknown type!</td>";
 		}
-		$r .= "</tr>";
+		$html .= "</tr>";
 	}
 
-	return $r . "</tbody></table></div>";
+	return $html . "</tbody></table></div>";
 } 
 
 function get_page_content_html($page, $edit, $temp) {
