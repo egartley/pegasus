@@ -32,32 +32,45 @@ jQuery.fn.caret = function() {
     return;
 }
 
-var inFocusParagraph;
+var strings = [
+    "<div class=\"sub-module paragraph\" contenteditable=\"true\"></div>",
+    "<div class=\"module heading\" contenteditable=\"true\">New Section</div>",
+    "<div class=\"module paragraph-container\">",
+    "<div class=\"add-content-container\"><button class=\"add-paragraph\">Add Paragraph</button><br><button class=\"new-section\">New Section</button></div>"
+];
 
 function registerEvents() {
-    $('div.module.paragraph-container div.paragraph').focusin(function() {
-        inFocusParagraph = $(this)
-    });
+    $('div.paragraph').off('keyup');
     $('div.paragraph').keyup(function(e) {
         if ($(this).html().length == 0 || $(this).html().indexOf('<br') == 0) {
             $(this).remove()
         }
     });
+    $('button.add-paragraph').off('click');
+    $('button.add-paragraph').click(function(e) {
+        addNewParagraph($(e.target))
+    });
+    $('button.new-section').off('click');
+    $('button.new-section').click(function(e) {
+        newSection($(e.target))
+    });
 }
 
-function addNewParagraph() {
-    inFocusParagraph.parent().insertAt(inFocusParagraph.parent().children().length, "<div contenteditable=\"true\" class=\"sub-module paragraph\"></div>");
-    inFocusParagraph.parent().children().eq(inFocusParagraph.parent().children().length - 1).focus();
+function addNewParagraph(invoker) {
+    var container = invoker.parent().parent();
+    container.insertAt(container.children().length - 1, strings[0]);
+    container.children().eq(container.children().length - 1).focus();
     // added new paragraph, need to register events for it
     registerEvents()
 }
 
-function enableButton(button) {
-    $(button).removeAttr('disabled')
-}
-
-function disableButton(button) {
-    $(button).prop("disabled", true)
+function newSection(invoker) {
+    var mod = invoker.parent().parent();
+    var modcontainer = mod.parent();
+    modcontainer.insertAt(mod.index() + 1, strings[1]);
+    modcontainer.insertAt(mod.index() + 2, strings[2] + strings[0] + strings[3] + "</div>");
+    modcontainer.children().eq(mod.index() + 1).focus();
+    registerEvents()
 }
 
 $(document).ready(function() {
@@ -120,9 +133,5 @@ $(document).ready(function() {
 
         $.post("/editor/", { contentjson: encodeURIComponent(JSON.stringify(content)), id: $('span#hiddenpageid').html(), isnew: $('span#hiddenpageisnew').html(), title: $('div.page-title').html(), action: "save" })
     });
-    $('button.new-paragraph').click(function() {
-        addNewParagraph()
-    });
-
     registerEvents()
 });

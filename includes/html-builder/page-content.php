@@ -9,7 +9,7 @@ function page_content_html($content, $page, $edit) {
 		// css file no found!
 		$html .= "div.page-content:before{content:\"Could not find \\\"/resources/page-content.css\\\"\"}";
 	}
-	$html .= "</style><script src=\"../resources/js/jquery.js\" type=\"text/javascript\"></script><script src=\"../resources/js/viewer.js\" type=\"text/javascript\"></script><button class=\"save-changes\">Save Changes</button><button class=\"new-paragraph\">New Paragraph</button><span style=\"display:none\" id=\"hiddenpageid\">" . $page->id . "</span><span style=\"display:none\" id=\"hiddenpageisnew\">" . $page->isnew . "</span><div class=\"page-content\"><div class=\"content\">";
+	$html .= "</style><script src=\"../resources/js/jquery.js\" type=\"text/javascript\"></script><script src=\"../resources/js/viewer.js\" type=\"text/javascript\"></script><button class=\"save-changes\">Save Changes</button><span style=\"display:none\" id=\"hiddenpageid\">" . $page->id . "</span><span style=\"display:none\" id=\"hiddenpageisnew\">" . $page->isnew . "</span><div class=\"page-content\"><div class=\"content\">";
 	// page title
 	$html .= "<div class=\"module page-title\"";
 	if ($edit) {
@@ -18,19 +18,18 @@ function page_content_html($content, $page, $edit) {
 	$html .= ">" . $page->title . "</div>";
 
 	// modules (paragraphs, inline images, data tables, etc.)
-	$moduleindex = 0;
 	foreach ($content["modules"] as $module) {
-		$html .= "<div tabindex=\"". $moduleindex . "\" class=\"module ";
+		$html .= "<div class=\"module ";
 		// content of module div
 		if ($module["type"] == "paragraph-container") {
 			$html .= "paragraph-container\">";
+			$submoduleindex = 0;
 			foreach ($module["value"] as $submodule) {
 				$html .= "<div ";
 				if ($edit) {
 					$html .= "contenteditable=\"true\" ";
 				}
 				$html .= "class=\"sub-module ";
-				// content of sub-module div
 				if ($submodule["type"] == "paragraph") {
 					$html .= "paragraph\">";
 					foreach ($submodule["value"] as $pmodule) {
@@ -45,6 +44,11 @@ function page_content_html($content, $page, $edit) {
 				}
 				// end sub-module div
 				$html .= "</div>";
+				if ($submoduleindex == count($module["value"]) - 1) {
+					// last module in paragraph container
+					$html .= "<div class=\"add-content-container\"><button class=\"add-paragraph\">Add Paragraph</button><br><button class=\"new-section\">New Section</button></div>";
+				}
+				$submoduleindex++;
 			}
 		} else if($module["type"] == "heading") {
 			$html .= "heading\"";
@@ -57,7 +61,6 @@ function page_content_html($content, $page, $edit) {
 		}
 		// end module div
 		$html .= "</div>";
-		$moduleindex++;
 	}
 	// footer (hardcoded for now)
 	$html .= "<div class=\"module footer\">Copyright 2018</div>";
