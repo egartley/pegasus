@@ -1,14 +1,5 @@
-body {
-	font-family: sans-serif;
-	background-color: black;
-	color: whitesmoke
-}
-
+body { font-family: sans-serif; background-color: black; color: whitesmoke }
 a,
-a:hover {
-	color: skyblue;
-	text-decoration: none
-}
-a:hover {
-	text-decoration: underline
-}
+a:hover { color: skyblue; text-decoration: none }
+a:hover { text-decoration: underline }
+.hidden { display: none }

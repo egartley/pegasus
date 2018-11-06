@@ -17,25 +17,23 @@ function get_editor_html($page, $action) {
 	}
 	$html .= "</style>";
 
-	// page meta (broken into seperate lines for better readability)
-	$html .= "<h2 style=\"display:none\">Meta</h2>";
-	$html .= "<div class=\"page-meta\" style=\"display:none\">";
-	$html .= "<p>Page ID: " . $page->id . "</p>";
-	$html .= "<p>Created: " . $page->created . "</p>";
-	$html .= "<p>Updated: " . $page->updated . "</p>";
-	$html .= "</div>";
+	// page meta
+	// $html .= "<h2 style=\"display:none\">Meta</h2>";
+	// $html .= "<div class=\"page-meta\" style=\"display:none\">";
+	// $html .= "<p>Page ID: " . $page->id . "</p>";
+	// $html .= "<p>Created: " . $page->created . "</p>";
+	// $html .= "<p>Updated: " . $page->updated . "</p>";
+	// $html .= "</div>";
 
 	// page options
-	$html .= "<div class=\"page-options\" style=\"display:none\"><p><a rel=\"noopener\" href=\"/dashboard/\">Back to Dashboard</a></p></div>";
+	// $html .= "<div class=\"page-options\" style=\"display:none\"><p><a rel=\"noopener\" href=\"/dashboard/\">Back to Dashboard</a></p></div>";
 
 	// the actual editor
-	$html .= "<div><h2>Editor</h2></div><iframe class=\"viewer\" src=\"/viewer/?id=" . $page->id;
-	if ($action == "edit") {
-		$html .= "&edit=yes";
-	} else if ($action == "new") {
-		$html .= "&edit=yes&temp=yes";
+	$html .= "<div><h2>Editor</h2></div><iframe class=\"viewer\" src=\"/viewer/?id=" . $page->id . "&edit=yes";
+	if ($action == "new") {
+		$html .= "&temp=yes";
 	}
-	$html .= "\" width=\"1250\" height=\"900\"></iframe>";
+	$html .= "\" width=\"1300\" height=\"900\"></iframe>";
 
 	return $html;
 }

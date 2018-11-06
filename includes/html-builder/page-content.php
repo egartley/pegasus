@@ -1,16 +1,41 @@
 <?php
 
+function get_style_sheet_inline($name) {
+	$r = "<style type=\"text/css\">";
+	try {
+    	$content = file_get_contents("../resources/css/" . $name . ".css");
+    	if ($content === false) {
+        	$r .= ".page-content:before{content:\"Could not find \\\"/resources/css/" . $name . ".css\\\"\"}";
+    	} else {
+    		$r .= $content;
+    	}
+    	$r .= "</style>";
+	} catch (Exception $e) {
+		// todo
+	}
+	return $r;
+}
+
 function page_content_html($content, $page, $edit) {
 	// styling
-	$html = "<style type=\"text/css\">";
-	if (file_exists("../resources/css/page-content.css")) {
-		$html .= file_get_contents("../resources/css/page-content.css");
-	} else {
-		// css file no found!
-		$html .= "div.page-content:before{content:\"Could not find \\\"/resources/page-content.css\\\"\"}";
+	$html = get_style_sheet_inline("min");
+	$html .= get_style_sheet_inline("page-content");
+
+	// script
+	$html .= "</style><script src=\"../resources/js/jquery.js\" type=\"text/javascript\"></script><script src=\"../resources/js/viewer.js\" type=\"text/javascript\"></script>";
+	
+	// meta/other
+	$html .= "<span class=\"hidden\" id=\"hiddenpageid\">" . $page->id . "</span>";
+	$html .= "<span class=\"hidden\" id=\"hiddenpageisnew\">" . $page->isnew . "</span>";
+	$html .= "<span class=\"hidden\" id=\"hiddenedit\">" . $edit . "</span>";
+
+	// if editing, add toolbar
+	if ($edit) {
+		$html .= "<div class=\"toolbar\"><div class=\"actionable action99\"><span id=\"icon\"><img src=\"../resources/png/check.png\"></span><span id=\"text\">Save</span></div><div class=\"actionable action01\"><span id=\"icon\"><img src=\"../resources/gif/plus.gif\"></span><span id=\"text\">Paragraph</span></div><div class=\"actionable action02\"><span id=\"icon\"><img src=\"../resources/gif/plus.gif\"></span><span id=\"text\">Section</span></div><div class=\"actionable action03\"><span id=\"icon\"><img src=\"../resources/png/gear.png\"></span><span id=\"text\">Options</span></div><div class=\"toolbar-status\"><span>Ready</span></div><div class=\"toolbar-spinner hidden\"></div></div>";
 	}
-	$html .= "</style><script src=\"../resources/js/jquery.js\" type=\"text/javascript\"></script><script src=\"../resources/js/viewer.js\" type=\"text/javascript\"></script><button class=\"save-changes\">Save Changes</button><span style=\"display:none\" id=\"hiddenpageid\">" . $page->id . "</span><span style=\"display:none\" id=\"hiddenpageisnew\">" . $page->isnew . "</span><div class=\"page-content\"><div class=\"content\">";
-	// page title
+
+	// start of actual content
+	$html .= "<div class=\"page-content\"><div class=\"content\">";
 	$html .= "<div class=\"module page-title\"";
 	if ($edit) {
 		$html .= " contenteditable=\"true\"";
@@ -22,8 +47,8 @@ function page_content_html($content, $page, $edit) {
 		$html .= "<div class=\"module ";
 		// content of module div
 		if ($module["type"] == "paragraph-container") {
+			// paragraph container
 			$html .= "paragraph-container\">";
-			$submoduleindex = 0;
 			foreach ($module["value"] as $submodule) {
 				$html .= "<div ";
 				if ($edit) {
@@ -42,15 +67,11 @@ function page_content_html($content, $page, $edit) {
 				} else {
 					$html .= "\">Unknown type!";
 				}
-				// end sub-module div
+				// end sub-module of paragraph container module
 				$html .= "</div>";
-				if ($submoduleindex == count($module["value"]) - 1) {
-					// last module in paragraph container
-					$html .= "<div class=\"add-content-container\"><button class=\"add-paragraph\">Add Paragraph</button><br><button class=\"new-section\">New Section</button></div>";
-				}
-				$submoduleindex++;
 			}
 		} else if($module["type"] == "heading") {
+			// section heading
 			$html .= "heading\"";
 			if ($edit) {
 				$html .= " contenteditable=\"true\"";
@@ -59,12 +80,12 @@ function page_content_html($content, $page, $edit) {
 		} else {
 			$html .= "\">Unknown type!";
 		}
-		// end module div
+		// end module
 		$html .= "</div>";
 	}
 	// footer (hardcoded for now)
 	$html .= "<div class=\"module footer\">Copyright 2018</div>";
-	// end modules
+	// end all modules
 	$html .= "</div>";
 
 	// infobox
@@ -98,7 +119,7 @@ function get_page_content_html($page, $edit, $temp) {
 		return page_content_html(json_decode($rawjsonstring, true), $page, $edit);
 	} else {
 		// could not get raw json
-		return "Could not retrieve content HTML (make sure the page exists and has content)";
+		return "Could not get content HTML (make sure the page exists and has content)";
 	}
 }
 

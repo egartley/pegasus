@@ -36,7 +36,8 @@ var strings = [
     "<div class=\"sub-module paragraph\" contenteditable=\"true\"></div>",
     "<div class=\"module heading\" contenteditable=\"true\">New Section</div>",
     "<div class=\"module paragraph-container\">",
-    "<div class=\"add-content-container\"><button class=\"add-paragraph\">Add Paragraph</button><br><button class=\"new-section\">New Section</button></div>"
+    "<div class=\"add-content-container\"><button class=\"add-paragraph\">Add Paragraph</button><br><button class=\"new-section\">New Section</button></div>",
+    "Ready"
 ];
 
 function registerEvents() {
@@ -73,9 +74,26 @@ function newSection(invoker) {
     registerEvents()
 }
 
+function setToolbarStatusText(text) {
+    $('div.toolbar div.toolbar-status span').html(text)
+}
+
+function setToolbarSpinnerVisible(visible) {
+    var spin = $('div.toolbar div.toolbar-spinner');
+    if (visible) {
+        spin.removeClass("hidden")
+    } else {
+        spin.addClass("hidden")
+    }
+}
+
 $(document).ready(function() {
-    // BUTTONS
-    $('button.save-changes').click(function() {
+    // buttons
+    $('div.toolbar div.actionable.action99').click(function() {
+        setToolbarSpinnerVisible(true);
+        setToolbarStatusText("Saving...");
+
+        // save
         var content = {
             modules: [],
             infobox: {
@@ -131,7 +149,13 @@ $(document).ready(function() {
             }
         });
 
-        $.post("/editor/", { contentjson: encodeURIComponent(JSON.stringify(content)), id: $('span#hiddenpageid').html(), isnew: $('span#hiddenpageisnew').html(), title: $('div.page-title').html(), action: "save" })
+        $.post("/editor/", { contentjson: encodeURIComponent(JSON.stringify(content)), id: $('span#hiddenpageid').html(), isnew: $('span#hiddenpageisnew').html(), title: $('div.page-title').html(), action: "save" }).done(function(){
+            setTimeout(function(){
+                // timeout to make it look better (too fast!)
+                setToolbarSpinnerVisible(false);
+                setToolbarStatusText(strings[4])
+            }, 2000)
+        })
     });
     registerEvents()
 });
