@@ -35,7 +35,7 @@ function valid_id($checkid) {
 function editor() {
 	$action = get_action();
 	if ($action == "edit") {
-		// ex. "/editor/?action=edit&id=0"
+		// ex. "/viewer/?action=edit&id=0"
 		if (!valid_id($_GET["id"])) {
 			echo "<p>" . $invalidreason . "</p>";
 			return;
@@ -44,20 +44,20 @@ function editor() {
 		$workingpage = get_page($_GET["id"]);
 		if ($workingpage == null) {
 			// there is not a page by that id
-			echo "<p>ERROR: No page with ID of " . $_GET["id"] . " (make a <a rel=\"noopener\" href=\"/editor/?action=new\">new page</a>)</p>";
+			echo "<p>ERROR: No page with ID of " . $_GET["id"] . " (make a <a rel=\"noopener\" href=\"/viewer/?action=new\">new page</a>)</p>";
 			return;
 		}
 	} else if ($action == "new") {
-		// ex. "/editor/?action=new"	
+		// ex. "/viewer/?action=new"	
 		$workingpage = new Page(-1);
 	} else if ($action == "save") {
-		// ex. "/editor/?action=save&id=2&isnew=no&contentjson=blahblah&title=My%20Page" (POST method)
+		// ex. "/viewer/?action=save&id=2&isnew=no&contentjson=blahblah&title=My%20Page" (POST method)
 		if (!valid_id($_POST["id"])) {
 			echo "<p>" . $invalidreason . "</p>";
 			return;
 		}
 		if (Page::action_save($_POST)) {
-			header("Location: /editor/?action=edit&id=" . $_POST["id"]);
+			header("Location: /viewer/?action=edit&id=" . $_POST["id"]);
 		} else {
 			// the typical Microsoft "something went wrong"
 			echo "<p>Something went wrong while trying to save the page</p>";

@@ -3,7 +3,7 @@
 require_once '../includes/core/page-storage.php';
 
 function get_page_list_item_html($page) {
-	return "<div class=\"listing\"><span><a rel=\"noopener\" href=\"/editor/?action=edit&id=" . $page->id . "\">" . $page->title . "</a></span></div>";
+	return "<div class=\"listing\"><span><a rel=\"noopener\" href=\"/viewer/?action=edit&id=" . $page->id . "\">" . $page->title . "</a></span></div>";
 }
 
 function get_all_pages_list_html() {

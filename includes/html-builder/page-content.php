@@ -31,7 +31,7 @@ function page_content_html($content, $page, $edit) {
 
 	// if editing, add toolbar
 	if ($edit) {
-		$html .= "<div class=\"toolbar\"><div class=\"actionable action99\"><span id=\"icon\"><img src=\"../resources/png/check.png\"></span><span id=\"text\">Save</span></div><div class=\"actionable action01\"><span id=\"icon\"><img src=\"../resources/gif/plus.gif\"></span><span id=\"text\">Paragraph</span></div><div class=\"actionable action02\"><span id=\"icon\"><img src=\"../resources/gif/plus.gif\"></span><span id=\"text\">Section</span></div><div class=\"actionable action03\"><span id=\"icon\"><img src=\"../resources/png/gear.png\"></span><span id=\"text\">Options</span></div><div class=\"toolbar-status\"><span>Ready</span></div><div class=\"toolbar-spinner hidden\"></div></div>";
+		$html .= "<div class=\"toolbar\"><div class=\"actionable action98\"><span id=\"icon\"><img src=\"../resources/png/back.png\"></span><span id=\"text\">Dashboard</span></div><div class=\"delimiter\"></div><div class=\"actionable action99\"><span id=\"icon\"><img src=\"../resources/png/check.png\"></span><span id=\"text\">Save</span></div><div class=\"actionable action01\"><span id=\"icon\"><img src=\"../resources/gif/plus.gif\"></span><span id=\"text\">Paragraph</span></div><div class=\"actionable action02\"><span id=\"icon\"><img src=\"../resources/gif/plus.gif\"></span><span id=\"text\">Section</span></div><div class=\"actionable action03\"><span id=\"icon\"><img src=\"../resources/png/gear.png\"></span><span id=\"text\">Options</span></div><div class=\"toolbar-status\"><span>Ready</span></div><div class=\"toolbar-spinner hidden\"></div></div>";
 	}
 
 	// start of actual content

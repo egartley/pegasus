@@ -22,7 +22,6 @@ class Page {
 		if ($this->id == -1) {
 			// make new page
 			$this->isnew = "yes";
-
 			// get next available id
 			for ($i = 0; $i < Page::$maxNumberOfPages - 1; $i++) {
 				if (file_exists(Page::$storageFilePath . "/" . $i)) {
@@ -31,7 +30,6 @@ class Page {
 				$this->id = $i;
 				break;
 			}
-
 			// update paths and meta
 			$this->update_paths();
 			$this->set_meta();
@@ -61,7 +59,6 @@ class Page {
 			// not found or has wrong permissions
 			return false;
 		}
-
 		fwrite($metafile, json_encode(array(
 			"title" => $post["title"], // title from url
 			"id" => $post["id"], // id from url
@@ -69,7 +66,6 @@ class Page {
 			"updated" => strtotime("now") // updated just now
 		)));
 		fclose($metafile);
-
 		return true;
 	}
 
@@ -79,10 +75,8 @@ class Page {
 			// not found or has wrong permissions
 			return false;
 		}
-
 		fwrite($contentfile, urldecode($post["contentjson"]));
 		fclose($contentfile);
-
 		return true;
 	}
 
@@ -103,10 +97,8 @@ class Page {
 			// not found or has wrong permissions
 			return false;
 		}
-
 		fwrite($contentfile, urldecode($post["contentjson"]));
 		fclose($contentfile);
-
 		return true;
 	}
 
@@ -115,10 +107,8 @@ class Page {
 	public static function action_save($post) {
 		if (isset($post["isnew"]) && $post["isnew"] == "yes") {
 			// we're saving a new page
-
 			// make sure temp directory exists
 			Page::check_temporary_page_directory();
-			
 			// save files to temp
 			if (Page::save_meta_to_temp($post) && Page::save_content_to_temp($post)) {
 				// create its "normal" storage directory
@@ -139,7 +129,6 @@ class Page {
 		} else {
 			// not new, has been previously saved, get that meta
 			$oldmeta = Page::get_meta_by_id($post["id"]);
-
 			return Page::save_meta_normal(array(
 				"title" => $post["title"], // updated title
 				"id" => $oldmeta["id"], // id doesn't change
