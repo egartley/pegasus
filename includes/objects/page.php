@@ -1,16 +1,19 @@
 <?php
 
+// this entire thing is a complete shitshow, but at least it works...
+
 class Page {
 	public static $storageFilePath = "../data-storage/pages";
 	public static $tempStorageFilePath = "../data-storage/temporary-page";
 	public static $maxNumberOfPages = 5000;
-	public static $emptyContentRawJSON = "{\"modules\":[{\"type\":\"paragraph-container\",\"value\":[{\"type\":\"paragraph\",\"value\":[{\"type\":\"text\",\"value\":\"This is a paragraph. Click or tap to change its text.\"}]}]},{\"type\":\"heading\",\"value\":\"Example Heading\"}],\"infobox\":{\"heading\":\"\",\"image\":{\"file\":\"\",\"caption\":\"\"},\"items\":[]}}";
+	public static $emptyContentRawJSON = "{\"modules\": [{\"type\": \"section-content\", \"value\": [{\"type\": \"paragraph\", \"value\": [{\"type\": \"text\", \"value\": \"This is a paragraph. Click or tap to change its text.\"}] }] }, {\"type\": \"heading\", \"value\": \"New Section\"}, {\"type\": \"section-content\", \"value\": [{\"type\": \"paragraph\", \"value\": [{\"type\": \"text\", \"value\": \"This is another paragraph. Additional, more detailed content can go here.\"}] }] }], \"infobox\": {\"heading\": \"Infobox\", \"image\": {\"file\": \"/resources/png/infobox-default.png\", \"caption\": \"Add your own picture\"}, \"items\": [{\"type\": \"property\", \"label\": \"Property\", \"value\": \"value\"}] } }";
+	public static $defaultTitle = "Untitled Page";
 
 	public $filePath = "";
 	public $metaFilePath = "";
 	public $contentFilePath = "";
 
-	public $title = "Untitled";
+	public $title = "Untitled Page";
 	public $id = 0;
 	public $isnew = "no";
 
@@ -102,7 +105,28 @@ class Page {
 		return true;
 	}
 
-	// called from /core/editor.php when action is "save"
+	// http://php.net/manual/en/function.rmdir.php#117354
+	private static function delete_page_directory($src) {
+		$dir = opendir($src);
+    	while(false !== ($file = readdir($dir))) {
+        	if ($file != '.' && $file != '..') {
+            	$full = $src . '/' . $file;
+            	if (is_dir($full)) {
+                	Page::delete_page_directory($full);
+            	} else {
+                	unlink($full);
+            	}
+        	}
+    	}
+    	closedir($dir);
+    	rmdir($src);
+	}
+
+	public static function action_delete($deleteID) {
+		Page::delete_page_directory(Page::$storageFilePath . "/" . $deleteID);
+		return true;
+	}
+
 	// ex. "/editor/?action=save&id=2&isnew=no"
 	public static function action_save($post) {
 		if (isset($post["isnew"]) && $post["isnew"] == "yes") {

@@ -3,7 +3,7 @@
 require_once '../includes/core/page-storage.php';
 
 function get_page_list_item_html($page) {
-	return "<div class=\"listing\"><span><a rel=\"noopener\" href=\"/viewer/?action=edit&id=" . $page->id . "\">" . $page->title . "</a></span></div>";
+	return "<div class=\"listing\"><span><a rel=\"noopener\" href=\"/editor/?action=edit&id=" . $page->id . "\">" . $page->title . "</a></span></div>";
 }
 
 function get_all_pages_list_html() {
@@ -12,8 +12,11 @@ function get_all_pages_list_html() {
 	if (count($pagedirs) == 0) {
 		$r .= "<div class=\"listing\"><span>No pages found</span></div>";;
 	} else {
-		for ($i = 0; $i < count($pagedirs); $i++) {
-			$r .= get_page_list_item_html(get_page($i));
+		foreach ($pagedirs as $currentpageid) {
+			$currentpage = get_page($currentpageid);
+			if ($currentpage != null) {
+				$r .= get_page_list_item_html($currentpage);
+			}
 		}
 	}
 	return $r . "</div></div>";

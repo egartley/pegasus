@@ -28,13 +28,16 @@ $(document).ready(function() {
     $('div.toolbar div.actionable.action-newlist').click(function() {
         action_newlist()
     });
+    $('div.toolbar div.actionable.action-options').click(function() {
+        window.location = "/editor/?action=delete&id=" + $('span#hiddenpageid').html()
+    });
     registerEventHandlers()
 });
 
 var strings = [
-    "<div class=\"sub-module paragraph\" contenteditable=\"true\"></div>",
-    "<div class=\"module heading\"><span contenteditable=\"true\">New Section</span><span id=\"removesection\"><img src=\"../resources/png/trash.png\" alt=\"[X]\" title=\"Remove this section\"></span></div>",
-    "<div class=\"module paragraph-container\">",
+    "<div class=\"sub-module paragraph\" contenteditable=\"true\">This is a paragraph. Click or tap to change its text.</div>",
+    "<div class=\"module heading\"><span contenteditable=\"true\">New Section</span><span id=\"removesection\"><img src=\"/resources/png/trash.png\" alt=\"[X]\" title=\"Remove this section\"></span></div>",
+    "<div class=\"module section-content\">",
     "Ready",
     "<div class=\"sub-module list\">",
     "<span id=\"list-item\" contenteditable=\"true\">List item</span>"
@@ -59,11 +62,12 @@ function registerEventHandlers() {
                 }
             })
         }
-        // click
+        // focus
         $(this).focus(function(e) {
             currentModule = $(this).parent();
             currentModuleIndex = currentModule.index();
             currentParagraph = $(this);
+            // currentParagraph.addClass("editing-infocus");
             currentParagraphIndex = $(this).index()
         })
     });
@@ -72,9 +76,11 @@ function registerEventHandlers() {
     $('div.module.heading span#removesection').click(function(e) {
         var headingModule = $(this).parent();
         // first remove the paragraph container
-        headingModule.parent().children().eq(headingModule.index() + 1).remove();
+        headingModule.parent().children().eq(headingModule.index() + 1).slideUp();
+        alert("make actually remove")
+        // headingModule.parent().children().eq(headingModule.index() + 1).remove();
         // then remove the actual heading module
-        headingModule.remove()
+        headingModule.slideUp()
     });
 
     $('div.sub-module.list span#list-item').off('focus');
@@ -195,8 +201,8 @@ function action_save() {
             type: "",
             value: []
         };
-        if (classlist.contains("paragraph-container")) {
-            mod.type = "paragraph-container";
+        if (classlist.contains("section-content")) {
+            mod.type = "section-content";
             $(this).children(".sub-module").each(function(ii) {
                 if (this.classList.contains("paragraph")) {
                     mod.value.push({
@@ -247,7 +253,7 @@ function action_save() {
         }
     });
 
-    $.post("/viewer/", {
+    $.post("/editor/", {
         contentjson: encodeURIComponent(JSON.stringify(content)),
         id: $('span#hiddenpageid').html(),
         isnew: $('span#hiddenpageisnew').html(),

@@ -2,7 +2,7 @@
 
 function page_content_html($content, $page, $edit) {
 	// script
-	$html = "<script src=\"../resources/js/jquery.js\" type=\"text/javascript\"></script><script src=\"../resources/js/viewer.js\" type=\"text/javascript\"></script>";
+	$html = "<script src=\"/resources/js/jquery.js\" type=\"text/javascript\"></script><script src=\"/resources/js/editor.js\" type=\"text/javascript\"></script>";
 	
 	// meta/other
 	$html .= "<span class=\"hidden\" id=\"hiddenpageid\">" . $page->id . "</span>";
@@ -11,7 +11,7 @@ function page_content_html($content, $page, $edit) {
 
 	// if editing, add toolbar
 	if ($edit) {
-		$html .= "<div class=\"toolbar\"><div class=\"actionable action-back\"><span id=\"icon\"><img src=\"../resources/png/back.png\"></span><span id=\"text\">Dashboard</span></div><div class=\"delimiter\"></div><div class=\"actionable action-save\"><span id=\"icon\"><img src=\"../resources/png/check.png\"></span><span id=\"text\">Save</span></div><div class=\"actionable action-options\"><span id=\"icon\"><img src=\"../resources/png/gear.png\"></span><span id=\"text\">Options</span></div><div class=\"delimiter\"></div><div class=\"actionable action-newsection\"><span id=\"icon\"><img src=\"../resources/gif/plus.gif\"></span><span id=\"text\">Section</span></div><div class=\"actionable action-newparagraph\"><span id=\"icon\"><img src=\"../resources/png/paragraph.png\"></span><span id=\"text\">Paragraph</span></div><div class=\"actionable action-newlist\"><span id=\"icon\"><img src=\"../resources/png/list.png\"></span><span id=\"text\">List</span></div><div class=\"toolbar-status\"><span>Ready</span></div><div class=\"toolbar-spinner hidden\"></div></div>";
+		$html .= get_editing_toolbar_html();
 	}
 
 	// start of actual content
@@ -26,9 +26,9 @@ function page_content_html($content, $page, $edit) {
 	foreach ($content["modules"] as $module) {
 		$html .= "<div class=\"module ";
 		// content of module div
-		if ($module["type"] == "paragraph-container") {
+		if ($module["type"] == "section-content") {
 			// paragraph container
-			$html .= "paragraph-container\">";
+			$html .= "section-content\">";
 			foreach ($module["value"] as $submodule) {
 				$html .= "<div class=\"sub-module ";
 				if ($submodule["type"] == "paragraph") {
@@ -90,13 +90,8 @@ function page_content_html($content, $page, $edit) {
 	return $html . "</tbody></table></div>";
 } 
 
-function get_page_content_html($page, $edit, $temp) {
-	$rawjsonstring = null;
-	if (isset($temp) && $temp == "yes") {
-		$rawjsonstring = Page::$emptyContentRawJSON;
-	} else {
-		$rawjsonstring = $page->get_content_rawjson();
-	}
+function get_page_content_html($page, $edit) {
+	$rawjsonstring = $page->get_content_rawjson();
 	if ($rawjsonstring != null) {
 		// O.K. in getting raw json from content.json
 		return page_content_html(json_decode($rawjsonstring, true), $page, $edit);
