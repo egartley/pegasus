@@ -11,7 +11,7 @@ function page_content_html($content, $page, $edit) {
 
 	// if editing, add toolbar
 	if ($edit) {
-		$html .= "<div class=\"toolbar\"><div class=\"actionable action-back\"><span id=\"icon\"><img src=\"../resources/png/back.png\"></span><span id=\"text\">Dashboard</span></div><div class=\"delimiter\"></div><div class=\"actionable action-save\"><span id=\"icon\"><img src=\"../resources/png/check.png\"></span><span id=\"text\">Save</span></div><div class=\"actionable action-options\"><span id=\"icon\"><img src=\"../resources/png/gear.png\"></span><span id=\"text\">Options</span></div><div class=\"delimiter\"></div><div class=\"actionable action-newparagraph\"><span id=\"icon\"><img src=\"../resources/png/paragraph.png\"></span><span id=\"text\">Paragraph</span></div><div class=\"actionable action-newsection\"><span id=\"icon\"><img src=\"../resources/gif/plus.gif\"></span><span id=\"text\">Section</span></div><div class=\"actionable action-newlist\"><span id=\"icon\"><img src=\"../resources/gif/plus.gif\"></span><span id=\"text\">List</span></div><div class=\"toolbar-status\"><span>Ready</span></div><div class=\"toolbar-spinner hidden\"></div></div>";
+		$html .= "<div class=\"toolbar\"><div class=\"actionable action-back\"><span id=\"icon\"><img src=\"../resources/png/back.png\"></span><span id=\"text\">Dashboard</span></div><div class=\"delimiter\"></div><div class=\"actionable action-save\"><span id=\"icon\"><img src=\"../resources/png/check.png\"></span><span id=\"text\">Save</span></div><div class=\"actionable action-options\"><span id=\"icon\"><img src=\"../resources/png/gear.png\"></span><span id=\"text\">Options</span></div><div class=\"delimiter\"></div><div class=\"actionable action-newsection\"><span id=\"icon\"><img src=\"../resources/gif/plus.gif\"></span><span id=\"text\">Section</span></div><div class=\"actionable action-newparagraph\"><span id=\"icon\"><img src=\"../resources/png/paragraph.png\"></span><span id=\"text\">Paragraph</span></div><div class=\"actionable action-newlist\"><span id=\"icon\"><img src=\"../resources/png/list.png\"></span><span id=\"text\">List</span></div><div class=\"toolbar-status\"><span>Ready</span></div><div class=\"toolbar-spinner hidden\"></div></div>";
 	}
 
 	// start of actual content
@@ -30,19 +30,22 @@ function page_content_html($content, $page, $edit) {
 			// paragraph container
 			$html .= "paragraph-container\">";
 			foreach ($module["value"] as $submodule) {
-				$html .= "<div ";
-				if ($edit) {
-					$html .= "contenteditable=\"true\" ";
-				}
-				$html .= "class=\"sub-module ";
+				$html .= "<div class=\"sub-module ";
 				if ($submodule["type"] == "paragraph") {
-					$html .= "paragraph\">";
+					// paragraph
+					$html .= "paragraph\" contenteditable=\"true\">";
 					foreach ($submodule["value"] as $pmodule) {
 						if ($pmodule["type"] == "text") {
 							$html .= $pmodule["value"];
 						} else {
 							$html .= "Unknown type!";
 						}
+					}
+				} else if ($submodule["type"] == "list") {
+					// list
+					$html .= "list\">";
+					foreach ($submodule["value"] as $listitem) {
+						$html .= "<span id=\"list-item\" contenteditable=\"true\">" . $listitem . "</span>";
 					}
 				} else {
 					$html .= "\">Unknown type!";

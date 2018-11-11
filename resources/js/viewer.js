@@ -25,22 +25,30 @@ $(document).ready(function() {
     $('div.toolbar div.actionable.action-newsection').click(function() {
         action_newsection()
     });
-    registerEvents()
+    $('div.toolbar div.actionable.action-newlist').click(function() {
+        action_newlist()
+    });
+    registerEventHandlers()
 });
 
 var strings = [
-    "<div contenteditable=\"true\" class=\"sub-module paragraph\"></div>",
+    "<div class=\"sub-module paragraph\" contenteditable=\"true\"></div>",
     "<div class=\"module heading\"><span contenteditable=\"true\">New Section</span><span id=\"removesection\"><img src=\"../resources/png/trash.png\" alt=\"[X]\" title=\"Remove this section\"></span></div>",
     "<div class=\"module paragraph-container\">",
     "Ready",
-    "<div class=\"sub-module list\"></div>"
+    "<div class=\"sub-module list\">",
+    "<span id=\"list-item\" contenteditable=\"true\">List item</span>"
 ];
-var currentParagraphContainer = null;
+var currentModule = null;
+var currentModuleIndex = -1;
+var currentParagraph = null;
 var currentParagraphIndex = -1;
+var currentList = null;
+var currentListIndex = -1;
 
-function registerEvents() {
+function registerEventHandlers() {
     $('div.paragraph').off('keyup');
-    $('div.paragraph').off('click');
+    $('div.paragraph').off('focus');
     $('div.paragraph').each(function(i) {
         // keyup
         if ($(this).html() != $(this).parent().parent().children().eq(1).children().eq(0).html()) {
@@ -52,8 +60,10 @@ function registerEvents() {
             })
         }
         // click
-        $(this).click(function(e) {
-            currentParagraphContainer = $(this);
+        $(this).focus(function(e) {
+            currentModule = $(this).parent();
+            currentModuleIndex = currentModule.index();
+            currentParagraph = $(this);
             currentParagraphIndex = $(this).index()
         })
     });
@@ -66,6 +76,35 @@ function registerEvents() {
         // then remove the actual heading module
         headingModule.remove()
     });
+
+    $('div.sub-module.list span#list-item').off('focus');
+    $('div.sub-module.list span#list-item').off('keydown');
+    $('div.sub-module.list span#list-item').off('keyup');
+    $('div.sub-module.list span#list-item').focus(function(e) {
+        currentList = $(this).parent();
+        currentListIndex = $(this).index();
+        currentModule = currentList.parent();
+        currentModuleIndex = currentModule.index()
+    });
+    $('div.sub-module.list span#list-item').keydown(function(e) {
+        if (event.which == 13 && currentList != null && currentListIndex != -1) {
+            // enter or return
+            event.preventDefault();
+            insertNewListItem()
+        }
+    });
+    $('div.sub-module.list span#list-item').keyup(function(e) {
+        if ($(this).html().length == 0 || $(this).html().indexOf('<br') == 0) {
+            var parent = $(this).parent();
+            var amount = parent.children().length;
+            // remove list item
+            $(this).remove();
+            if (amount == 1) {
+                // remove list if empty
+                parent.remove()
+            }
+        }
+    })
 }
 
 function addNewParagraph(invoker) {
@@ -76,19 +115,36 @@ function addNewParagraph(invoker) {
     container.insertAt(currentParagraphIndex + 1, strings[0]);
     container.children().eq(currentParagraphIndex + 1).focus();
     // added new paragraph, need to register events for it
-    registerEvents()
+    registerEventHandlers()
 }
 
 function addNewSection(invoker) {
     if (invoker == null) {
         return;
     }
-    var mod = invoker.parent();
-    var modcontainer = mod.parent();
-    modcontainer.insertAt(mod.index() + 1, strings[1]);
-    modcontainer.insertAt(mod.index() + 2, strings[2] + strings[0] + "</div>");
-    modcontainer.children().eq(mod.index() + 1).focus();
-    registerEvents()
+    var allModules = invoker.parent();
+    allModules.insertAt(currentModuleIndex + 1, strings[1]);
+    allModules.insertAt(currentModuleIndex + 2, strings[2] + strings[0] + "</div>");
+    allModules.children().eq(currentModuleIndex + 1).focus();
+    registerEventHandlers()
+}
+
+function addNewList(invoker) {
+    if (invoker == null) {
+        return;
+    }
+    var paragraphContainer = invoker.parent();
+    var insertIndex = invoker.index() + 1;
+    paragraphContainer.insertAt(insertIndex, strings[4] + strings[5] + "</div>");
+    paragraphContainer.children().eq(insertIndex).children().eq(0).focus();
+    registerEventHandlers()
+}
+
+function insertNewListItem() {
+    currentList.insertAt(currentListIndex + 1, strings[5]);
+    currentListIndex++;
+    currentList.children().eq(currentListIndex).focus();
+    registerEventHandlers()
 }
 
 function setToolbarStatusText(text) {
@@ -105,11 +161,15 @@ function setToolbarSpinnerVisible(visible) {
 }
 
 function action_newparagraph() {
-    addNewParagraph(currentParagraphContainer)
+    addNewParagraph(currentParagraph)
 }
 
 function action_newsection() {
-    addNewSection(currentParagraphContainer)
+    addNewSection(currentModule)
+}
+
+function action_newlist() {
+    addNewList(currentParagraph)
 }
 
 function action_save() {
@@ -145,7 +205,16 @@ function action_save() {
                             type: "text",
                             value: $(this).html()
                         }]
+                    })
+                } else if (this.classList.contains("list")) {
+                    var listitems = [];
+                    $(this).children().each(function(iii){
+                        listitems.push($(this).html())
                     });
+                    mod.value.push({
+                        type: "list",
+                        value: listitems
+                    })
                 }
             });
         } else if (classlist.contains("heading")) {
@@ -169,12 +238,12 @@ function action_save() {
                 type: "property",
                 label: $(this).children("th").html(),
                 value: $(this).children("td#value").html()
-            });
+            })
         } else if (this.className == "sub-heading") {
             content.infobox.items.push({
                 type: "sub-heading",
                 value: $(this).children("td").children("div").html()
-            });
+            })
         }
     });
 
