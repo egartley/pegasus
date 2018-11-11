@@ -1,28 +1,8 @@
 <?php
 
-function get_style_sheet_inline($name) {
-	$r = "<style type=\"text/css\">";
-	try {
-    	$content = file_get_contents("../resources/css/" . $name . ".css");
-    	if ($content === false) {
-        	$r .= ".page-content:before{content:\"Could not find \\\"/resources/css/" . $name . ".css\\\"\"}";
-    	} else {
-    		$r .= $content;
-    	}
-    	$r .= "</style>";
-	} catch (Exception $e) {
-		// todo
-	}
-	return $r;
-}
-
 function page_content_html($content, $page, $edit) {
-	// styling
-	$html = get_style_sheet_inline("min");
-	$html .= get_style_sheet_inline("page-content");
-
 	// script
-	$html .= "</style><script src=\"../resources/js/jquery.js\" type=\"text/javascript\"></script><script src=\"../resources/js/viewer.js\" type=\"text/javascript\"></script>";
+	$html = "<script src=\"../resources/js/jquery.js\" type=\"text/javascript\"></script><script src=\"../resources/js/viewer.js\" type=\"text/javascript\"></script>";
 	
 	// meta/other
 	$html .= "<span class=\"hidden\" id=\"hiddenpageid\">" . $page->id . "</span>";
@@ -31,7 +11,7 @@ function page_content_html($content, $page, $edit) {
 
 	// if editing, add toolbar
 	if ($edit) {
-		$html .= "<div class=\"toolbar\"><div class=\"actionable action98\"><span id=\"icon\"><img src=\"../resources/png/back.png\"></span><span id=\"text\">Dashboard</span></div><div class=\"delimiter\"></div><div class=\"actionable action99\"><span id=\"icon\"><img src=\"../resources/png/check.png\"></span><span id=\"text\">Save</span></div><div class=\"actionable action01\"><span id=\"icon\"><img src=\"../resources/gif/plus.gif\"></span><span id=\"text\">Paragraph</span></div><div class=\"actionable action02\"><span id=\"icon\"><img src=\"../resources/gif/plus.gif\"></span><span id=\"text\">Section</span></div><div class=\"actionable action03\"><span id=\"icon\"><img src=\"../resources/png/gear.png\"></span><span id=\"text\">Options</span></div><div class=\"toolbar-status\"><span>Ready</span></div><div class=\"toolbar-spinner hidden\"></div></div>";
+		$html .= "<div class=\"toolbar\"><div class=\"actionable action-back\"><span id=\"icon\"><img src=\"../resources/png/back.png\"></span><span id=\"text\">Dashboard</span></div><div class=\"delimiter\"></div><div class=\"actionable action-save\"><span id=\"icon\"><img src=\"../resources/png/check.png\"></span><span id=\"text\">Save</span></div><div class=\"actionable action-options\"><span id=\"icon\"><img src=\"../resources/png/gear.png\"></span><span id=\"text\">Options</span></div><div class=\"delimiter\"></div><div class=\"actionable action-newparagraph\"><span id=\"icon\"><img src=\"../resources/png/paragraph.png\"></span><span id=\"text\">Paragraph</span></div><div class=\"actionable action-newsection\"><span id=\"icon\"><img src=\"../resources/gif/plus.gif\"></span><span id=\"text\">Section</span></div><div class=\"actionable action-newlist\"><span id=\"icon\"><img src=\"../resources/gif/plus.gif\"></span><span id=\"text\">List</span></div><div class=\"toolbar-status\"><span>Ready</span></div><div class=\"toolbar-spinner hidden\"></div></div>";
 	}
 
 	// start of actual content
@@ -72,11 +52,11 @@ function page_content_html($content, $page, $edit) {
 			}
 		} else if($module["type"] == "heading") {
 			// section heading
-			$html .= "heading\"";
+			$html .= "heading\"><span";
 			if ($edit) {
 				$html .= " contenteditable=\"true\"";
 			}
-			$html .= ">" . $module["value"];
+			$html .= ">" . $module["value"] . "</span><span id=\"removesection\"><img src=\"../resources/png/trash.png\" alt=\"[X]\" title=\"Remove this section\"></span>";
 		} else {
 			$html .= "\">Unknown type!";
 		}

@@ -8,7 +8,7 @@ echo "
 <meta http-equiv=\"cache-control\" content=\"no-cache\">";
 
 // styling
-require '../includes/style/get.php';
-getStylesheet($STYLE_min);
+require_once '../includes/style/get.php';
+get_stylesheet_link("min.css");
 
 ?>

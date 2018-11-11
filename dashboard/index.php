@@ -2,7 +2,7 @@
 <head>
 	<?php
 		require_once '../includes/core/min-header.php';
-		getStylesheet($STYLE_all_pages_list);
+		get_stylesheet_link("all-pages-list.css");
 	?>
 	<title>Dashboard - Pegasus</title>
 </head>

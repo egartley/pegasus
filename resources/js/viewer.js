@@ -10,69 +10,83 @@ jQuery.fn.insertAt = function(index, element) {
     }
     return this;
 }
-// https://github.com/accursoft/caret
-jQuery.fn.caret = function() {
-    var target = this[0];
-    var isContentEditable = target && target.contentEditable === 'true';
-    if (target) {
-        if (window.getSelection) {
-            if (isContentEditable) {
-                target.focus();
-                var range1 = window.getSelection().getRangeAt(0),
-                    range2 = range1.cloneRange();
-                range2.selectNodeContents(target);
-                range2.setEnd(range1.endContainer, range1.endOffset);
-                return range2.toString().length;
-            }
-            return target.selectionStart;
-        }
-        if (target.selectionStart)
-            return target.selectionStart;
-    }
-    return;
-}
 
 $(document).ready(function() {
     // buttons
-    $('div.toolbar div.actionable.action99').click(function() {
+    $('div.toolbar div.actionable.action-save').click(function() {
         action_save()
     });
-    $('div.toolbar div.actionable.action98').click(function() {
+    $('div.toolbar div.actionable.action-back').click(function() {
         action_back()
+    });
+    $('div.toolbar div.actionable.action-newparagraph').click(function() {
+        action_newparagraph()
+    });
+    $('div.toolbar div.actionable.action-newsection').click(function() {
+        action_newsection()
     });
     registerEvents()
 });
 
 var strings = [
-    "<div class=\"sub-module paragraph\" contenteditable=\"true\"></div>",
-    "<div class=\"module heading\" contenteditable=\"true\">New Section</div>",
+    "<div contenteditable=\"true\" class=\"sub-module paragraph\"></div>",
+    "<div class=\"module heading\"><span contenteditable=\"true\">New Section</span><span id=\"removesection\"><img src=\"../resources/png/trash.png\" alt=\"[X]\" title=\"Remove this section\"></span></div>",
     "<div class=\"module paragraph-container\">",
-    "<div class=\"add-content-container\"><button class=\"add-paragraph\">Add Paragraph</button><br><button class=\"new-section\">New Section</button></div>",
-    "Ready"
+    "Ready",
+    "<div class=\"sub-module list\"></div>"
 ];
+var currentParagraphContainer = null;
+var currentParagraphIndex = -1;
 
 function registerEvents() {
     $('div.paragraph').off('keyup');
-    $('div.paragraph').keyup(function(e) {
-        if ($(this).html().length == 0 || $(this).html().indexOf('<br') == 0) {
-            $(this).remove()
+    $('div.paragraph').off('click');
+    $('div.paragraph').each(function(i) {
+        // keyup
+        if ($(this).html() != $(this).parent().parent().children().eq(1).children().eq(0).html()) {
+            // not the first/intro paragraph, so it can be removed
+            $(this).keyup(function(e) {
+                if ($(this).html().length == 0 || $(this).html().indexOf('<br') == 0) {
+                    $(this).remove()
+                }
+            })
         }
-    })
+        // click
+        $(this).click(function(e) {
+            currentParagraphContainer = $(this);
+            currentParagraphIndex = $(this).index()
+        })
+    });
+
+    $('div.module.heading span#removesection').off('click');
+    $('div.module.heading span#removesection').click(function(e) {
+        var headingModule = $(this).parent();
+        // first remove the paragraph container
+        headingModule.parent().children().eq(headingModule.index() + 1).remove();
+        // then remove the actual heading module
+        headingModule.remove()
+    });
 }
 
 function addNewParagraph(invoker) {
-    var container = invoker.parent().parent();
-    container.insertAt(container.children().length - 1, strings[0]);
-    container.children().eq(container.children().length - 1).focus();
+    if (invoker == null) {
+        return;
+    }
+    var container = invoker.parent();
+    container.insertAt(currentParagraphIndex + 1, strings[0]);
+    container.children().eq(currentParagraphIndex + 1).focus();
     // added new paragraph, need to register events for it
     registerEvents()
 }
 
-function newSection(invoker) {
-    var mod = invoker.parent().parent();
+function addNewSection(invoker) {
+    if (invoker == null) {
+        return;
+    }
+    var mod = invoker.parent();
     var modcontainer = mod.parent();
     modcontainer.insertAt(mod.index() + 1, strings[1]);
-    modcontainer.insertAt(mod.index() + 2, strings[2] + strings[0] + strings[3] + "</div>");
+    modcontainer.insertAt(mod.index() + 2, strings[2] + strings[0] + "</div>");
     modcontainer.children().eq(mod.index() + 1).focus();
     registerEvents()
 }
@@ -88,6 +102,14 @@ function setToolbarSpinnerVisible(visible) {
     } else {
         spin.addClass("hidden")
     }
+}
+
+function action_newparagraph() {
+    addNewParagraph(currentParagraphContainer)
+}
+
+function action_newsection() {
+    addNewSection(currentParagraphContainer)
 }
 
 function action_save() {
@@ -109,25 +131,31 @@ function action_save() {
 
     $('div.module').each(function(i) {
         var classlist = this.classList;
-        var mod = { type: "", value: [] };
-        if(classlist.contains("paragraph-container")) {
+        var mod = {
+            type: "",
+            value: []
+        };
+        if (classlist.contains("paragraph-container")) {
             mod.type = "paragraph-container";
             $(this).children(".sub-module").each(function(ii) {
-                if(this.classList.contains("paragraph")) {
+                if (this.classList.contains("paragraph")) {
                     mod.value.push({
                         type: "paragraph",
-                        value: [{ type: "text", value: $(this).html() }]
+                        value: [{
+                            type: "text",
+                            value: $(this).html()
+                        }]
                     });
                 }
             });
-        } else if(classlist.contains("heading")) {
+        } else if (classlist.contains("heading")) {
             mod.type = "heading";
-            mod.value = $(this).html();
+            mod.value = $(this).children("span").eq(0).html()
         } else {
-            mod = "";
+            mod = ""
         }
-        if(mod != "") {
-            content.modules.push(mod);
+        if (mod != "") {
+            content.modules.push(mod)
         }
     });
 
@@ -136,13 +164,13 @@ function action_save() {
     content.infobox.image.caption = $("table.infobox tr.main-image table tbody tr td#caption").html();
 
     $('table.infobox tbody').children().each(function(i) {
-        if(this.className == "property") {
+        if (this.className == "property") {
             content.infobox.items.push({
                 type: "property",
                 label: $(this).children("th").html(),
                 value: $(this).children("td#value").html()
             });
-        } else if(this.className == "sub-heading") {
+        } else if (this.className == "sub-heading") {
             content.infobox.items.push({
                 type: "sub-heading",
                 value: $(this).children("td").children("div").html()
@@ -150,12 +178,18 @@ function action_save() {
         }
     });
 
-    $.post("/viewer/", { contentjson: encodeURIComponent(JSON.stringify(content)), id: $('span#hiddenpageid').html(), isnew: $('span#hiddenpageisnew').html(), title: $('div.page-title').html(), action: "save" }).done(function() {
+    $.post("/viewer/", {
+        contentjson: encodeURIComponent(JSON.stringify(content)),
+        id: $('span#hiddenpageid').html(),
+        isnew: $('span#hiddenpageisnew').html(),
+        title: $('div.page-title').html(),
+        action: "save"
+    }).done(function() {
         setTimeout(function() {
             // timeout to make it look better (too fast!)
             setToolbarSpinnerVisible(false);
-            setToolbarStatusText(strings[4])
-        }, 2000)
+            setToolbarStatusText(strings[3])
+        }, 1000)
     })
 }
 
