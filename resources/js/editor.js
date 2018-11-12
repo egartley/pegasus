@@ -29,7 +29,7 @@ $(document).ready(function() {
         action_newlist()
     });
     $('div.toolbar div.actionable.action-options').click(function() {
-        window.location = "/editor/?action=delete&id=" + $('span#hiddenpageid').html()
+        // window.location = "/editor/?action=delete&id=" + $('span#hiddenpageid').html()
     });
     registerEventHandlers()
 });
@@ -39,8 +39,8 @@ var strings = [
     "<div class=\"module heading\"><span contenteditable=\"true\">New Section</span><span id=\"removesection\"><img src=\"/resources/png/trash.png\" alt=\"[X]\" title=\"Remove this section\"></span></div>",
     "<div class=\"module section-content\">",
     "Ready",
-    "<div class=\"sub-module list\">",
-    "<span id=\"list-item\" contenteditable=\"true\">List item</span>"
+    "<div class=\"sub-module list\"><ul>",
+    "<li contenteditable=\"true\">List item</li>"
 ];
 var currentModule = null;
 var currentModuleIndex = -1;
@@ -76,30 +76,28 @@ function registerEventHandlers() {
     $('div.module.heading span#removesection').click(function(e) {
         var headingModule = $(this).parent();
         // first remove the paragraph container
-        headingModule.parent().children().eq(headingModule.index() + 1).slideUp();
-        alert("make actually remove")
-        // headingModule.parent().children().eq(headingModule.index() + 1).remove();
+        headingModule.parent().children().eq(headingModule.index() + 1).remove();
         // then remove the actual heading module
-        headingModule.slideUp()
+        headingModule.remove()
     });
 
-    $('div.sub-module.list span#list-item').off('focus');
-    $('div.sub-module.list span#list-item').off('keydown');
-    $('div.sub-module.list span#list-item').off('keyup');
-    $('div.sub-module.list span#list-item').focus(function(e) {
+    $('div.sub-module.list li').off('focus');
+    $('div.sub-module.list li').off('keydown');
+    $('div.sub-module.list li').off('keyup');
+    $('div.sub-module.list li').focus(function(e) {
         currentList = $(this).parent();
         currentListIndex = $(this).index();
         currentModule = currentList.parent();
         currentModuleIndex = currentModule.index()
     });
-    $('div.sub-module.list span#list-item').keydown(function(e) {
+    $('div.sub-module.list li').keydown(function(e) {
         if (event.which == 13 && currentList != null && currentListIndex != -1) {
             // enter or return
             event.preventDefault();
             insertNewListItem()
         }
     });
-    $('div.sub-module.list span#list-item').keyup(function(e) {
+    $('div.sub-module.list li').keyup(function(e) {
         if ($(this).html().length == 0 || $(this).html().indexOf('<br') == 0) {
             var parent = $(this).parent();
             var amount = parent.children().length;
@@ -141,7 +139,7 @@ function addNewList(invoker) {
     }
     var paragraphContainer = invoker.parent();
     var insertIndex = invoker.index() + 1;
-    paragraphContainer.insertAt(insertIndex, strings[4] + strings[5] + "</div>");
+    paragraphContainer.insertAt(insertIndex, strings[4] + strings[5] + "</ul></div>");
     paragraphContainer.children().eq(insertIndex).children().eq(0).focus();
     registerEventHandlers()
 }
@@ -186,10 +184,10 @@ function action_save() {
     var content = {
         modules: [],
         infobox: {
-            heading: "Untitled",
+            heading: "",
             image: {
                 file: "",
-                caption: "No caption provided"
+                caption: ""
             },
             items: []
         }

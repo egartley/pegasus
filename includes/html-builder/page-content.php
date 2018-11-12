@@ -43,10 +43,11 @@ function page_content_html($content, $page, $edit) {
 					}
 				} else if ($submodule["type"] == "list") {
 					// list
-					$html .= "list\">";
+					$html .= "list\"><ul>";
 					foreach ($submodule["value"] as $listitem) {
-						$html .= "<span id=\"list-item\" contenteditable=\"true\">" . $listitem . "</span>";
+						$html .= "<li id=\"list-item\" contenteditable=\"true\">" . $listitem . "</li>";
 					}
+					$html .= "</ul>";
 				} else {
 					$html .= "\">Unknown type!";
 				}
@@ -73,7 +74,15 @@ function page_content_html($content, $page, $edit) {
 
 	// infobox
 	$infobox = $content["infobox"];
-	$html .= "<table class=\"infobox\"><tbody><tr class=\"heading\"><td colspan=\"2\"><div class=\"bold-text\">" . $infobox["heading"] . "</div></td></tr><tr class=\"main-image\"><td colspan=\"2\"><span class=\"flex-centered\"><table><tbody><tr><td><img src=\"" . $infobox["image"]["file"] . "\"></td></tr><tr><td class=\"small-text\" id=\"caption\">" . $infobox["image"]["caption"] . "</td></tr></tbody></table></span></td></tr>";
+	$html .= "<table class=\"infobox\"><tbody><tr class=\"heading\"><td colspan=\"2\"><div class=\"bold-text\"";
+	if ($edit) {
+		$html .= "contenteditable=\"true\"";
+	}
+	$html .= ">" . $infobox["heading"] . "</div></td></tr><tr class=\"main-image\"><td colspan=\"2\"><span class=\"flex-centered\"><table><tbody><tr><td><img src=\"" . $infobox["image"]["file"] . "\"></td></tr><tr><td class=\"small-text\" id=\"caption\"";
+	if ($edit) {
+		$html .= "contenteditable=\"true\"";
+	}
+	$html .= ">" . $infobox["image"]["caption"] . "</td></tr></tbody></table></span></td></tr>";
 	// properties
 	foreach ($infobox["items"] as $item) {
 		$html .= "<tr class=\"";

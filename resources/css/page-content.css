@@ -14,8 +14,7 @@
 .module.footer { padding-top: 28px; border: 2px solid transparent; border-width: 2px 0 0 0; border-top-color: #444 }
 
 .sub-module { margin-bottom: 18px }
-.sub-module.list span#list-item { display: table }
-.sub-module.list span#list-item:before { content: '\2022'; margin-right: 6px }
+.sub-module.list ul { padding-left: 26px }
 
 .infobox { max-width: 400px; min-width: 300px; border: 1px solid grey; border-radius: 1px; text-align: center; margin-left: 16px; background-color: #111; padding: 0.2em; position: sticky; top: 56px }
 .infobox tbody tr:first-child > td > * { margin-top: 4px }
