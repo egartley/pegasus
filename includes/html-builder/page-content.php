@@ -2,14 +2,18 @@
 
 function page_content_html($content, $page, $edit) {
 	// script
-	$html = "<script src=\"/resources/js/jquery.js\" type=\"text/javascript\"></script><script src=\"/resources/js/editor.js\" type=\"text/javascript\"></script>";
+	$html = "<script src=\"/resources/js/jquery.js\" type=\"text/javascript\"></script>";
+	if ($edit) {
+		$html .= "<script src=\"/resources/js/editor.js\" type=\"text/javascript\"></script>";
+	}
+	$html .= "<script src=\"/resources/js/page.js\" type=\"text/javascript\"></script>";
 	
 	// meta/other
 	$html .= "<span class=\"hidden\" id=\"hiddenpageid\">" . $page->id . "</span>";
 	$html .= "<span class=\"hidden\" id=\"hiddenpageisnew\">" . $page->isnew . "</span>";
 	$html .= "<span class=\"hidden\" id=\"hiddenedit\">" . $edit . "</span>";
 
-	// if editing, add toolbar
+	// toolbar when editing
 	if ($edit) {
 		$html .= get_editing_toolbar_html();
 	}
@@ -109,9 +113,6 @@ function page_content_html($content, $page, $edit) {
 		}
 		$html .= "</tr>";
 	}
-	if ($edit) {
-		// $html .= "<tr class=\"infobox-add\"><td><div class=\"actionable action-addinfoboxproperty\"><span id=\"icon\"><img src=\"/resources/png/plus.png\"></span><span id=\"text\">Property</span></div><div class=\"actionable action-addinfoboxheading\"><span id=\"icon\"><img src=\"/resources/png/plus.png\"></span><span id=\"text\">Heading</span></div></td></tr>";
-	}
 
 	return $html . "</tbody></table></div>";
 } 
@@ -119,7 +120,7 @@ function page_content_html($content, $page, $edit) {
 function get_page_content_html($page, $edit) {
 	$rawjsonstring = $page->get_content_rawjson();
 	if ($rawjsonstring != null) {
-		// O.K. in getting raw json from content.json
+		// was able to get raw json
 		return page_content_html(json_decode($rawjsonstring, true), $page, $edit);
 	} else {
 		// could not get raw json

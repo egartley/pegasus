@@ -11,8 +11,46 @@ jQuery.fn.insertAt = function(index, element) {
     return this;
 }
 
-$(document).ready(function() {
+var strings = [
+    /* 0 */
+    "<div class=\"sub-module paragraph\" contenteditable=\"true\">This is a paragraph. Click or tap to change its text.</div>",
+    /* 1 */
+    "<div class=\"module heading\"><span contenteditable=\"true\">New Section</span><span id=\"removesection\"><img src=\"/resources/png/trash.png\" alt=\"remove\" title=\"Remove this section\"></span></div>",
+    /* 2 */
+    "<div class=\"module section-content\">",
+    /* 3 */
+    "Ready",
+    /* 4 */
+    "<div class=\"sub-module list\"><ul>",
+    /* 5 */
+    "<li contenteditable=\"true\">List item</li>",
+    /* 6 */
+    "<tr class=\"sub-heading\"><td colspan=\"2\"><span class=\"bold-text\" contenteditable=\"true\">Sub-Heading</span></td></tr>",
+    /* 7 */
+    "<tr class=\"property\"><th contenteditable=\"true\">Name</th><td id=\"value\" contenteditable=\"true\">Value</td></tr>",
+    /* 8 */
+    "Saving..."
+];
+var currentModule = null;
+var currentModuleIndex = -1;
+
+var currentParagraph = null;
+var currentParagraphIndex = -1;
+
+var currentList = null;
+var currentListIndex = -1;
+
+var currentInfoboxIndex = -1;
+
+function editorInit() {
     // TOOLBAR BUTTONS ("actionables")
+    $('div.toolbar div.actionable').click(function() {
+        var t = $(this);
+        t.addClass("actionable-clicked");
+        setTimeout(function() {
+            t.removeClass("actionable-clicked");
+        }, 175);
+    });
     $('div.toolbar div.actionable.action-save').click(function() {
         action_save()
     });
@@ -45,38 +83,11 @@ $(document).ready(function() {
 
     // DYNAMIC EVENTS (amount/element can change)
     registerEventHandlers()
-});
+}
 
-var strings = [
-    /* 0 */
-    "<div class=\"sub-module paragraph\" contenteditable=\"true\">This is a paragraph. Click or tap to change its text.</div>",
-    /* 1 */
-    "<div class=\"module heading\"><span contenteditable=\"true\">New Section</span><span id=\"removesection\"><img src=\"/resources/png/trash.png\" alt=\"remove\" title=\"Remove this section\"></span></div>",
-    /* 2 */
-    "<div class=\"module section-content\">",
-    /* 3 */
-    "Ready",
-    /* 4 */
-    "<div class=\"sub-module list\"><ul>",
-    /* 5 */
-    "<li contenteditable=\"true\">List item</li>",
-    /* 6 */
-    "<tr class=\"sub-heading\"><td colspan=\"2\"><span class=\"bold-text\" contenteditable=\"true\">Sub-Heading</span></td></tr>",
-    /* 7 */
-    "<tr class=\"property\"><th contenteditable=\"true\">Name</th><td id=\"value\" contenteditable=\"true\">Value</td></tr>",
-    /* 8 */
-    "Saving..."
-];
-var currentModule = null;
-var currentModuleIndex = -1;
-
-var currentParagraph = null;
-var currentParagraphIndex = -1;
-
-var currentList = null;
-var currentListIndex = -1;
-
-var currentInfoboxIndex = -1;
+function isElementHTMLEmpty(jqueryElement) {
+    return jqueryElement.html().length == 0 || jqueryElement.html().indexOf('<br') == 0;
+}
 
 function registerEventHandlers() {
     $('div.paragraph').off('keyup');
@@ -86,7 +97,7 @@ function registerEventHandlers() {
         if ($(this).html() != $(this).parent().parent().children().eq(1).children().eq(0).html()) {
             // not the first/intro paragraph, so it can be removed
             $(this).keyup(function(e) {
-                if ($(this).html().length == 0 || $(this).html().indexOf('<br') == 0) {
+                if (isElementHTMLEmpty($(this))) {
                     $(this).remove()
                 }
             })
@@ -127,7 +138,7 @@ function registerEventHandlers() {
         }
     });
     $('div.sub-module.list li').keyup(function(e) {
-        if ($(this).html().length == 0 || $(this).html().indexOf('<br') == 0) {
+        if (isElementHTMLEmpty($(this))) {
             var parent = $(this).parent();
             var amount = parent.children().length;
             // remove list item
@@ -142,6 +153,9 @@ function registerEventHandlers() {
     $('table.infobox tr.property td').off('focus');
     $('table.infobox tr.property th').off('focus');
     $('table.infobox tr.sub-heading td').off('focus');
+    $('table.infobox tr.property td').off('keyup');
+    $('table.infobox tr.property th').off('keyup');
+    $('table.infobox tr.sub-heading td span').off('keyup');
     $('table.infobox tr.property td').focus(function(e) {
         currentInfoboxIndex = $(this).parent().index()
     });
@@ -150,6 +164,21 @@ function registerEventHandlers() {
     });
     $('table.infobox tr.sub-heading td').focus(function(e) {
         currentInfoboxIndex = $(this).parent().index()
+    })
+    $('table.infobox tr.property td').keyup(function(e) {
+        if (isElementHTMLEmpty($(this))) {
+           $(this).parent().remove()
+        }
+    });
+    $('table.infobox tr.property th').keyup(function(e) {
+        if (isElementHTMLEmpty($(this))) {
+           $(this).parent().remove()
+        }
+    });
+    $('table.infobox tr.sub-heading td span').keyup(function(e) {
+        if (isElementHTMLEmpty($(this))) {
+           $(this).parent().parent().remove()
+        }
     })
 }
 

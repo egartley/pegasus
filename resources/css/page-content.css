@@ -3,11 +3,11 @@
 .small-text { font-size: 12px }
 .flex-centered { display: flex; justify-content: center; align-items: center }
 .editing-infocus { background-color: #222 }
-.content { padding: 8px; padding-right: 16px; width: 1200px; min-width: 600px }
+.content { padding: 8px; padding-right: 16px; max-width: 1400px; min-width: 600px }
 
 .module.page-title, .module.heading { font-family: "Times New Roman"; line-height: 1.2em; padding-bottom: 6px; margin-bottom: 2px; border: 2px solid transparent; border-width: 0 0 2px 0; border-bottom-color: #444 }
 .module.page-title { font-size: 36px }
-.module.heading { font-size: 26px; display: flex; align-items: center }
+.module.heading { font-size: 26px; display: flex; align-items: center; margin-top: 52px }
 .module.heading span#removesection { cursor: pointer; margin-left: 8px }
 .module.section-content { padding-top: 18px; line-height: 1.82575em; font-size: 15px }
 
