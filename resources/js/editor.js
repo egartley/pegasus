@@ -12,7 +12,7 @@ jQuery.fn.insertAt = function(index, element) {
 }
 
 $(document).ready(function() {
-    // buttons
+    // TOOLBAR BUTTONS ("actionables")
     $('div.toolbar div.actionable.action-save').click(function() {
         action_save()
     });
@@ -31,23 +31,52 @@ $(document).ready(function() {
     $('div.toolbar div.actionable.action-options').click(function() {
         // window.location = "/editor/?action=delete&id=" + $('span#hiddenpageid').html()
     });
+    $('div.toolbar div.actionable.action-addinfoboxsubheading').click(function() {
+        action_addinfoboxsubheading()
+    });
+    $('div.toolbar div.actionable.action-addinfoboxproperty').click(function() {
+        action_addinfoboxproperty()
+    });
+
+    // ABSOLUTE EVENTS (amount/element will not change)
+    // $('tr.main-image img').click(function() {
+    // open image picker or something like that
+    // });
+
+    // DYNAMIC EVENTS (amount/element can change)
     registerEventHandlers()
 });
 
 var strings = [
+    /* 0 */
     "<div class=\"sub-module paragraph\" contenteditable=\"true\">This is a paragraph. Click or tap to change its text.</div>",
-    "<div class=\"module heading\"><span contenteditable=\"true\">New Section</span><span id=\"removesection\"><img src=\"/resources/png/trash.png\" alt=\"[X]\" title=\"Remove this section\"></span></div>",
+    /* 1 */
+    "<div class=\"module heading\"><span contenteditable=\"true\">New Section</span><span id=\"removesection\"><img src=\"/resources/png/trash.png\" alt=\"remove\" title=\"Remove this section\"></span></div>",
+    /* 2 */
     "<div class=\"module section-content\">",
+    /* 3 */
     "Ready",
+    /* 4 */
     "<div class=\"sub-module list\"><ul>",
-    "<li contenteditable=\"true\">List item</li>"
+    /* 5 */
+    "<li contenteditable=\"true\">List item</li>",
+    /* 6 */
+    "<tr class=\"sub-heading\"><td colspan=\"2\"><span class=\"bold-text\" contenteditable=\"true\">Sub-Heading</span></td></tr>",
+    /* 7 */
+    "<tr class=\"property\"><th contenteditable=\"true\">Name</th><td id=\"value\" contenteditable=\"true\">Value</td></tr>",
+    /* 8 */
+    "Saving..."
 ];
 var currentModule = null;
 var currentModuleIndex = -1;
+
 var currentParagraph = null;
 var currentParagraphIndex = -1;
+
 var currentList = null;
 var currentListIndex = -1;
+
+var currentInfoboxIndex = -1;
 
 function registerEventHandlers() {
     $('div.paragraph').off('keyup');
@@ -108,6 +137,19 @@ function registerEventHandlers() {
                 parent.remove()
             }
         }
+    });
+
+    $('table.infobox tr.property td').off('focus');
+    $('table.infobox tr.property th').off('focus');
+    $('table.infobox tr.sub-heading td').off('focus');
+    $('table.infobox tr.property td').focus(function(e) {
+        currentInfoboxIndex = $(this).parent().index()
+    });
+    $('table.infobox tr.property th').focus(function(e) {
+        currentInfoboxIndex = $(this).parent().index()
+    });
+    $('table.infobox tr.sub-heading td').focus(function(e) {
+        currentInfoboxIndex = $(this).parent().index()
     })
 }
 
@@ -118,7 +160,6 @@ function addNewParagraph(invoker) {
     var container = invoker.parent();
     container.insertAt(currentParagraphIndex + 1, strings[0]);
     container.children().eq(currentParagraphIndex + 1).focus();
-    // added new paragraph, need to register events for it
     registerEventHandlers()
 }
 
@@ -145,9 +186,29 @@ function addNewList(invoker) {
 }
 
 function insertNewListItem() {
+    if (currentListIndex == -1)
+        return;
     currentList.insertAt(currentListIndex + 1, strings[5]);
     currentListIndex++;
     currentList.children().eq(currentListIndex).focus();
+    registerEventHandlers()
+}
+
+function insertNewSubHeading() {
+    if (currentInfoboxIndex == -1)
+        return;
+    $('table.infobox tbody').eq(0).insertAt(currentInfoboxIndex + 1, strings[6]);
+    currentInfoboxIndex++;
+    $('table.infobox tbody').children().eq(currentInfoboxIndex).children("td").children("span").focus();
+    registerEventHandlers()
+}
+
+function insertNewProperty() {
+    if (currentInfoboxIndex == -1)
+        return;
+    $('table.infobox tbody').eq(0).insertAt(currentInfoboxIndex + 1, strings[7]);
+    currentInfoboxIndex++;
+    $('table.infobox tbody').children().eq(currentInfoboxIndex).children("th").focus();
     registerEventHandlers()
 }
 
@@ -178,7 +239,7 @@ function action_newlist() {
 
 function action_save() {
     setToolbarSpinnerVisible(true);
-    setToolbarStatusText("Saving...");
+    setToolbarStatusText(strings[8]);
 
     // save
     var content = {
@@ -212,7 +273,7 @@ function action_save() {
                     })
                 } else if (this.classList.contains("list")) {
                     var listitems = [];
-                    $(this).children().each(function(iii){
+                    $(this).children().eq(0).children().each(function(iii) {
                         listitems.push($(this).html())
                     });
                     mod.value.push({
@@ -246,7 +307,7 @@ function action_save() {
         } else if (this.className == "sub-heading") {
             content.infobox.items.push({
                 type: "sub-heading",
-                value: $(this).children("td").children("div").html()
+                value: $(this).children("td").children("span").html()
             })
         }
     });
@@ -268,4 +329,12 @@ function action_save() {
 
 function action_back() {
     window.location = "/dashboard/";
+}
+
+function action_addinfoboxproperty() {
+    insertNewProperty()
+}
+
+function action_addinfoboxsubheading() {
+    insertNewSubHeading()
 }

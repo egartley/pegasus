@@ -78,22 +78,39 @@ function page_content_html($content, $page, $edit) {
 	if ($edit) {
 		$html .= "contenteditable=\"true\"";
 	}
+	// heading/title and main image
 	$html .= ">" . $infobox["heading"] . "</div></td></tr><tr class=\"main-image\"><td colspan=\"2\"><span class=\"flex-centered\"><table><tbody><tr><td><img src=\"" . $infobox["image"]["file"] . "\"></td></tr><tr><td class=\"small-text\" id=\"caption\"";
 	if ($edit) {
 		$html .= "contenteditable=\"true\"";
 	}
+	// main image caption
 	$html .= ">" . $infobox["image"]["caption"] . "</td></tr></tbody></table></span></td></tr>";
-	// properties
+	// properties & sub-headings
 	foreach ($infobox["items"] as $item) {
 		$html .= "<tr class=\"";
 		if ($item["type"] == "property") {
-			$html .= "property\"><th>" . $item["label"] . "</th><td id=\"value\">" . $item["value"] . "</td>";
+			$html .= "property\"><th";
+			if ($edit) {
+				$html .= " contenteditable=\"true\"";
+			}
+			$html .= ">" . $item["label"] . "</th><td id=\"value\"";
+			if ($edit) {
+				$html .= " contenteditable=\"true\"";
+			}
+			$html .= ">" . $item["value"] . "</td>";
 		} else if ($item["type"] == "sub-heading") {
-			$html .= "sub-heading\"><td colspan=\"2\"><div class=\"bold-text\">" . $item["value"] . "</div></td>";
+			$html .= "sub-heading\"><td colspan=\"2\"><span class=\"bold-text\"";
+			if ($edit) {
+				$html .= " contenteditable=\"true\"";
+			}
+			$html .= ">" . $item["value"] . "</span></td>";
 		} else {
 			$html .= "\"><td>Unknown type!</td>";
 		}
 		$html .= "</tr>";
+	}
+	if ($edit) {
+		// $html .= "<tr class=\"infobox-add\"><td><div class=\"actionable action-addinfoboxproperty\"><span id=\"icon\"><img src=\"/resources/png/plus.png\"></span><span id=\"text\">Property</span></div><div class=\"actionable action-addinfoboxheading\"><span id=\"icon\"><img src=\"/resources/png/plus.png\"></span><span id=\"text\">Heading</span></div></td></tr>";
 	}
 
 	return $html . "</tbody></table></div>";
