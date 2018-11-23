@@ -1,6 +1,6 @@
 // https://stackoverflow.com/a/5086688
-jQuery.fn.insertAt = function(index, element) {
-    var lastIndex = this.children().length;
+jQuery.fn.insertAt = function (index, element) {
+    let lastIndex = this.children().length;
     if (index < 0) {
         index = Math.max(0, lastIndex + 1 + index);
     }
@@ -9,9 +9,9 @@ jQuery.fn.insertAt = function(index, element) {
         this.children().eq(index).before(this.children().last());
     }
     return this;
-}
+};
 
-var strings = [
+let strings = [
     /* 0 */
     "<div class=\"sub-module paragraph\" contenteditable=\"true\">This is a paragraph. Click or tap to change its text.</div>",
     /* 1 */
@@ -31,48 +31,48 @@ var strings = [
     /* 8 */
     "Saving..."
 ];
-var currentModule = null;
-var currentModuleIndex = -1;
+let currentModule = null;
+let currentModuleIndex = 0;
 
-var currentParagraph = null;
-var currentParagraphIndex = -1;
+let currentParagraph = null;
+let currentParagraphIndex = 0;
 
-var currentList = null;
-var currentListIndex = -1;
+let currentList = null;
+let currentListIndex = 0;
 
-var currentInfoboxIndex = -1;
+let currentInfoboxIndex = 0;
 
 function editorInit() {
     // TOOLBAR BUTTONS ("actionables")
-    $('div.toolbar div.actionable').click(function() {
-        var t = $(this);
+    $('div.toolbar div.actionable').mousedown(function () {
+        let t = $(this);
         t.addClass("actionable-clicked");
-        setTimeout(function() {
+        setTimeout(function () {
             t.removeClass("actionable-clicked");
-        }, 175);
+        }, 200);
     });
-    $('div.toolbar div.actionable.action-save').click(function() {
+    $('div.toolbar div.actionable.action-save').click(function () {
         action_save()
     });
-    $('div.toolbar div.actionable.action-back').click(function() {
+    $('div.toolbar div.actionable.action-back').click(function () {
         action_back()
     });
-    $('div.toolbar div.actionable.action-newparagraph').click(function() {
+    $('div.toolbar div.actionable.action-newparagraph').click(function () {
         action_newparagraph()
     });
-    $('div.toolbar div.actionable.action-newsection').click(function() {
+    $('div.toolbar div.actionable.action-newsection').click(function () {
         action_newsection()
     });
-    $('div.toolbar div.actionable.action-newlist').click(function() {
+    $('div.toolbar div.actionable.action-newlist').click(function () {
         action_newlist()
     });
-    $('div.toolbar div.actionable.action-options').click(function() {
+    $('div.toolbar div.actionable.action-options').click(function () {
         // window.location = "/editor/?action=delete&id=" + $('span#hiddenpageid').html()
     });
-    $('div.toolbar div.actionable.action-addinfoboxsubheading').click(function() {
+    $('div.toolbar div.actionable.action-addinfoboxsubheading').click(function () {
         action_addinfoboxsubheading()
     });
-    $('div.toolbar div.actionable.action-addinfoboxproperty').click(function() {
+    $('div.toolbar div.actionable.action-addinfoboxproperty').click(function () {
         action_addinfoboxproperty()
     });
 
@@ -86,24 +86,24 @@ function editorInit() {
 }
 
 function isElementHTMLEmpty(jqueryElement) {
-    return jqueryElement.html().length == 0 || jqueryElement.html().indexOf('<br') == 0;
+    return jqueryElement.html().length === 0 || jqueryElement.html().indexOf('<br') === 0;
 }
 
 function registerEventHandlers() {
     $('div.paragraph').off('keyup');
     $('div.paragraph').off('focus');
-    $('div.paragraph').each(function(i) {
+    $('div.paragraph').each(function (i) {
         // keyup
-        if ($(this).html() != $(this).parent().parent().children().eq(1).children().eq(0).html()) {
+        if ($(this).html() !== $(this).parent().parent().children().eq(1).children().eq(0).html()) {
             // not the first/intro paragraph, so it can be removed
-            $(this).keyup(function(e) {
+            $(this).keyup(function () {
                 if (isElementHTMLEmpty($(this))) {
                     $(this).remove()
                 }
             })
         }
         // focus
-        $(this).focus(function(e) {
+        $(this).focus(function () {
             currentModule = $(this).parent();
             currentModuleIndex = currentModule.index();
             currentParagraph = $(this);
@@ -113,8 +113,8 @@ function registerEventHandlers() {
     });
 
     $('div.module.heading span#removesection').off('click');
-    $('div.module.heading span#removesection').click(function(e) {
-        var headingModule = $(this).parent();
+    $('div.module.heading span#removesection').click(function () {
+        let headingModule = $(this).parent();
         // first remove the paragraph container
         headingModule.parent().children().eq(headingModule.index() + 1).remove();
         // then remove the actual heading module
@@ -124,26 +124,26 @@ function registerEventHandlers() {
     $('div.sub-module.list li').off('focus');
     $('div.sub-module.list li').off('keydown');
     $('div.sub-module.list li').off('keyup');
-    $('div.sub-module.list li').focus(function(e) {
+    $('div.sub-module.list li').focus(function () {
         currentList = $(this).parent();
         currentListIndex = $(this).index();
         currentModule = currentList.parent();
         currentModuleIndex = currentModule.index()
     });
-    $('div.sub-module.list li').keydown(function(e) {
-        if (event.which == 13 && currentList != null && currentListIndex != -1) {
+    $('div.sub-module.list li').keydown(function () {
+        if (event.which === 13 && currentList != null && currentListIndex !== -1) {
             // enter or return
             event.preventDefault();
             insertNewListItem()
         }
     });
-    $('div.sub-module.list li').keyup(function(e) {
+    $('div.sub-module.list li').keyup(function () {
         if (isElementHTMLEmpty($(this))) {
-            var parent = $(this).parent();
-            var amount = parent.children().length;
+            let parent = $(this).parent();
+            let amount = parent.children().length;
             // remove list item
             $(this).remove();
-            if (amount == 1) {
+            if (amount === 1) {
                 // remove list if empty
                 parent.remove()
             }
@@ -156,28 +156,23 @@ function registerEventHandlers() {
     $('table.infobox tr.property td').off('keyup');
     $('table.infobox tr.property th').off('keyup');
     $('table.infobox tr.sub-heading td span').off('keyup');
-    $('table.infobox tr.property td').focus(function(e) {
+    $('table.infobox tr.property td').focus(function () {
         currentInfoboxIndex = $(this).parent().index()
     });
-    $('table.infobox tr.property th').focus(function(e) {
+    $('table.infobox tr.property th').focus(function () {
         currentInfoboxIndex = $(this).parent().index()
     });
-    $('table.infobox tr.sub-heading td').focus(function(e) {
+    $('table.infobox tr.sub-heading td').focus(function (e) {
         currentInfoboxIndex = $(this).parent().index()
-    })
-    $('table.infobox tr.property td').keyup(function(e) {
+    });
+    $('table.infobox tr.property td').keyup(function () {
         if (isElementHTMLEmpty($(this))) {
-           $(this).parent().remove()
+            $(this).parent().remove()
         }
     });
-    $('table.infobox tr.property th').keyup(function(e) {
+    $('table.infobox tr.sub-heading td span').keyup(function () {
         if (isElementHTMLEmpty($(this))) {
-           $(this).parent().remove()
-        }
-    });
-    $('table.infobox tr.sub-heading td span').keyup(function(e) {
-        if (isElementHTMLEmpty($(this))) {
-           $(this).parent().parent().remove()
+            $(this).parent().parent().remove()
         }
     })
 }
@@ -186,7 +181,7 @@ function addNewParagraph(invoker) {
     if (invoker == null) {
         return;
     }
-    var container = invoker.parent();
+    let container = invoker.parent();
     container.insertAt(currentParagraphIndex + 1, strings[0]);
     container.children().eq(currentParagraphIndex + 1).focus();
     registerEventHandlers()
@@ -196,7 +191,7 @@ function addNewSection(invoker) {
     if (invoker == null) {
         return;
     }
-    var allModules = invoker.parent();
+    let allModules = invoker.parent();
     allModules.insertAt(currentModuleIndex + 1, strings[1]);
     allModules.insertAt(currentModuleIndex + 2, strings[2] + strings[0] + "</div>");
     allModules.children().eq(currentModuleIndex + 1).focus();
@@ -207,15 +202,15 @@ function addNewList(invoker) {
     if (invoker == null) {
         return;
     }
-    var paragraphContainer = invoker.parent();
-    var insertIndex = invoker.index() + 1;
+    let paragraphContainer = invoker.parent();
+    let insertIndex = invoker.index() + 1;
     paragraphContainer.insertAt(insertIndex, strings[4] + strings[5] + "</ul></div>");
     paragraphContainer.children().eq(insertIndex).children().eq(0).focus();
     registerEventHandlers()
 }
 
 function insertNewListItem() {
-    if (currentListIndex == -1)
+    if (currentListIndex === -1)
         return;
     currentList.insertAt(currentListIndex + 1, strings[5]);
     currentListIndex++;
@@ -224,7 +219,7 @@ function insertNewListItem() {
 }
 
 function insertNewSubHeading() {
-    if (currentInfoboxIndex == -1)
+    if (currentInfoboxIndex === -1)
         return;
     $('table.infobox tbody').eq(0).insertAt(currentInfoboxIndex + 1, strings[6]);
     currentInfoboxIndex++;
@@ -233,7 +228,7 @@ function insertNewSubHeading() {
 }
 
 function insertNewProperty() {
-    if (currentInfoboxIndex == -1)
+    if (currentInfoboxIndex === -1)
         return;
     $('table.infobox tbody').eq(0).insertAt(currentInfoboxIndex + 1, strings[7]);
     currentInfoboxIndex++;
@@ -246,7 +241,7 @@ function setToolbarStatusText(text) {
 }
 
 function setToolbarSpinnerVisible(visible) {
-    var spin = $('div.toolbar div.toolbar-spinner');
+    let spin = $('div.toolbar div.toolbar-spinner');
     if (visible) {
         spin.removeClass("hidden")
     } else {
@@ -271,7 +266,7 @@ function action_save() {
     setToolbarStatusText(strings[8]);
 
     // save
-    var content = {
+    let content = {
         modules: [],
         infobox: {
             heading: "",
@@ -283,15 +278,16 @@ function action_save() {
         }
     };
 
-    $('div.module').each(function(i) {
-        var classlist = this.classList;
-        var mod = {
+    $('div.module').each(function () {
+        let classlist = this.classList;
+        let mod = {
             type: "",
             value: []
         };
         if (classlist.contains("section-content")) {
             mod.type = "section-content";
-            $(this).children(".sub-module").each(function(ii) {
+            $(this).children(".sub-module").each(function () {
+                // noinspection JSPotentiallyInvalidUsageOfThis
                 if (this.classList.contains("paragraph")) {
                     mod.value.push({
                         type: "paragraph",
@@ -300,24 +296,27 @@ function action_save() {
                             value: $(this).html()
                         }]
                     })
-                } else if (this.classList.contains("list")) {
-                    var listitems = [];
-                    $(this).children().eq(0).children().each(function(iii) {
-                        listitems.push($(this).html())
-                    });
-                    mod.value.push({
-                        type: "list",
-                        value: listitems
-                    })
+                } else {
+                    // noinspection JSPotentiallyInvalidUsageOfThis
+                    if (this.classList.contains("list")) {
+                        let listitems = [];
+                        $(this).children().eq(0).children().each(function () {
+                            listitems.push($(this).html())
+                        });
+                        mod.value.push({
+                            type: "list",
+                            value: listitems
+                        })
+                    }
                 }
             });
         } else if (classlist.contains("heading")) {
             mod.type = "heading";
             mod.value = $(this).children("span").eq(0).html()
         } else {
-            mod = ""
+            mod = {}
         }
-        if (mod != "") {
+        if (mod !== {}) {
             content.modules.push(mod)
         }
     });
@@ -326,14 +325,14 @@ function action_save() {
     content.infobox.image.file = $("table.infobox tr.main-image table tbody tr td img").attr("src");
     content.infobox.image.caption = $("table.infobox tr.main-image table tbody tr td#caption").html();
 
-    $('table.infobox tbody').children().each(function(i) {
-        if (this.className == "property") {
+    $('table.infobox tbody').children().each(function () {
+        if (this.className === "property") {
             content.infobox.items.push({
                 type: "property",
                 label: $(this).children("th").html(),
                 value: $(this).children("td#value").html()
             })
-        } else if (this.className == "sub-heading") {
+        } else if (this.className === "sub-heading") {
             content.infobox.items.push({
                 type: "sub-heading",
                 value: $(this).children("td").children("span").html()
@@ -347,8 +346,8 @@ function action_save() {
         isnew: $('span#hiddenpageisnew').html(),
         title: $('div.page-title').html(),
         action: "save"
-    }).done(function() {
-        setTimeout(function() {
+    }).done(function () {
+        setTimeout(function () {
             // timeout to make it look better (too fast!)
             setToolbarSpinnerVisible(false);
             setToolbarStatusText(strings[3])

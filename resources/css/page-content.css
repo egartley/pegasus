@@ -1,29 +1,138 @@
-.page-content { line-height: 1.275em; max-width: 1600px; margin-left: auto; margin-right: auto; display: flex; flex-direction: row; margin-bottom: 32px }
-.bold-text { font-weight: bold }
-.small-text { font-size: 12px }
-.flex-centered { display: flex; justify-content: center; align-items: center }
-.editing-infocus { background-color: #222 }
-.content { padding: 8px; padding-right: 16px; max-width: 1400px; min-width: 600px }
+.page-content {
+    line-height: 1.275em;
+    max-width: 1600px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 32px
+}
 
-.module.page-title, .module.heading { font-family: "Times New Roman"; line-height: 1.2em; padding-bottom: 6px; margin-bottom: 2px; border: 2px solid transparent; border-width: 0 0 2px 0; border-bottom-color: #444 }
-.module.page-title { font-size: 36px }
-.module.heading { font-size: 26px; display: flex; align-items: center; margin-top: 52px }
-.module.heading span#removesection { cursor: pointer; margin-left: 8px }
-.module.section-content { padding-top: 18px; line-height: 1.82575em; font-size: 15px }
+.bold-text {
+    font-weight: bold
+}
 
-.module.footer { padding-top: 28px; border: 2px solid transparent; border-width: 2px 0 0 0; border-top-color: #444 }
+.small-text {
+    font-size: 12px
+}
 
-.sub-module { margin-bottom: 18px }
-.sub-module.list ul { padding-left: 26px }
+.flex-centered {
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
 
-.infobox { max-width: calc(400px - 32px); min-width: calc(200px - 32px); border: 1px solid grey; border-radius: 4px; text-align: center; margin-top: 16px; background-color: #111; padding: 0.2em }
-.infobox tbody tr:first-child > td > * { margin-top: 4px }
-.infobox > tbody > tr > td > * { margin-bottom: 4px }
-.infobox tr { padding-left: 4px; padding-right: 4px; line-height: 1.275em }
-.infobox tr.main-image img { width: 150px; height: auto }
+.editing-infocus {
+    background-color: #222
+}
+
+.content {
+    padding: 8px 16px 8px 8px;
+    max-width: 1400px;
+    min-width: 600px
+}
+
+.module.page-title, .module.heading {
+    font-family: "Times New Roman", sans-serif;
+    line-height: 1.2em;
+    padding-bottom: 6px;
+    margin-bottom: 2px;
+    border: 0 solid transparent;
+    border-bottom-width: 2px;
+    border-bottom-color: #444
+}
+
+.module.page-title {
+    font-size: 36px
+}
+
+.module.heading {
+    font-size: 26px;
+    display: flex;
+    align-items: center;
+    margin-top: 52px
+}
+
+.module.heading span#removesection {
+    cursor: pointer;
+    margin-left: 8px
+}
+
+.module.section-content {
+    padding-top: 18px;
+    line-height: 1.82575em;
+    font-size: 15px
+}
+
+.module.footer {
+    padding-top: 28px;
+    border: 0 solid transparent;
+    border-top-width: 2px;
+    border-top-color: #444
+}
+
+.sub-module {
+    margin-bottom: 18px
+}
+
+.sub-module.list ul {
+    padding-left: 26px
+}
+
+.infobox {
+    max-width: calc(400px - 32px);
+    min-width: calc(200px - 32px);
+    border: 1px solid grey;
+    border-radius: 4px;
+    text-align: center;
+    margin-top: 16px;
+    background-color: #111;
+    padding: 0.2em
+}
+
+.infobox tbody tr:first-child > td > * {
+    margin-top: 4px
+}
+
+.infobox > tbody > tr > td > * {
+    margin-bottom: 4px
+}
+
+.infobox tr {
+    padding-left: 4px;
+    padding-right: 4px;
+    line-height: 1.275em
+}
+
+.infobox tr.main-image img {
+    width: 150px;
+    height: auto
+}
+
 /* calc() for future with variables */
-.infobox tr.sub-heading > td { max-width: calc(300px - 8px) }
-.infobox tr.sub-heading > td > span { height: 24px; background-color: #333; font-size: 12px; display: flex; justify-content: center; align-items: center; overflow: hidden }
-.infobox tr.heading { font-size: 18px }
-.infobox tr.property td, .infobox tr.property th { font-size: 12px; text-align: left }
-.infobox tr.property th { vertical-align: top }
+.infobox tr.sub-heading > td {
+    max-width: calc(300px - 8px)
+}
+
+.infobox tr.sub-heading > td > span {
+    height: 24px;
+    background-color: #333;
+    font-size: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden
+}
+
+.infobox tr.heading {
+    font-size: 18px
+}
+
+.infobox tr.property td, .infobox tr.property th {
+    font-size: 12px;
+    text-align: left
+}
+
+.infobox tr.property th {
+    vertical-align: top
+}
