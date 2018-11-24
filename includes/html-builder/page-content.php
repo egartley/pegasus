@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Returns HTML for page content, with editing capabilities if specified
+ *
+ * @param $content
+ * @param $page
+ * @param $edit
+ * @return string
+ */
 function page_content_html($content, $page, $edit)
 {
     // script
@@ -18,6 +26,9 @@ function page_content_html($content, $page, $edit)
     if ($edit) {
         $html .= get_editing_toolbar_html();
     }
+
+    // modals
+    $html .= "<div class=\"link-modal\"><input type=\"text\" /></div>";
 
     // start of actual content
     $html .= "<div class=\"page-content\"><div class=\"content\">";
@@ -118,13 +129,16 @@ function page_content_html($content, $page, $edit)
     return $html . "</tbody></table></div>";
 }
 
-function get_page_content_html($page, $edit)
+/**
+ * Returns HTML for just the page content, and nothing else
+ *
+ * @param $page
+ * @param $edit
+ * @return string
+ */
+function get_page_content_html(Page $page, $edit)
 {
-    $rawjsonstring = null;
-    if (is_a($page, 'Page')) {
-        /** @noinspection PhpUndefinedMethodInspection */
-        $rawjsonstring = $page->get_content_rawjson();
-    }
+    $rawjsonstring = $page->get_content_rawjson();
     if ($rawjsonstring != null) {
         // was able to get raw json
         return page_content_html(json_decode($rawjsonstring, true), $page, $edit);

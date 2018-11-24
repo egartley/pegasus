@@ -1,6 +1,6 @@
 <?php
 
-require_once '../../includes/objects/page.php';
+require_once '../includes/objects/page.php';
 
 function get_page_dirs($relative)
 {

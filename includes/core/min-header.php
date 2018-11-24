@@ -9,7 +9,5 @@ echo "
 <link href=\"/resources/ico/favicon.ico\" rel=\"shortcut icon\" type=\"images/x-icon\">";
 
 // styling
-require_once '../../includes/style/get.php';
+require_once '../includes/style/get.php';
 get_stylesheet_link("min.css");
-
-?>

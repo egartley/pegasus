@@ -97,6 +97,12 @@ class Page
         return true;
     }
 
+    /**
+     *
+     *
+     * @param $post
+     * @return bool
+     */
     private static function save_content_normal($post)
     {
         $contentfile = fopen(Page::$storageFilePath . "/" . $post["id"] . "/content.json", "w");
@@ -133,9 +139,9 @@ class Page
         return true;
     }
 
-    // ex. "/editor/?action=save&id=2&isnew=no"
     public static function action_save($post)
     {
+        // ex. "/editor/?action=save&id=2&isnew=no" POST
         if (isset($post["isnew"]) && $post["isnew"] == "yes") {
             // we're saving a new page
             // make sure temp directory exists
@@ -160,6 +166,7 @@ class Page
         } else {
             // not new, has been previously saved, get that meta
             $oldmeta = Page::get_meta_by_id($post["id"]);
+            // save meta and content
             return Page::save_meta_normal(array(
                     "title" => $post["title"], // updated title
                     "id" => $oldmeta["id"], // id doesn't change
@@ -169,6 +176,9 @@ class Page
         }
     }
 
+    /**
+     * Checks for the temporary directory's existence, and creates it if needed
+     */
     private static function check_temporary_page_directory()
     {
         if (!file_exists(Page::$tempStorageFilePath)) {
@@ -226,16 +236,24 @@ class Page
 
     private function set_empty_content()
     {
+        // make sure temp directory exists
         $this->check_temporary_page_directory();
+        // get temp content json file
         $file = fopen(Page::$tempStorageFilePath . "/content.json", "w");
         if ($file === false) {
             // not found or has wrong permissions
             return;
         }
+        // write the empty content json to it
         fwrite($file, Page::$emptyContentRawJSON);
         fclose($file);
     }
 
+    /**
+     * Returns the page's raw content JSON (content.json) as a string if it exists, otherwise returns <code>null</code>
+     *
+     * @return false|string|null
+     */
     function get_content_rawjson()
     {
         if (!file_exists($this->contentFilePath)) {

@@ -1,6 +1,6 @@
 <?php
 
-require_once '../../includes/core/page-storage.php';
+require_once '../includes/core/page-storage.php';
 
 function get_page_list_item_html($page)
 {
