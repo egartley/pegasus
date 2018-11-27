@@ -97,12 +97,6 @@ class Page
         return true;
     }
 
-    /**
-     *
-     *
-     * @param $post
-     * @return bool
-     */
     private static function save_content_normal($post)
     {
         $contentfile = fopen(Page::$storageFilePath . "/" . $post["id"] . "/content.json", "w");

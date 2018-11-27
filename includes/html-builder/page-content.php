@@ -11,11 +11,10 @@
 function page_content_html($content, $page, $edit)
 {
     // script
-    $html = "<script src=\"/resources/js/jquery.js\" type=\"text/javascript\"></script>";
+    $html = "<script src=\"/resources/js/jquery.js\" type=\"text/javascript\"></script><script src=\"/resources/js/jquery.caret.js\" type=\"text/javascript\"></script><script src=\"/resources/js/page.js\" type=\"text/javascript\"></script>";
     if ($edit) {
         $html .= "<script src=\"/resources/js/editor.js\" type=\"text/javascript\"></script>";
     }
-    $html .= "<script src=\"/resources/js/page.js\" type=\"text/javascript\"></script>";
 
     // meta/other
     $html .= "<span class=\"hidden\" id=\"hiddenpageid\">" . $page->id . "</span>";
@@ -28,7 +27,7 @@ function page_content_html($content, $page, $edit)
     }
 
     // modals
-    $html .= "<div class=\"link-modal\"><input type=\"text\" /></div>";
+    $html .= "<div class=\"link-modal hidden\"><span class=\"centerer\"><div class=\"link-dialog\"><div class=\"textbox-container\"><span id=\"text\">Link to:</span><input type=\"text\" autocomplete=\"off\" min=\"12\" placeholder=\"http://example.com\"></div></div></span></div>";
 
     // start of actual content
     $html .= "<div class=\"page-content\"><div class=\"content\">";

@@ -1,6 +1,6 @@
 // https://stackoverflow.com/a/5086688
 jQuery.fn.insertAt = function (index, element) {
-    let lastIndex = this.children().length;
+    var lastIndex = this.children().length;
     if (index < 0) {
         index = Math.max(0, lastIndex + 1 + index);
     }
@@ -11,7 +11,11 @@ jQuery.fn.insertAt = function (index, element) {
     return this;
 };
 
-let strings = [
+$(document).ready(function () {
+    initEditor()
+});
+
+var strings = [
     /* 0 */
     "<div class=\"sub-module paragraph\" contenteditable=\"true\">This is a paragraph. Click or tap to change its text.</div>",
     /* 1 */
@@ -33,29 +37,33 @@ let strings = [
 ];
 
 // editing indexes
-let currentModule = null;
-let currentModuleIndex = 0;
-let currentParagraph = null;
-let currentParagraphIndex = 0;
-let currentList = null;
-let currentListIndex = 0;
-let currentInfoboxIndex = 0;
+var currentModule = null;
+var currentModuleIndex = 0;
+var currentParagraph = null;
+var currentParagraphIndex = 0;
+var currentList = null;
+var currentListIndex = 0;
+var currentInfoboxIndex = 0;
 
 // link modal
-let linkModalHeight = 32;
-let selectionTimeout = 75;
-let didFireSelectionEvent = false;
-let didSetLeftPosition = false;
-let previousSelectionLength = 0;
+var selectionLength = 0;
+var mostRecentCaretPos = -1;
+var selectedText = "";
+var didSetCaret = false;
+var isDisplayingLinkModal = false;
 
-function editorInit() {
+function initEditor() {
     // TOOLBAR BUTTONS ("actionables")
+    $(document).on("mouseup", function () {
+        $('div.toolbar div.actionable').each(function () {
+            $(this).removeClass("actionable-clicked")
+        })
+    });
     $('div.toolbar div.actionable').on("mousedown", function () {
-        let t = $(this);
-        t.addClass("actionable-clicked");
-        setTimeout(function () {
-            t.removeClass("actionable-clicked");
-        }, 200);
+        $(this).addClass("actionable-clicked")
+    });
+    $('div.toolbar div.actionable').on("mouseup", function () {
+        $(this).removeClass("actionable-clicked")
     });
     $('div.toolbar div.actionable.action-save').on("click", function () {
         action_save()
@@ -72,6 +80,9 @@ function editorInit() {
     $('div.toolbar div.actionable.action-newlist').on("click", function () {
         addNewList(currentParagraph)
     });
+    $('div.toolbar div.actionable.action-addlink').on("click", function () {
+        addLink(getSelectionContainingElement())
+    });
     $('div.toolbar div.actionable.action-options').on("click", function () {
         // window.location = "/editor/?action=delete&id=" + getHiddenMeta("id")
     });
@@ -87,34 +98,37 @@ function editorInit() {
     // open image picker or something like that
     // });
     document.onselectionchange = function () {
-        let text = document.getSelection().toString();
-        let modal = $("div.link-modal");
-        previousSelectionLength = text.length;
-        if (text.length === 0) {
-            setLinkModalVisible(false);
+        if (isDisplayingLinkModal) {
             return
         }
-        if (!didFireSelectionEvent) {
-            let r = window.getSelection().getRangeAt(0).getBoundingClientRect();
-            let relative = document.body.parentNode.getBoundingClientRect();
-            setLinkModalVisible(true);
-            // TODO: needs work but ok for now
-            modal.css("top", (r.bottom - relative.top - r.height - linkModalHeight) + "px");
-            if (!didSetLeftPosition) {
-                modal.css("left", r.left + "px");
-                didSetLeftPosition = true
+        selectedText = window.getSelection().toString();
+        selectionLength = selectedText.length;
+        if (selectionLength > 0) {
+            // keep to start of selection rather than the end of it
+            if (!didSetCaret) {
+                mostRecentCaretPos = getSelectionContainingElement().caret() - selectionLength;
+                didSetCaret = true
             }
-            didFireSelectionEvent = true
         } else {
-            return
+            didSetCaret = false
         }
-        setTimeout(function () {
-            didFireSelectionEvent = false
-        }, selectionTimeout)
     };
 
     // DYNAMIC EVENTS (amount/element can change)
     registerEventHandlers()
+}
+
+function initLinkDialog() {
+    setLinkModalVisible(true);
+    $("div.link-modal div.link-dialog").off("onclick");
+    $("div.link-modal div.link-dialog").on("onclick", function () {
+        setLinkModalVisible(false)
+    });
+    getSelectionContainingElement().trigger("blur");
+    $("div.link-modal div.link-dialog").trigger("focus");
+    $("div.link-modal").on("click", function (e) {
+        setLinkModalVisible(!$(e.target).hasClass("link-modal"))
+    })
 }
 
 function action_save() {
@@ -122,7 +136,7 @@ function action_save() {
     setToolbarStatusText(strings[8]);
 
     // save
-    let content = {
+    var content = {
         modules: [],
         infobox: {
             heading: "",
@@ -135,8 +149,8 @@ function action_save() {
     };
 
     $('div.module').each(function () {
-        let classlist = this.classList;
-        let mod = {
+        var classlist = this.classList;
+        var mod = {
             type: "",
             value: []
         };
@@ -153,7 +167,7 @@ function action_save() {
                     })
                 } else {
                     if (this.classList.contains("list")) {
-                        let listitems = [];
+                        var listitems = [];
                         $(this).children().eq(0).children().each(function () {
                             listitems.push($(this).html())
                         });
@@ -168,9 +182,9 @@ function action_save() {
             mod.type = "heading";
             mod.value = $(this).children("span").eq(0).html()
         } else {
-            mod = {}
+            mod = null
         }
-        if (mod !== {}) {
+        if (mod !== null) {
             content.modules.push(mod)
         }
     });
@@ -233,7 +247,7 @@ function registerEventHandlers() {
 
     $('div.module.heading span#removesection').off('click');
     $('div.module.heading span#removesection').on("click", function () {
-        let headingModule = $(this).parent();
+        var headingModule = $(this).parent();
         // first remove the paragraph container
         headingModule.parent().children().eq(headingModule.index() + 1).remove();
         // then remove the actual heading module
@@ -256,8 +270,8 @@ function registerEventHandlers() {
     });
     $('div.sub-module.list li').on("keyup", function () {
         if (isElementHTMLEmpty($(this))) {
-            let parent = $(this).parent();
-            let amount = parent.children().length;
+            var parent = $(this).parent();
+            var amount = parent.children().length;
             // remove list item
             $(this).remove();
             if (amount === 1) {
@@ -293,18 +307,13 @@ function registerEventHandlers() {
     });
 
     $('div.page-content *').each(function () {
-        let attr = $(this).attr("contenteditable");
+        var attr = $(this).attr("contenteditable");
         if (typeof attr !== typeof undefined && attr !== false) {
             $(this).on("click", function (event) {
-                console.log(event.delegateTarget);
-                checkForLinkModalFix()
+                // checkForLinkModalFix()
             })
         }
     })
-}
-
-function isElementHTMLEmpty(element) {
-    return element.html().length === 0 || element.html().indexOf('<br') === 0;
 }
 
 function setToolbarStatusText(text) {
@@ -312,7 +321,7 @@ function setToolbarStatusText(text) {
 }
 
 function setToolbarSpinnerVisible(visible) {
-    let spin = $('div.toolbar div.toolbar-spinner');
+    var spin = $('div.toolbar div.toolbar-spinner');
     if (visible) {
         spin.removeClass("hidden")
     } else {
@@ -321,29 +330,55 @@ function setToolbarSpinnerVisible(visible) {
 }
 
 function setLinkModalVisible(visible) {
-    if (!visible) {
-        $("div.link-modal").css("display", "none");
-        didSetLeftPosition = false
+    if (visible) {
+        $("div.link-modal").fadeIn("fast").removeClass("hidden");
+        isDisplayingLinkModal = true
     } else {
-        $("div.link-modal").css("display", "block")
+        $("div.link-modal").fadeOut("fast").addClass("hidden");
+        isDisplayingLinkModal = false
     }
 }
 
-function getHiddenMeta(meta) {
-    return $("span#hiddenpage" + meta).html()
+function getSelectionContainingElement() {
+    if (selectedText.length === 0) {
+        return null
+    }
+    if (currentModule.hasClass("section-content")) {
+        if (currentParagraph == null && currentList == null) {
+            return null
+        }
+        if (currentParagraph == null && currentList != null) {
+            return currentList
+        }
+        if (currentParagraph != null && currentList == null) {
+            return currentParagraph
+        }
+        if (currentParagraph.index() > currentList.index()) {
+            return currentList
+        } else {
+            return currentParagraph
+        }
+    } else if (currentModule.hasClass("heading")) {
+        return currentModule.children().eq(0)
+    } else if (currentModule.hasClass("page-title") || currentModule.hasClass("footer")) {
+        return null
+    } else {
+        return null
+    }
 }
 
-function checkForLinkModalFix() {
-    if (document.getSelection().toString().length === 0 && previousSelectionLength !== 0) {
-        setLinkModalVisible(false)
+function addLink(container) {
+    if (container == null) {
+        // return
     }
+    initLinkDialog()
 }
 
 function addNewParagraph(invoker) {
     if (invoker == null) {
         return;
     }
-    let container = invoker.parent();
+    var container = invoker.parent();
     container.insertAt(currentParagraphIndex + 1, strings[0]);
     container.children().eq(currentParagraphIndex + 1).focus();
     registerEventHandlers()
@@ -353,7 +388,7 @@ function addNewSection(invoker) {
     if (invoker == null) {
         return;
     }
-    let allModules = invoker.parent();
+    var allModules = invoker.parent();
     allModules.insertAt(currentModuleIndex + 1, strings[1]);
     allModules.insertAt(currentModuleIndex + 2, strings[2] + strings[0] + "</div>");
     allModules.children().eq(currentModuleIndex + 1).focus();
@@ -364,8 +399,8 @@ function addNewList(invoker) {
     if (invoker == null) {
         return;
     }
-    let paragraphContainer = invoker.parent();
-    let insertIndex = invoker.index() + 1;
+    var paragraphContainer = invoker.parent();
+    var insertIndex = invoker.index() + 1;
     paragraphContainer.insertAt(insertIndex, strings[4] + strings[5] + "</ul></div>");
     paragraphContainer.children().eq(insertIndex).children().eq(0).focus();
     registerEventHandlers()

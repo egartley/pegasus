@@ -13,26 +13,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/includes/objects/page.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="183">
-              <caret line="100" column="6" selection-start-line="100" selection-start-column="6" selection-end-line="100" selection-end-column="6" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/includes/core/min-header.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="252">
-              <caret line="12" column="31" selection-start-line="12" selection-start-column="31" selection-end-line="12" selection-end-column="31" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/includes/html-builder/page-content.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="331">
-              <caret line="30" column="63" selection-start-line="30" selection-start-column="63" selection-end-line="30" selection-end-column="63" />
+            <state relative-caret-position="2877">
+              <caret line="137" column="50" selection-start-line="137" selection-start-column="50" selection-end-line="137" selection-end-column="50" />
             </state>
           </provider>
         </entry>
@@ -41,25 +23,16 @@
         <entry file="file://$PROJECT_DIR$/includes/html-builder/all-pages-list.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="42">
-              <caret line="2" column="17" selection-start-line="2" selection-start-column="17" selection-end-line="2" selection-end-column="17" />
+              <caret line="2" column="49" lean-forward="true" selection-start-line="2" selection-start-column="49" selection-end-line="2" selection-end-column="49" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/editor/index.php">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/includes/html-builder/page-content.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="389">
-              <caret line="113" column="20" selection-start-line="113" selection-start-column="20" selection-end-line="113" selection-end-column="20" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/resources/css/min.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="147">
-              <caret line="7" column="12" selection-start-line="7" selection-start-column="12" selection-end-line="7" selection-end-column="12" />
+            <state relative-caret-position="476">
+              <caret line="29" column="250" selection-start-line="29" selection-start-column="250" selection-end-line="29" selection-end-column="250" />
             </state>
           </provider>
         </entry>
@@ -67,40 +40,24 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/resources/css/page-content.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="630">
-              <caret line="30" column="23" selection-start-line="30" selection-start-column="23" selection-end-line="30" selection-end-column="23" />
+            <state relative-caret-position="588">
+              <caret line="100" column="32" lean-forward="true" selection-start-line="100" selection-start-column="32" selection-end-line="100" selection-end-column="32" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/resources/js/editor.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="477">
-              <caret line="327" column="51" selection-start-line="327" selection-start-column="51" selection-end-line="327" selection-end-column="51" />
+            <state relative-caret-position="709">
+              <caret line="336" column="41" selection-start-line="336" selection-start-column="41" selection-end-line="336" selection-end-column="41" />
               <folding>
-                <element signature="e#373#1248#0" />
+                <element signature="e#86#356#0" />
+                <element signature="e#427#1302#0" />
                 <element signature="n#!!block;n#action_save#0" />
-                <element signature="e#8897#9091#0" />
-                <element signature="e#9131#10634#0" />
-                <element signature="e#9191#9246#0" />
-                <element signature="e#10975#11458#0" />
-                <element signature="e#3282#3976#0" />
-                <element signature="e#3400#3645#0" />
-                <element signature="e#3703#3969#0" />
-                <element signature="e#4112#4375#0" />
-                <element signature="e#4575#4763#0" />
-                <element signature="e#4824#5024#0" />
-                <element signature="e#5083#5417#0" />
-                <element signature="e#6058#6120#0" />
-                <element signature="e#9743#9850#0" />
-                <element signature="e#5806#5868#0" />
-                <element signature="e#5933#5995#0" />
-                <element signature="e#6185#6283#0" />
-                <element signature="n#!!block;n#isElementHTMLEmpty#0" />
+                <element signature="n#!!block;n#registerEventHandlers#0" />
                 <element signature="n#!!block;n#setToolbarStatusText#0" />
                 <element signature="n#!!block;n#setToolbarSpinnerVisible#0" />
-                <element signature="n#!!block;n#getHiddenMeta#0" />
                 <element signature="n#!!block;n#addNewParagraph#0" />
                 <element signature="n#!!block;n#addNewSection#0" />
                 <element signature="n#!!block;n#addNewList#0" />
@@ -115,13 +72,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/resources/js/page.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="294">
-              <caret line="14" column="26" selection-start-line="14" selection-start-column="26" selection-end-line="14" selection-end-column="26" />
+            <state relative-caret-position="331">
+              <caret line="24" column="31" lean-forward="true" selection-start-line="24" selection-start-column="31" selection-end-line="24" selection-end-column="31" />
             </state>
           </provider>
         </entry>
       </file>
     </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -130,12 +94,14 @@
       <find>.click(function () {</find>
       <find>.keyup(function () {</find>
       <find>console</find>
+      <find>let</find>
     </findStrings>
     <replaceStrings>
       <replace>let</replace>
       <replace>img alt=\&quot;X\&quot;</replace>
       <replace>.on(&quot;click&quot;, function () {</replace>
       <replace>.on(&quot;keyup&quot;, function () {</replace>
+      <replace>var</replace>
     </replaceStrings>
   </component>
   <component name="IdeDocumentHistory">
@@ -144,17 +110,21 @@
         <option value="$PROJECT_DIR$/resources/css/all-pages-list.css" />
         <option value="$PROJECT_DIR$/dashboard/index.php" />
         <option value="$PROJECT_DIR$/resources/css/min.css" />
-        <option value="$PROJECT_DIR$/resources/js/page.js" />
-        <option value="$PROJECT_DIR$/includes/html-builder/toolbar.php" />
         <option value="$PROJECT_DIR$/includes/style/get.php" />
-        <option value="$PROJECT_DIR$/editor/index.php" />
-        <option value="$PROJECT_DIR$/includes/objects/page.php" />
-        <option value="$PROJECT_DIR$/includes/core/min-header.php" />
         <option value="$PROJECT_DIR$/includes/html-builder/all-pages-list.php" />
         <option value="$PROJECT_DIR$/includes/core/page-storage.php" />
+        <option value="$PROJECT_DIR$/resources/js/jquery.caret.js" />
+        <option value="$PROJECT_DIR$/data-storage/pages/2/content.json" />
+        <option value="$PROJECT_DIR$/includes/core/min-header.php" />
+        <option value="$PROJECT_DIR$/includes/objects/page.php" />
+        <option value="$PROJECT_DIR$/resources/svg/link.svg" />
+        <option value="$PROJECT_DIR$/includes/html-builder/toolbar.php" />
+        <option value="$PROJECT_DIR$/resources/css/toolbar.css" />
+        <option value="$PROJECT_DIR$/resources/js/page.js" />
+        <option value="$PROJECT_DIR$/editor/index.php" />
+        <option value="$PROJECT_DIR$/resources/js/editor.js" />
         <option value="$PROJECT_DIR$/resources/css/page-content.css" />
         <option value="$PROJECT_DIR$/includes/html-builder/page-content.php" />
-        <option value="$PROJECT_DIR$/resources/js/editor.js" />
       </list>
     </option>
   </component>
@@ -186,6 +156,11 @@
             <path>
               <item name="htdocs" type="b2602c69:ProjectViewProjectNode" />
               <item name="htdocs" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="htdocs" type="b2602c69:ProjectViewProjectNode" />
+              <item name="htdocs" type="462c0819:PsiDirectoryNode" />
+              <item name="editor" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="htdocs" type="b2602c69:ProjectViewProjectNode" />
@@ -227,6 +202,12 @@
               <item name="resources" type="462c0819:PsiDirectoryNode" />
               <item name="js" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="htdocs" type="b2602c69:ProjectViewProjectNode" />
+              <item name="htdocs" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="svg" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -242,7 +223,7 @@
     <property name="node.js.path.for.package.stylelint" value="node" />
     <property name="node.js.selected.package.stylelint" value="" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="ics" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -258,9 +239,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17913593" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.13224447" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -289,13 +269,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/includes/html-builder/toolbar.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="735">
-          <caret line="35" column="1" selection-start-line="35" selection-start-column="1" selection-end-line="35" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/dashboard/index.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
@@ -312,52 +285,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/resources/js/page.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="294">
-          <caret line="14" column="26" selection-start-line="14" selection-start-column="26" selection-end-line="14" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/css/min.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="147">
-          <caret line="7" column="12" selection-start-line="7" selection-start-column="12" selection-end-line="7" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/editor/index.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="389">
-          <caret line="113" column="20" selection-start-line="113" selection-start-column="20" selection-end-line="113" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/includes/objects/page.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="183">
-          <caret line="100" column="6" selection-start-line="100" selection-start-column="6" selection-end-line="100" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/includes/core/min-header.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="12" column="31" selection-start-line="12" selection-start-column="31" selection-end-line="12" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/includes/style/get.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="462">
           <caret line="22" column="1" selection-start-line="22" selection-start-column="1" selection-end-line="22" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/includes/html-builder/all-pages-list.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="42">
-          <caret line="2" column="17" selection-start-line="2" selection-start-column="17" selection-end-line="2" selection-end-column="17" />
         </state>
       </provider>
     </entry>
@@ -368,47 +299,93 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/resources/css/page-content.css">
+    <entry file="file://$PROJECT_DIR$/data-storage/pages/2/content.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="630">
-          <caret line="30" column="23" selection-start-line="30" selection-start-column="23" selection-end-line="30" selection-end-column="23" />
+        <state relative-caret-position="189">
+          <caret column="1950" selection-start-column="1950" selection-end-column="1950" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/includes/html-builder/page-content.php">
+    <entry file="file://$PROJECT_DIR$/includes/core/min-header.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="84">
+          <caret line="3" column="248" selection-start-line="3" selection-start-column="248" selection-end-line="3" selection-end-column="248" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/js/jquery.caret.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="42">
+          <caret line="2" column="63" lean-forward="true" selection-start-line="2" selection-start-column="63" selection-end-line="2" selection-end-column="63" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/svg/link.svg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/css/toolbar.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="594">
+          <caret line="83" column="24" selection-start-line="83" selection-start-column="24" selection-end-line="83" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/includes/html-builder/toolbar.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="17" column="82" selection-start-line="17" selection-start-column="82" selection-end-line="17" selection-end-column="82" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/editor/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2394">
+          <caret line="114" column="5" selection-start-line="114" selection-start-column="5" selection-end-line="114" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/includes/objects/page.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2877">
+          <caret line="137" column="50" selection-start-line="137" selection-start-column="50" selection-end-line="137" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/css/min.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="147">
+          <caret line="7" column="12" selection-start-line="7" selection-start-column="12" selection-end-line="7" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/includes/html-builder/all-pages-list.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="42">
+          <caret line="2" column="49" lean-forward="true" selection-start-line="2" selection-start-column="49" selection-end-line="2" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/js/page.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="331">
-          <caret line="30" column="63" selection-start-line="30" selection-start-column="63" selection-end-line="30" selection-end-column="63" />
+          <caret line="24" column="31" lean-forward="true" selection-start-line="24" selection-start-column="31" selection-end-line="24" selection-end-column="31" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/resources/js/editor.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="477">
-          <caret line="327" column="51" selection-start-line="327" selection-start-column="51" selection-end-line="327" selection-end-column="51" />
+        <state relative-caret-position="709">
+          <caret line="336" column="41" selection-start-line="336" selection-start-column="41" selection-end-line="336" selection-end-column="41" />
           <folding>
-            <element signature="e#373#1248#0" />
+            <element signature="e#86#356#0" />
+            <element signature="e#427#1302#0" />
             <element signature="n#!!block;n#action_save#0" />
-            <element signature="e#8897#9091#0" />
-            <element signature="e#9131#10634#0" />
-            <element signature="e#9191#9246#0" />
-            <element signature="e#10975#11458#0" />
-            <element signature="e#3282#3976#0" />
-            <element signature="e#3400#3645#0" />
-            <element signature="e#3703#3969#0" />
-            <element signature="e#4112#4375#0" />
-            <element signature="e#4575#4763#0" />
-            <element signature="e#4824#5024#0" />
-            <element signature="e#5083#5417#0" />
-            <element signature="e#6058#6120#0" />
-            <element signature="e#9743#9850#0" />
-            <element signature="e#5806#5868#0" />
-            <element signature="e#5933#5995#0" />
-            <element signature="e#6185#6283#0" />
-            <element signature="n#!!block;n#isElementHTMLEmpty#0" />
+            <element signature="n#!!block;n#registerEventHandlers#0" />
             <element signature="n#!!block;n#setToolbarStatusText#0" />
             <element signature="n#!!block;n#setToolbarSpinnerVisible#0" />
-            <element signature="n#!!block;n#getHiddenMeta#0" />
             <element signature="n#!!block;n#addNewParagraph#0" />
             <element signature="n#!!block;n#addNewSection#0" />
             <element signature="n#!!block;n#addNewList#0" />
@@ -416,6 +393,20 @@
             <element signature="n#!!block;n#insertNewSubHeading#0" />
             <element signature="n#!!block;n#insertNewProperty#0" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/css/page-content.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="588">
+          <caret line="100" column="32" lean-forward="true" selection-start-line="100" selection-start-column="32" selection-end-line="100" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/includes/html-builder/page-content.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="476">
+          <caret line="29" column="250" selection-start-line="29" selection-start-column="250" selection-end-line="29" selection-end-column="250" />
         </state>
       </provider>
     </entry>

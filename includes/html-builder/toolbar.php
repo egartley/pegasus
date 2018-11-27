@@ -15,6 +15,7 @@ function get_editing_toolbar_html()
     <div class=\"actionable action-newsection\"><span id=\"icon\"><img alt=\"X\" src=\"/resources/svg/plus.svg\"></span><span id=\"text\">Section</span></div>
     <div class=\"actionable action-newparagraph\"><span id=\"icon\"><img alt=\"X\" src=\"/resources/svg/paragraph.svg\"></span><span id=\"text\">Paragraph</span></div>
     <div class=\"actionable action-newlist\"><span id=\"icon\"><img alt=\"X\" src=\"/resources/svg/list.svg\"></span><span id=\"text\">List</span></div>
+    <div class=\"actionable action-addlink\"><span id=\"icon\"><img class=\"resize\" alt=\"X\" src=\"/resources/svg/link.svg\"></span><span id=\"text\">Link</span></div>
     <div class=\"delimiter\"></div>
     
     <div class=\"actionable action-addinfoboxsubheading\"><span id=\"icon\"><img alt=\"X\" src=\"/resources/svg/plus.svg\"></span><span id=\"text\">Heading</span></div>

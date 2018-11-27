@@ -113,20 +113,8 @@
         }
         return true;
     }
-
     ?>
-    <title>
-        <?php
-        if (get_action() == "edit") {
-            echo "Editing \"" . get_page($_GET["id"])->title . "\"";
-        } else if (get_action() == "new") {
-            echo "New Page";
-        } else {
-            echo "Working...";
-        }
-        echo " - Pegasus";
-        ?>
-    </title>
+    <title><?php if (get_action() == "edit") { echo "Editing \"" . get_page($_GET["id"])->title . "\""; } else if (get_action() == "new") { echo "New Page"; } else { echo "Working..."; } echo " - Pegasus"; ?></title>
 </head>
 <body>
 <?php
