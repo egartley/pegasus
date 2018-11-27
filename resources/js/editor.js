@@ -120,13 +120,12 @@ function initEditor() {
 
 function initLinkDialog() {
     setLinkModalVisible(true);
-    $("div.link-modal div.link-dialog").off("onclick");
-    $("div.link-modal div.link-dialog").on("onclick", function () {
-        setLinkModalVisible(false)
-    });
     getSelectionContainingElement().trigger("blur");
     $("div.link-modal div.link-dialog").trigger("focus");
+
+    $("div.link-modal").off("click");
     $("div.link-modal").on("click", function (e) {
+        // hide if click was not on the dialog itself (i.e. anywhere else)
         setLinkModalVisible(!$(e.target).hasClass("link-modal"))
     })
 }
