@@ -60,6 +60,7 @@ var previousCaretPos = 0;
 var selectedText = "";
 var isDisplayingLinkModal = false;
 var totalIndexOffset = 0;
+var mostRecentNode = null;
 
 function initEditor() {
     // TOOLBAR BUTTONS ("actionables")
@@ -113,7 +114,8 @@ function initEditor() {
         var s = window.getSelection();
         selectionLength = selectedText.length;
         selectedText = s.toString();
-        mostRecentCaretPos = totalIndexOffset + s.anchorOffset + previousCaretPos
+        mostRecentCaretPos = totalIndexOffset + s.anchorOffset + previousCaretPos;
+        mostRecentNode = document.activeElement
     };
 
     // DYNAMIC EVENTS (amount/element can change)
@@ -453,10 +455,7 @@ function insertLink(container) {
         var linkAddress = $("div.link-dialog div.textbox-container input").val();
         var pre = "<a rel=\"nofollow\" href=\"" + linkAddress + "\">";
         var post = "</a>";
-        var modifiedHTML = originalHTML.insert(mostRecentCaretPos, pre);
-        modifiedHTML = modifiedHTML.insert(mostRecentCaretPos + pre.length + selectionLength, post);
-        container.html(modifiedHTML);
-        console.log("prev: " + previousCaretPos + ", recent: " + mostRecentCaretPos + ", total: " + totalIndexOffset + ", sel len: " + selectionLength);
+        mostRecentNode.innerHTML = originalHTML.insert(mostRecentCaretPos, pre).insert(mostRecentCaretPos + pre.length + selectionLength, post);
         totalIndexOffset += selectionLength;
         previousCaretPos = mostRecentCaretPos
     } else if (container === currentList) {

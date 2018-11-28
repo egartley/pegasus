@@ -31,12 +31,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/includes/html-builder/page-content.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="351">
-              <caret line="38" column="29" lean-forward="true" selection-start-line="38" selection-start-column="29" selection-end-line="38" selection-end-column="29" />
-              <folding>
-                <element signature="e#1580#3484#0#PHP" />
-                <element signature="e#4400#5258#0#PHP" />
-              </folding>
+            <state relative-caret-position="798">
+              <caret line="38" column="29" selection-start-line="38" selection-start-column="29" selection-end-line="38" selection-end-column="29" />
             </state>
           </provider>
         </entry>
@@ -44,17 +40,16 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/resources/js/editor.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="640">
-              <caret line="458" column="131" selection-start-line="458" selection-start-column="131" selection-end-line="458" selection-end-column="131" />
+            <state relative-caret-position="620">
+              <caret line="117" column="47" selection-start-line="117" selection-start-column="47" selection-end-line="117" selection-end-column="47" />
               <folding>
                 <element signature="e#86#356#0" />
-                <element signature="e#427#1302#0" />
                 <element signature="n#!!block;n#action_save#0" />
                 <element signature="n#!!block;n#registerEventHandlers#0" />
                 <element signature="n#!!block;n#setToolbarStatusText#0" />
                 <element signature="n#!!block;n#setToolbarSpinnerVisible#0" />
                 <element signature="n#!!block;n#getSelectionContainingElement#0" />
-                <element signature="n#!!block;n#addLink#0" />
+                <element signature="n#!!block;n#addNewLink#0" />
                 <element signature="n#!!block;n#addNewParagraph#0" />
                 <element signature="n#!!block;n#addNewSection#0" />
                 <element signature="n#!!block;n#addNewList#0" />
@@ -70,7 +65,7 @@
         <entry file="file://$PROJECT_DIR$/resources/js/page.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="42">
-              <caret line="2" column="40" lean-forward="true" selection-start-line="2" selection-start-column="40" selection-end-line="2" selection-end-column="40" />
+              <caret line="2" column="40" selection-start-line="2" selection-start-column="40" selection-end-line="2" selection-end-column="40" />
             </state>
           </provider>
         </entry>
@@ -78,7 +73,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/resources/css/page-content.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-698">
+            <state relative-caret-position="2100">
               <caret line="100" column="32" selection-start-line="100" selection-start-column="32" selection-end-line="100" selection-end-column="32" />
             </state>
           </provider>
@@ -218,12 +213,6 @@
               <item name="resources" type="462c0819:PsiDirectoryNode" />
               <item name="js" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="htdocs" type="b2602c69:ProjectViewProjectNode" />
-              <item name="htdocs" type="462c0819:PsiDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
-              <item name="svg" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -345,17 +334,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/resources/js/jquery.caret.js" />
+    <entry file="file://$PROJECT_DIR$/resources/css/toolbar.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="954">
+          <caret line="83" column="24" selection-start-line="83" selection-start-column="24" selection-end-line="83" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/includes/objects/page.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2877">
           <caret line="137" column="50" selection-start-line="137" selection-start-column="50" selection-end-line="137" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/js/jquery.caret.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="36" lean-forward="true" selection-start-column="36" selection-end-column="36" />
         </state>
       </provider>
     </entry>
@@ -366,16 +356,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/resources/css/toolbar.css">
+    <entry file="file://$PROJECT_DIR$/includes/html-builder/page-content.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="954">
-          <caret line="83" column="24" selection-start-line="83" selection-start-column="24" selection-end-line="83" selection-end-column="24" />
+        <state relative-caret-position="798">
+          <caret line="38" column="29" selection-start-line="38" selection-start-column="29" selection-end-line="38" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/js/page.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="42">
+          <caret line="2" column="40" selection-start-line="2" selection-start-column="40" selection-end-line="2" selection-end-column="40" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/resources/css/page-content.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-698">
+        <state relative-caret-position="2100">
           <caret line="100" column="32" selection-start-line="100" selection-start-column="32" selection-end-line="100" selection-end-column="32" />
         </state>
       </provider>
@@ -387,37 +384,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/resources/js/page.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="42">
-          <caret line="2" column="40" lean-forward="true" selection-start-line="2" selection-start-column="40" selection-end-line="2" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/includes/html-builder/page-content.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="351">
-          <caret line="38" column="29" lean-forward="true" selection-start-line="38" selection-start-column="29" selection-end-line="38" selection-end-column="29" />
-          <folding>
-            <element signature="e#1580#3484#0#PHP" />
-            <element signature="e#4400#5258#0#PHP" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/resources/js/editor.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="640">
-          <caret line="458" column="131" selection-start-line="458" selection-start-column="131" selection-end-line="458" selection-end-column="131" />
+        <state relative-caret-position="620">
+          <caret line="117" column="47" selection-start-line="117" selection-start-column="47" selection-end-line="117" selection-end-column="47" />
           <folding>
             <element signature="e#86#356#0" />
-            <element signature="e#427#1302#0" />
             <element signature="n#!!block;n#action_save#0" />
             <element signature="n#!!block;n#registerEventHandlers#0" />
             <element signature="n#!!block;n#setToolbarStatusText#0" />
             <element signature="n#!!block;n#setToolbarSpinnerVisible#0" />
             <element signature="n#!!block;n#getSelectionContainingElement#0" />
-            <element signature="n#!!block;n#addLink#0" />
+            <element signature="n#!!block;n#addNewLink#0" />
             <element signature="n#!!block;n#addNewParagraph#0" />
             <element signature="n#!!block;n#addNewSection#0" />
             <element signature="n#!!block;n#addNewList#0" />
