@@ -11,15 +11,19 @@
 function page_content_html($content, $page, $edit)
 {
     // script
-    $html = "<script src=\"/resources/js/jquery.js\" type=\"text/javascript\"></script><script src=\"/resources/js/jquery.caret.js\" type=\"text/javascript\"></script><script src=\"/resources/js/page.js\" type=\"text/javascript\"></script>";
+    $html = "
+<script src=\"/resources/js/jquery.js\" type=\"application/javascript\"></script>
+<script src=\"/resources/js/page.js\" type=\"text/javascript\"></script>";
     if ($edit) {
-        $html .= "<script src=\"/resources/js/editor.js\" type=\"text/javascript\"></script>";
+        $html .= "
+<script src=\"/resources/js/editor.js\" type=\"application/javascript\"></script>";
     }
 
     // meta/other
-    $html .= "<span class=\"hidden\" id=\"hiddenpageid\">" . $page->id . "</span>";
-    $html .= "<span class=\"hidden\" id=\"hiddenpageisnew\">" . $page->isnew . "</span>";
-    $html .= "<span class=\"hidden\" id=\"hiddenedit\">" . $edit . "</span>";
+    $html .= "
+<span class=\"hidden\" id=\"hiddenpageid\">" . $page->id . "</span>
+<span class=\"hidden\" id=\"hiddenpageisnew\">" . $page->isnew . "</span>
+<span class=\"hidden\" id=\"hiddenedit\">" . $edit . "</span>";
 
     // toolbar when editing
     if ($edit) {
@@ -27,10 +31,21 @@ function page_content_html($content, $page, $edit)
     }
 
     // modals
-    $html .= "<div class=\"link-modal hidden\"><span class=\"centerer\"><div class=\"link-dialog\"><div class=\"textbox-container\"><span id=\"text\">Link to:</span><input type=\"text\" autocomplete=\"off\" min=\"12\" placeholder=\"http://example.com\"></div></div></span></div>";
+    $html .= "
+<div class=\"link-modal hidden\">
+    <div class=\"link-dialog\">
+        <div class=\"textbox-container\">
+            <span id=\"text\">Link to:</span>
+            <input type=\"text\" autocomplete=\"off\" min=\"12\" max=\"2048\" placeholder=\"http://example.com\">
+        </div>
+        <button class=\"insert-link\">Insert</button>
+    </div>
+</div>";
 
     // start of actual content
-    $html .= "<div class=\"page-content\"><div class=\"content\">";
+    $html .= "
+<div class=\"page-content\">
+    <div class=\"content\">";
     $html .= "<div class=\"module page-title\"";
     if ($edit) {
         $html .= " contenteditable=\"true\"";
@@ -85,11 +100,13 @@ function page_content_html($content, $page, $edit)
     // footer (hardcoded for now)
     $html .= "<div class=\"module footer\">Copyright 2018</div>";
     // end all modules
-    $html .= "</div>";
+    $html .= "
+    </div>";
 
     // infobox
     $infobox = $content["infobox"];
-    $html .= "<table class=\"infobox\"><tbody><tr class=\"heading\"><td colspan=\"2\"><div class=\"bold-text\"";
+    $html .= "
+    <table class=\"infobox\"><tbody><tr class=\"heading\"><td colspan=\"2\"><div class=\"bold-text\"";
     if ($edit) {
         $html .= " contenteditable=\"true\"";
     }
@@ -125,7 +142,9 @@ function page_content_html($content, $page, $edit)
         $html .= "</tr>";
     }
 
-    return $html . "</tbody></table></div>";
+    return $html . "</tbody>
+    </table>
+</div>";
 }
 
 /**

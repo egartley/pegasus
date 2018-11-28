@@ -11,6 +11,14 @@ jQuery.fn.insertAt = function (index, element) {
     return this;
 };
 
+// https://coderamblings.wordpress.com/2012/07/09/insert-a-string-at-a-specific-index/
+String.prototype.insert = function (index, string) {
+    if (index > 0)
+        return this.substring(0, index) + string + this.substring(index, this.length);
+    else
+        return string + this;
+};
+
 $(document).ready(function () {
     initEditor()
 });
@@ -47,10 +55,11 @@ var currentInfoboxIndex = 0;
 
 // link modal
 var selectionLength = 0;
-var mostRecentCaretPos = -1;
+var mostRecentCaretPos = 0;
+var previousCaretPos = 0;
 var selectedText = "";
-var didSetCaret = false;
 var isDisplayingLinkModal = false;
+var totalIndexOffset = 0;
 
 function initEditor() {
     // TOOLBAR BUTTONS ("actionables")
@@ -81,7 +90,7 @@ function initEditor() {
         addNewList(currentParagraph)
     });
     $('div.toolbar div.actionable.action-addlink').on("click", function () {
-        addLink(getSelectionContainingElement())
+        addNewLink(getSelectionContainingElement())
     });
     $('div.toolbar div.actionable.action-options').on("click", function () {
         // window.location = "/editor/?action=delete&id=" + getHiddenMeta("id")
@@ -101,32 +110,36 @@ function initEditor() {
         if (isDisplayingLinkModal) {
             return
         }
-        selectedText = window.getSelection().toString();
+        var s = window.getSelection();
         selectionLength = selectedText.length;
-        if (selectionLength > 0) {
-            // keep to start of selection rather than the end of it
-            if (!didSetCaret) {
-                mostRecentCaretPos = getSelectionContainingElement().caret() - selectionLength;
-                didSetCaret = true
-            }
-        } else {
-            didSetCaret = false
-        }
+        selectedText = s.toString();
+        mostRecentCaretPos = totalIndexOffset + s.anchorOffset + previousCaretPos
     };
 
     // DYNAMIC EVENTS (amount/element can change)
     registerEventHandlers()
 }
 
-function initLinkDialog() {
+function initLinkDialog(container) {
     setLinkModalVisible(true);
-    getSelectionContainingElement().trigger("blur");
-    $("div.link-modal div.link-dialog").trigger("focus");
+    // unfocus container
+    container.trigger("blur");
+    // focus dialog, specifically textbox
+    $("div.link-modal div.link-dialog div.textbox-container input").trigger("focus");
 
     $("div.link-modal").off("click");
     $("div.link-modal").on("click", function (e) {
-        // hide if click was not on the dialog itself (i.e. anywhere else)
-        setLinkModalVisible(!$(e.target).hasClass("link-modal"))
+        // hide if click was not anywhere in the dialog
+        if ($(e.target).hasClass("link-modal")) {
+            // only change visibility if clicked on modal itself, not dialog
+            setLinkModalVisible(false)
+        }
+    });
+    $("button.insert-link").off("click");
+    $("button.insert-link").on("click", function () {
+        insertLink(container);
+        $("div.link-dialog div.textbox-container input").val("");
+        setLinkModalVisible(false)
     })
 }
 
@@ -366,11 +379,11 @@ function getSelectionContainingElement() {
     }
 }
 
-function addLink(container) {
+function addNewLink(container) {
     if (container == null) {
-        // return
+        return
     }
-    initLinkDialog()
+    initLinkDialog(container)
 }
 
 function addNewParagraph(invoker) {
@@ -430,4 +443,25 @@ function insertNewProperty() {
     currentInfoboxIndex++;
     $('table.infobox tbody').children().eq(currentInfoboxIndex).children("th").focus();
     registerEventHandlers()
+}
+
+function insertLink(container) {
+    // TODO: sanitize url
+    if (container === currentParagraph) {
+        var originalHTML = container.html();
+        // set url to varibale for sanitizing
+        var linkAddress = $("div.link-dialog div.textbox-container input").val();
+        var pre = "<a rel=\"nofollow\" href=\"" + linkAddress + "\">";
+        var post = "</a>";
+        var modifiedHTML = originalHTML.insert(mostRecentCaretPos, pre);
+        modifiedHTML = modifiedHTML.insert(mostRecentCaretPos + pre.length + selectionLength, post);
+        container.html(modifiedHTML);
+        console.log("prev: " + previousCaretPos + ", recent: " + mostRecentCaretPos + ", total: " + totalIndexOffset + ", sel len: " + selectionLength);
+        totalIndexOffset += selectionLength;
+        previousCaretPos = mostRecentCaretPos
+    } else if (container === currentList) {
+    } else if (currentModule.hasClass("heading")) {
+    } else {
+        // TODO: infobox stuff
+    }
 }

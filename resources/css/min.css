@@ -5,13 +5,14 @@ body {
     margin: 0
 }
 
-a, a:hover {
+a {
     color: skyblue;
-    text-decoration: none
+    transition: color 0.1s linear
 }
 
 a:hover {
-    text-decoration: underline
+    color: whitesmoke;
+    cursor: pointer
 }
 
 .hidden {
