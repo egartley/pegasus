@@ -13,7 +13,7 @@ function page_content_html($content, $page, $edit)
     // script
     $html = "
 <script src=\"/resources/js/jquery.js\" type=\"application/javascript\"></script>
-<script src=\"/resources/js/page.js\" type=\"text/javascript\"></script>";
+<script src=\"/resources/js/page.js\" type=\"application/javascript\"></script>";
     if ($edit) {
         $html .= "
 <script src=\"/resources/js/editor.js\" type=\"application/javascript\"></script>";

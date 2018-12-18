@@ -107,6 +107,14 @@
     margin-bottom: 18px
 }
 
+.sub-module.paragraph {
+    display: inline-block
+}
+
+.sub-module.link {
+    display: inline
+}
+
 .sub-module.list ul {
     padding-left: 26px
 }

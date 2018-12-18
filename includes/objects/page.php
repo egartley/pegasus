@@ -109,7 +109,7 @@ class Page
         return true;
     }
 
-    // http://php.net/manual/en/function.rmdir.php#117354
+    // Credit: http://php.net/manual/en/function.rmdir.php#117354
     private static function delete_page_directory($src)
     {
         $dir = opendir($src);
