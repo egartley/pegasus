@@ -31,7 +31,7 @@ $(document).ready(function () {
  */
 var strings = [
     /* 0 */
-    "<div class=\"sub-module paragraph\" contenteditable=\"true\">",
+    "<div class=\"sub-module paragraph\">",
     /* 1 */
     "<div class=\"module heading\"><span contenteditable=\"true\">New Section</span><span id=\"removesection\"><img src=\"/resources/png/trash.png\" alt=\"remove\" title=\"Remove this section\"></span></div>",
     /* 2 */
@@ -51,7 +51,7 @@ var strings = [
     /* 9 */
     "e",
     /* 10 */
-    "<div class=\"e plain\">"
+    "<div class=\"e morph\" contenteditable=\"true\">"
 ];
 
 // editing indexes
@@ -261,7 +261,11 @@ function registerEventHandlers() {
             $(this).off('focus keyup keydown');
             $(this).on("focus", function () {
                 currentParagraphElement = $(this);
-                currentParagraphElementIndex = $(this).index()
+                currentParagraphElementIndex = currentParagraphElement.index();
+                currentParagraph = $(this).parent();
+                currentParagraphIndex = currentParagraph.index();
+                currentModule = $(this).parent().parent();
+                currentModuleIndex = currentModule.index()
             });
             $(this).on("keydown", function (e) {
                 // prevent spamming of enter key while holding it down
@@ -272,7 +276,16 @@ function registerEventHandlers() {
             });
             $(this).on("keyup", function (e) {
                 var pressedEnter = (e.keyCode || e.which) === 13;
+                var pressedBackspace = (e.keyCode || e.which) === 8;
                 var isMorph = $(this)[0].classList.contains("morph");
+                if (pressedBackspace && mostRecentCaretPos === 0) {
+                    var prevElement = $(this).parent().children().eq(currentParagraphElementIndex);
+                    if (prevElement !== null) {
+                        $(this).remove();
+                        prevElement.focus()
+                    }
+                    return
+                }
                 if (isMorph) {
                     if (pressedEnter) {
                         // pressed enter in a morph element, therefore make a whole new paragraph instead of just another element
@@ -283,7 +296,8 @@ function registerEventHandlers() {
                         $(this).attr("class", strings[9] + "plain")
                     }
                 } else if (pressedEnter) {
-                    addNewParagraphElement($(this))
+                    addNewParagraphElement($(this));
+                    mostRecentCaretPos = 0
                 }
             })
         });
@@ -301,10 +315,7 @@ function registerEventHandlers() {
         }
         // focus
         $(this).on("focus", function () {
-            currentModule = $(this).parent();
-            currentModuleIndex = currentModule.index();
-            currentParagraph = $(this);
-            currentParagraphIndex = $(this).index()
+
         });
         // keypress
         $(this).on("keypress", function (e) {
@@ -461,8 +472,10 @@ function addNewParagraphElement(element) {
         return
     }
     var p = element.parent();
-    p.insertAt(currentParagraphElementIndex + 1, strings[10] + "</div>");
-    p.focus();
+    var prevHTML = element.html();
+    p.insertAt(currentParagraphElementIndex + 1, strings[10] + prevHTML.substring(mostRecentCaretPos) + "</div>");
+    element.html(prevHTML.substring(0, mostRecentCaretPos));
+    p.children().eq(currentParagraphElementIndex + 1).focus();
     registerEventHandlers()
 }
 

@@ -63,7 +63,7 @@ function page_content_html($content, $page, $edit)
                 $html .= "<div class=\"sub-module ";
                 if ($submodule["type"] == "paragraph") {
                     // paragraph
-                    $html .= "paragraph\" contenteditable=\"true\">";
+                    $html .= "paragraph\">";
                     foreach ($submodule["value"] as $pmodule) {
                         if ($pmodule["type"] == "text") {
                             $html .= $pmodule["value"];
