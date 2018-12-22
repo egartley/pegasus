@@ -51,6 +51,8 @@ var strings = [
     /* 9 */
     "e",
     /* 10 */
+    "<div class=\"e plain\" contenteditable=\"true\">",
+    /* 11 */
     "<div class=\"e morph\" contenteditable=\"true\">"
 ];
 
@@ -278,24 +280,36 @@ function registerEventHandlers() {
                 var pressedEnter = (e.keyCode || e.which) === 13;
                 var pressedBackspace = (e.keyCode || e.which) === 8;
                 var isMorph = $(this)[0].classList.contains("morph");
-                if (pressedBackspace && mostRecentCaretPos === 0) {
-                    var prevElement = $(this).parent().children().eq(currentParagraphElementIndex);
-                    if (prevElement !== null) {
-                        $(this).remove();
-                        prevElement.focus()
+                var empty = isElementHTMLEmpty($(this));
+                var atBeginning = mostRecentCaretPos === 0;
+                if (pressedBackspace && atBeginning) {
+                    if (empty) {
+                        // delete this element
+                        var prevElement = $(this).parent().children().eq(currentParagraphElementIndex - 1);
+                        if (prevElement !== null) {
+                            $(this).remove();
+                            prevElement.focus()
+                        }
+                    } else {
+                        // merge with above paragraph or element
+                        if (currentParagraphElementIndex === 0) {
+                            // backspace-ing in the first element, so merge into preceding paragraph
+                            mergeParagraph($(this).parent())
+                        } else {
+                            // backspace-ing not in the first element, so merge into the preceding element
+                            mergeParagraphElement($(this))
+                        }
                     }
                     return
                 }
+                // DID NOT PRESS BACKSPACE AT BEGINNING OF ELEMENT
                 if (isMorph) {
+                    $(this).attr("class", strings[9] + " plain");
                     if (pressedEnter) {
                         // pressed enter in a morph element, therefore make a whole new paragraph instead of just another element
-                        addNewParagraph($(this).parent());
-                        $(this).remove()
-                    } else {
-                        // is morph element, but did not press enter, therefore change to plain
-                        $(this).attr("class", strings[9] + "plain")
+                        addNewParagraph($(this).parent())
                     }
-                } else if (pressedEnter) {
+                } else if (pressedEnter && !isElementHTMLEmpty($(this))) {
                     addNewParagraphElement($(this));
                     mostRecentCaretPos = 0
                 }
@@ -461,9 +475,17 @@ function addNewParagraph(p) {
         return
     }
     var container = p.parent();
-    container.insertAt(currentParagraphIndex + 1, strings[0] + strings[10] + "</div></div>");
-    currentParagraph.html(currentParagraph.html().substring(0, mostRecentCaretPos));
-    container.children().eq(currentParagraphIndex + 1).focus();
+    var elementHTML = currentParagraphElement.html();
+
+    currentParagraphElement.remove();
+    container.insertAt(currentParagraphIndex + 1, strings[0] + strings[10] + elementHTML + "</div></div>");
+    container.children().eq(currentParagraphIndex + 1).children().eq(0).focus();
+
+    currentParagraph = container.children().eq(currentParagraphIndex + 1);
+    currentParagraphIndex = currentParagraph.index();
+    currentParagraphElement = currentParagraph.children().eq(0);
+    currentParagraphElementIndex = 0;
+
     registerEventHandlers()
 }
 
@@ -473,35 +495,61 @@ function addNewParagraphElement(element) {
     }
     var p = element.parent();
     var prevHTML = element.html();
-    p.insertAt(currentParagraphElementIndex + 1, strings[10] + prevHTML.substring(mostRecentCaretPos) + "</div>");
+
+    p.insertAt(currentParagraphElementIndex + 1, strings[11] + prevHTML.substring(mostRecentCaretPos) + "</div>");
     element.html(prevHTML.substring(0, mostRecentCaretPos));
     p.children().eq(currentParagraphElementIndex + 1).focus();
-    registerEventHandlers()
-}
 
-function addNewParagraphWithContent(merger, contentHTML) {
-    if (merger == null) {
-        return
-    }
-    var container = merger.parent();
-    var above = container.children().eq(currentParagraphIndex - 1);
-    if (above == null) {
-        return
-    }
-    var originalHTML = above.html();
-    above.html(originalHTML + contentHTML);
-    merger.remove();
-    above.focus();
+    currentParagraphElement = p.children().eq(currentParagraphElementIndex + 1);
+    currentParagraphElementIndex = currentParagraphElement.index();
+
     registerEventHandlers()
 }
 
 /**
- * Combines, or "merges", the given paragraph with the one above it
+ * Combines, or "merges", the given paragraph with the one preceding it
  *
- * @param toMerge The paragraph, as a jQuery object, to merge
+ * @param toMerge The paragraph as a jQuery object
  */
 function mergeParagraph(toMerge) {
-    addNewParagraphWithContent(toMerge, toMerge.html())
+    if (currentParagraphIndex === 0) {
+        // can't merge into non-existent paragraph
+        return
+    }
+    var html = toMerge.html();
+    var aboveP = toMerge.parent().children().eq(currentParagraphIndex - 1);
+    var aboveHTML = aboveP.html();
+    aboveP.html(aboveHTML + html);
+    toMerge.remove();
+
+    currentParagraph = aboveP;
+    currentParagraphIndex = currentParagraph.index();
+    currentParagraphElement = currentParagraph.children().eq(currentParagraph.children().length - 1);
+    currentParagraphElementIndex = currentParagraphElement.index();
+    currentParagraphElement.focus();
+    registerEventHandlers()
+}
+
+/**
+ * Combines, or "merges", the given paragraph element with the one preceding it
+ *
+ * @param toMerge The paragraph element as a jQuery object
+ */
+function mergeParagraphElement(toMerge) {
+    if (currentParagraphElementIndex === 0) {
+        // can't merge into non-existent element
+        return
+    }
+    var html = toMerge.html();
+    var aboveElement = toMerge.parent().children().eq(currentParagraphElementIndex - 1);
+    var aboveHTML = aboveElement.html();
+    aboveElement.html(aboveHTML + html);
+    toMerge.remove();
+
+    currentParagraphElement = aboveElement;
+    currentParagraphElementIndex = currentParagraphElement.index();
+    currentParagraphElement.focus();
+    registerEventHandlers()
 }
 
 function addNewSection(invoker) {
