@@ -72,7 +72,6 @@ var selectionLength = 0;
 var mostRecentCaretPos = 0;
 var selectedText = "";
 var isDisplayingLinkModal = false;
-var mostRecentNode = null;
 
 /**
  * Initializes various elements of the editor, such as toolbar buttons and selection handling
@@ -103,7 +102,7 @@ function initEditor() {
         addNewList(currentParagraph)
     });
     $('div.toolbar div.actionable.action-addlink').on("click", function () {
-        addNewLink(getSelectionNode())
+        addNewLink(getSelectionElement())
     });
     $('div.toolbar div.actionable.action-options').on("click", function () {
         // window.location = "/editor/?action=delete&id=" + getHiddenMeta("id")
@@ -123,7 +122,6 @@ function initEditor() {
         var s = window.getSelection();
         selectionLength = selectedText.length;
         selectedText = s.toString();
-        mostRecentNode = $(":focus");
         mostRecentCaretPos = s.anchorOffset
     };
 
@@ -191,17 +189,15 @@ function action_save() {
                             value: $(this).html()
                         }]
                     })
-                } else {
-                    if (this.classList.contains("list")) {
-                        var listitems = [];
-                        $(this).children().eq(0).children().each(function () {
-                            listitems.push($(this).html())
-                        });
-                        mod.value.push({
-                            type: "list",
-                            value: listitems
-                        })
-                    }
+                } else if (this.classList.contains("list")) {
+                    var listitems = [];
+                    $(this).children().eq(0).children().each(function () {
+                        listitems.push($(this).html())
+                    });
+                    mod.value.push({
+                        type: "list",
+                        value: listitems
+                    })
                 }
             });
         } else if (classlist.contains("heading")) {
@@ -426,11 +422,11 @@ function setLinkModalVisible(visible) {
 }
 
 /**
- * Returns the "node" that has the user selection within it
+ * Returns the element that has the user selection within it
  *
  * @returns {jQuery|null}
  */
-function getSelectionNode() {
+function getSelectionElement() {
     if (selectedText.length === 0) {
         return null
     }
@@ -439,15 +435,15 @@ function getSelectionNode() {
             return null
         }
         if (currentParagraph == null && currentList != null) {
-            return currentList
+            return currentList.children().eq(currentListIndex)
         }
         if (currentParagraph != null && currentList == null) {
-            return currentParagraph
+            return currentParagraph.children().eq(currentParagraphElementIndex)
         }
         if (currentParagraph.index() > currentList.index()) {
-            return currentList
+            return currentList.children().eq(currentListIndex)
         } else {
-            return currentParagraph
+            return currentParagraph.children().eq(currentParagraphElementIndex)
         }
     } else if (currentModule.hasClass("heading")) {
         return currentModule.children().eq(0)
@@ -604,20 +600,15 @@ function insertNewProperty() {
 /**
  * Actually inserts the URL as a link into the provided container at the previously specified location
  *
- * @param container The container, or "node", that contains the user selection
+ * @param element The element that contains the user selection
  */
-function insertLink(container) {
-    // TODO: sanitize url
-    if (container === currentParagraph) {
-        var originalHTML = container.html();
-        // set url to varibale for sanitizing
-        var linkAddress = $("div.link-dialog div.textbox-container input").val();
-        var pre = "<a rel=\"nofollow\" href=\"" + linkAddress + "\">";
-        var post = "</a>";
-        mostRecentNode.html(originalHTML.insert(mostRecentCaretPos, pre).insert(mostRecentCaretPos + pre.length + selectionLength, post))
-    } else if (container === currentList) {
-    } else if (currentModule.hasClass("heading")) {
-    } else {
-        // TODO: infobox
-    }
+function insertLink(element) {
+    var linkAddress = $("div.link-dialog div.textbox-container input").val();
+    var elementHTML = element.html();
+    var toInsert = "<a rel=\"nofollow\" href=\"" + linkAddress + "\">" + selectedText + "</a>";
+    var fromSelected = elementHTML.substring(mostRecentCaretPos);
+    console.log(fromSelected);
+    var replaced = fromSelected.replace(selectedText, toInsert);
+    var newHTML = elementHTML.substring(0, mostRecentCaretPos) + replaced;
+    element.html(newHTML)
 }

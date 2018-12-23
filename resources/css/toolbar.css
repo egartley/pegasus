@@ -18,7 +18,7 @@ div.toolbar > div:not(:last-child):not(.delimiter) {
     margin-right: 1px
 }
 
-div.toolbar > div:not(.delimiter) {
+div.toolbar > div:not(.delimiter):not(.toolbar-spinner) {
     height: 28px
 }
 

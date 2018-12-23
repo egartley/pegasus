@@ -22,7 +22,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/includes/html-builder/page-content.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="573">
+            <state relative-caret-position="1365">
               <caret line="65" column="41" selection-start-line="65" selection-start-column="41" selection-end-line="65" selection-end-column="41" />
             </state>
           </provider>
@@ -31,8 +31,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/includes/html-builder/toolbar.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="294">
-              <caret line="14" column="158" selection-start-line="14" selection-start-column="158" selection-end-line="14" selection-end-column="158" />
+            <state relative-caret-position="504">
+              <caret line="24" column="39" selection-start-line="24" selection-start-column="33" selection-end-line="24" selection-end-column="39" />
             </state>
           </provider>
         </entry>
@@ -40,28 +40,34 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/resources/js/editor.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="394">
-              <caret line="528" column="36" selection-start-line="528" selection-start-column="36" selection-end-line="528" selection-end-column="36" />
+            <state relative-caret-position="247">
+              <caret line="124" column="43" selection-start-line="124" selection-start-column="43" selection-end-line="124" selection-end-column="43" />
               <folding>
-                <element signature="n#!!block;n#initEditor#0" />
-                <element signature="n#!!block;n#initLinkDialog#0" />
+                <element signature="e#2526#2657#0" />
                 <element signature="n#!!block;n#action_save#0" />
-                <element signature="e#11760#12023#0" />
-                <element signature="e#12143#12331#0" />
-                <element signature="e#12392#12592#0" />
-                <element signature="e#12651#12985#0" />
-                <element signature="e#13304#13411#0" />
-                <element signature="e#13841#13939#0" />
+                <element signature="n#!!block;n#registerEventHandlers#0" />
                 <element signature="n#!!block;n#setToolbarStatusText#0" />
                 <element signature="n#!!block;n#setToolbarSpinnerVisible#0" />
                 <element signature="n#!!block;n#setLinkModalVisible#0" />
-                <element signature="n#!!block;n#getSelectionNode#0" />
+                <element signature="n#!!block;n#addNewParagraph#0" />
+                <element signature="n#!!block;n#addNewParagraphElement#0" />
+                <element signature="n#!!block;n#mergeParagraph#0" />
+                <element signature="n#!!block;n#mergeParagraphElement#0" />
                 <element signature="n#!!block;n#addNewSection#0" />
                 <element signature="n#!!block;n#addNewList#0" />
                 <element signature="n#!!block;n#insertNewListItem#0" />
                 <element signature="n#!!block;n#insertNewSubHeading#0" />
                 <element signature="n#!!block;n#insertNewProperty#0" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/resources/css/toolbar.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="420">
+              <caret line="20" column="56" selection-start-line="20" selection-start-column="56" selection-end-line="20" selection-end-column="56" />
             </state>
           </provider>
         </entry>
@@ -89,15 +95,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="294">
               <caret line="14" column="19" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="19" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/data-storage/pages/0/content.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="651">
-              <caret column="31578" selection-start-column="31578" selection-end-column="31578" />
             </state>
           </provider>
         </entry>
@@ -130,6 +127,7 @@
       <find>&lt;br&gt;&lt;/div&gt;</find>
       <find>\&quot;e plain</find>
       <find>strings[10</find>
+      <find>mostRecentNode</find>
     </findStrings>
     <replaceStrings>
       <replace>let</replace>
@@ -155,17 +153,17 @@
         <option value="$PROJECT_DIR$/includes/core/page-storage.php" />
         <option value="$PROJECT_DIR$/includes/core/min-header.php" />
         <option value="$PROJECT_DIR$/resources/svg/link.svg" />
-        <option value="$PROJECT_DIR$/resources/css/toolbar.css" />
         <option value="$PROJECT_DIR$/resources/js/page.js" />
         <option value="$PROJECT_DIR$/editor/index.php" />
         <option value="$PROJECT_DIR$/resources/js/jquery.caret.js" />
         <option value="$PROJECT_DIR$/resources/css/min.css" />
         <option value="$PROJECT_DIR$/data-storage/pages/2/content.json" />
         <option value="$PROJECT_DIR$/resources/css/page-content.css" />
-        <option value="$PROJECT_DIR$/includes/html-builder/toolbar.php" />
         <option value="$PROJECT_DIR$/includes/objects/page.php" />
         <option value="$PROJECT_DIR$/includes/html-builder/page-content.php" />
         <option value="$PROJECT_DIR$/data-storage/pages/0/content.json" />
+        <option value="$PROJECT_DIR$/resources/css/toolbar.css" />
+        <option value="$PROJECT_DIR$/includes/html-builder/toolbar.php" />
         <option value="$PROJECT_DIR$/resources/js/editor.js" />
       </list>
     </option>
@@ -181,7 +179,7 @@
     <other-services-enabled>true</other-services-enabled>
     <auto-save>true</auto-save>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="260" />
     <option name="y" value="20" />
     <option name="width" value="1400" />
@@ -295,11 +293,11 @@
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.13224447" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.13224447" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32936078" />
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
@@ -372,13 +370,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/resources/js/jquery.caret.js" />
-    <entry file="file://$PROJECT_DIR$/resources/css/toolbar.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="954">
-          <caret line="83" column="24" selection-start-line="83" selection-start-column="24" selection-end-line="83" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/data-storage/pages/2/content.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="58">
@@ -400,31 +391,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/includes/html-builder/toolbar.php">
+    <entry file="file://$PROJECT_DIR$/includes/html-builder/page-content.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="294">
-          <caret line="14" column="158" selection-start-line="14" selection-start-column="158" selection-end-line="14" selection-end-column="158" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/css/page-content.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2310">
-          <caret line="110" column="25" selection-start-line="110" selection-start-column="25" selection-end-line="110" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/css/min.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="294">
-          <caret line="14" column="19" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data-storage/pages/0/content.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="651">
-          <caret column="31578" selection-start-column="31578" selection-end-column="31578" />
+        <state relative-caret-position="1365">
+          <caret line="65" column="41" selection-start-line="65" selection-start-column="41" selection-end-line="65" selection-end-column="41" />
         </state>
       </provider>
     </entry>
@@ -435,31 +405,59 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/includes/html-builder/page-content.php">
+    <entry file="file://$PROJECT_DIR$/resources/css/page-content.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="573">
-          <caret line="65" column="41" selection-start-line="65" selection-start-column="41" selection-end-line="65" selection-end-column="41" />
+        <state relative-caret-position="2310">
+          <caret line="110" column="25" selection-start-line="110" selection-start-column="25" selection-end-line="110" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data-storage/pages/0/content.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3024">
+          <caret column="31690" selection-start-column="31690" selection-end-column="31690" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data-storage/pages/0/meta.json">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/css/min.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="294">
+          <caret line="14" column="19" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/css/toolbar.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="20" column="56" selection-start-line="20" selection-start-column="56" selection-end-line="20" selection-end-column="56" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/includes/html-builder/toolbar.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="504">
+          <caret line="24" column="39" selection-start-line="24" selection-start-column="33" selection-end-line="24" selection-end-column="39" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/resources/js/editor.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="394">
-          <caret line="528" column="36" selection-start-line="528" selection-start-column="36" selection-end-line="528" selection-end-column="36" />
+        <state relative-caret-position="247">
+          <caret line="124" column="43" selection-start-line="124" selection-start-column="43" selection-end-line="124" selection-end-column="43" />
           <folding>
-            <element signature="n#!!block;n#initEditor#0" />
-            <element signature="n#!!block;n#initLinkDialog#0" />
+            <element signature="e#2526#2657#0" />
             <element signature="n#!!block;n#action_save#0" />
-            <element signature="e#11760#12023#0" />
-            <element signature="e#12143#12331#0" />
-            <element signature="e#12392#12592#0" />
-            <element signature="e#12651#12985#0" />
-            <element signature="e#13304#13411#0" />
-            <element signature="e#13841#13939#0" />
+            <element signature="n#!!block;n#registerEventHandlers#0" />
             <element signature="n#!!block;n#setToolbarStatusText#0" />
             <element signature="n#!!block;n#setToolbarSpinnerVisible#0" />
             <element signature="n#!!block;n#setLinkModalVisible#0" />
-            <element signature="n#!!block;n#getSelectionNode#0" />
+            <element signature="n#!!block;n#addNewParagraph#0" />
+            <element signature="n#!!block;n#addNewParagraphElement#0" />
+            <element signature="n#!!block;n#mergeParagraph#0" />
+            <element signature="n#!!block;n#mergeParagraphElement#0" />
             <element signature="n#!!block;n#addNewSection#0" />
             <element signature="n#!!block;n#addNewList#0" />
             <element signature="n#!!block;n#insertNewListItem#0" />
