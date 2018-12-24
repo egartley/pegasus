@@ -65,17 +65,31 @@ function page_content_html($content, $page, $edit)
                     // paragraph
                     $html .= "paragraph\">";
                     foreach ($submodule["value"] as $pmodule) {
-                        if ($pmodule["type"] == "text") {
-                            $html .= $pmodule["value"];
+                        // start element div
+                        $html .= "<div";
+                        if ($edit) {
+                            $html .= " contenteditable=\"true\"";
+                        }
+                        $html .= " class=\"e ";
+                        if ($pmodule["type"] == "text" || $pmodule["type"] == "plain") {
+                            $html .= "plain\">" . $pmodule["value"];
+                        } else if ($pmodule["type"] == "link") {
+                            $html .= "link\" url=\"" . $pmodule["value"]["url"] . "\">" . $pmodule["value"]["displaytext"];
                         } else {
                             $html .= "Unknown type!";
                         }
+                        // end element div
+                        $html .= "</div>";
                     }
                 } else if ($submodule["type"] == "list") {
                     // list
                     $html .= "list\"><ul>";
                     foreach ($submodule["value"] as $listitem) {
-                        $html .= "<li id=\"list-item\" contenteditable=\"true\">" . $listitem . "</li>";
+                        $html .= "<li id=\"list-item\"";
+                        if ($edit) {
+                            $html .= " contenteditable=\"true\"";
+                        }
+                        $html .= ">" . $listitem . "</li>";
                     }
                     $html .= "</ul>";
                 } else {
@@ -90,7 +104,10 @@ function page_content_html($content, $page, $edit)
             if ($edit) {
                 $html .= " contenteditable=\"true\"";
             }
-            $html .= ">" . $module["value"] . "</span><span id=\"removesection\"><img src=\"../resources/png/trash.png\" alt=\"[X]\" title=\"Remove this section\"></span>";
+            $html .= ">" . $module["value"] . "</span>";
+            if ($edit) {
+                $html .= "<span id=\"removesection\"><img src=\"../resources/png/trash.png\" alt=\"[X]\" title=\"Remove this section\"></span>";
+            }
         } else {
             $html .= "\">Unknown type!";
         }

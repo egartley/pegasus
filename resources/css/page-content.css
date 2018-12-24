@@ -13,22 +13,9 @@
     margin-bottom: 32px
 }
 
-.bold-text {
-    font-weight: bold
-}
-
-.small-text {
-    font-size: 12px
-}
-
-.flex-centered {
-    display: flex;
-    justify-content: center;
-    align-items: center
-}
-
-.editing-infocus {
-    background-color: #222
+/* Credit: https://stackoverflow.com/a/2260788 */
+[contenteditable]:focus {
+    outline: 0 solid transparent
 }
 
 .link-modal {
@@ -51,11 +38,6 @@
     top: calc(50% - (var(--modal-dialog-height) / 2));
     left: calc(50% - (var(--modal-dialog-width) / 2));
     background-color: #111
-}
-
-.background-selection {
-    background-color: #777;
-    color: black
 }
 
 .content {
@@ -82,7 +64,7 @@
     font-size: 26px;
     display: flex;
     align-items: center;
-    margin-top: 52px
+    margin-top: 36px
 }
 
 .module.heading span#removesection {
@@ -107,11 +89,7 @@
     margin-bottom: 18px
 }
 
-.sub-module.paragraph {
-    display: inline-block
-}
-
-.sub-module.link {
+.sub-module.paragraph > div.e {
     display: inline
 }
 

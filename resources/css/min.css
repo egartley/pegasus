@@ -5,16 +5,33 @@ body {
     margin: 0
 }
 
-a {
+a,
+div.e.link {
     color: skyblue;
+    text-decoration: underline;
     transition: color 0.1s linear
 }
 
-a:hover {
+a:hover,
+div.e.link:hover {
     color: whitesmoke;
     cursor: pointer
 }
 
 .hidden {
     display: none
+}
+
+.bold-text {
+    font-weight: bold
+}
+
+.small-text {
+    font-size: 12px
+}
+
+.flex-centered {
+    display: flex;
+    justify-content: center;
+    align-items: center
 }

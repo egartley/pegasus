@@ -182,12 +182,26 @@ function action_save() {
             mod.type = "section-content";
             $(this).children(".sub-module").each(function () {
                 if (this.classList.contains("paragraph")) {
+                    var elements = [];
+                    $(this).children().each(function () {
+                        if (this.classList.contains("plain")) {
+                            elements.push({
+                                type: "plain",
+                                value: $(this).html()
+                            })
+                        } else if (this.classList.contains("link")) {
+                            elements.push({
+                                type: "link",
+                                value: {
+                                    displaytext: $(this).html(),
+                                    url: $(this).attr("url")
+                                }
+                            })
+                        }
+                    });
                     mod.value.push({
                         type: "paragraph",
-                        value: [{
-                            type: "text",
-                            value: $(this).html()
-                        }]
+                        value: elements
                     })
                 } else if (this.classList.contains("list")) {
                     var listitems = [];

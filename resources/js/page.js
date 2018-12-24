@@ -6,30 +6,30 @@ function isWithinView(e, full) {
     var elementBottom = elementTop + e.height();
 
     if (full === true) {
-        return ((pageTop < elementTop) && (pageBottom > elementBottom))
+        return pageTop < elementTop && pageBottom > elementBottom;
     } else {
-        return ((elementTop <= pageBottom) && (elementBottom >= pageTop))
+        return elementTop <= pageBottom && elementBottom >= pageTop;
     }
 }
 
 function getHiddenMeta(meta) {
-    return $("span#hiddenpage" + meta).html()
+    return $("span#hiddenpage" + meta).html();
 }
 
 function isElementHTMLEmpty(element) {
-    return element.html().length === 0 || element.html().indexOf('<br') === 0;
+    return element.html().length === 0 || element.html().indexOf("<br") === 0;
 }
 
 var showingInfobox = true;
 
 $(document).ready(function () {
-    var infobox = $('table.infobox');
+    var infobox = $("table.infobox");
     $(window).scroll(function () {
         if (!isWithinView(infobox, false)) {
             if (showingInfobox) {
                 // not visible, but still showing, so hide it
                 infobox.hide();
-                showingInfobox = false
+                showingInfobox = false;
             } else {
                 // not visible, not showing, all good
             }
@@ -37,10 +37,10 @@ $(document).ready(function () {
             if (!showingInfobox) {
                 // visible, but not showing, so show it
                 infobox.show();
-                showingInfobox = true
+                showingInfobox = true;
             } else {
                 // visible, showing, all good
             }
         }
-    })
-})
+    });
+});
