@@ -89,8 +89,8 @@
     margin-bottom: 18px
 }
 
-.sub-module.paragraph > div.e {
-    display: inline
+.sub-module.paragraph > .e {
+    display: block
 }
 
 .sub-module.list ul {

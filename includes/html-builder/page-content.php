@@ -66,20 +66,20 @@ function page_content_html($content, $page, $edit)
                     $html .= "paragraph\">";
                     foreach ($submodule["value"] as $pmodule) {
                         // start element div
-                        $html .= "<div";
+                        $ptype = $pmodule["type"];
+                        $html .= "<span class=\"e " . $ptype . "\"";
                         if ($edit) {
                             $html .= " contenteditable=\"true\"";
                         }
-                        $html .= " class=\"e ";
-                        if ($pmodule["type"] == "text" || $pmodule["type"] == "plain") {
-                            $html .= "plain\">" . $pmodule["value"];
+                        if ($ptype == "text" || $ptype == "plain") {
+                            $html .= ">" . $pmodule["value"];
                         } else if ($pmodule["type"] == "link") {
-                            $html .= "link\" url=\"" . $pmodule["value"]["url"] . "\">" . $pmodule["value"]["displaytext"];
+                            // $html .= " url=\"" . $pmodule["value"]["url"] . "\">" . $pmodule["value"]["displaytext"];
                         } else {
                             $html .= "Unknown type!";
                         }
                         // end element div
-                        $html .= "</div>";
+                        $html .= "</span>";
                     }
                 } else if ($submodule["type"] == "list") {
                     // list

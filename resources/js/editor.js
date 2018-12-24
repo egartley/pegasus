@@ -51,9 +51,9 @@ var strings = [
     /* 9 */
     "e",
     /* 10 */
-    "<div class=\"e plain\" contenteditable=\"true\">",
+    "<span class=\"e plain\" contenteditable=\"true\">",
     /* 11 */
-    "<div class=\"e morph\" contenteditable=\"true\">"
+    "<span class=\"e morph\" contenteditable=\"true\">"
 ];
 
 // editing indexes
@@ -102,7 +102,7 @@ function initEditor() {
         addNewList(currentParagraph)
     });
     $('div.toolbar div.actionable.action-addlink').on("click", function () {
-        addNewLink(getSelectionElement())
+        addNewLink(getFocusedElement())
     });
     $('div.toolbar div.actionable.action-options').on("click", function () {
         // window.location = "/editor/?action=delete&id=" + getHiddenMeta("id")
@@ -122,11 +122,47 @@ function initEditor() {
         var s = window.getSelection();
         selectionLength = selectedText.length;
         selectedText = s.toString();
-        mostRecentCaretPos = s.anchorOffset
+        var me = s.anchorNode;
+        var parent = me.parentNode;
+        if (parent.nodeName.length <= 2) {
+            // "me" was text of a non-containing element, such as <b> or <a>
+            // set "me" up one level to match all other scenarios
+            me = me.parentNode;
+            parent = me.parentNode;
+        }
+        console.log(me.nodeName);
+        console.log(parent.nodeName);
+        var childs = parent.childNodes;
+        var myIndex = -1;
+        var allbeforelength = 0;
+        for (var i = 0; i < childs.length; i++) {
+            // get index of "me" in parent's children
+            if (childs[i].isSameNode(me)) {
+                myIndex = i;
+                break
+            }
+        }
+        for (var i = 0; i <= myIndex - 1; i++) {
+            allbeforelength += childs[i].textContent.length
+        }
+        allbeforelength += me.textContent.substring(0, s.anchorOffset).length;
+        console.log("allbeforelength: " + allbeforelength);
+        console.log("myIndex: " + myIndex + "\n-----------------------------");
+
+        mostRecentCaretPos = allbeforelength;
+
+        $("div.module.page-title").html(mostRecentCaretPos.toString())
     };
 
     // DYNAMIC EVENTS (amount/element can change)
     registerEventHandlers()
+}
+
+/**
+ * Returns the "absolute" caret position, which takes into account any links, bolds, italics, etc. from the element
+ */
+function getAbsoluteCaretPos(remainingText) {
+    return getFocusedElement().text().indexOf(remainingText)
 }
 
 function initLinkDialog(node) {
@@ -304,10 +340,12 @@ function registerEventHandlers() {
                         // merge with above paragraph or element
                         if (currentParagraphElementIndex === 0) {
                             // backspace-ing in the first element, so merge into preceding paragraph
-                            mergeParagraph($(this).parent())
+                            mergeParagraph($(this).parent());
+                            mostRecentCaretPos = 0
                         } else {
                             // backspace-ing not in the first element, so merge into the preceding element
-                            mergeParagraphElement($(this))
+                            mergeParagraphElement($(this));
+                            mostRecentCaretPos = 0
                         }
                     }
                     return
@@ -436,14 +474,11 @@ function setLinkModalVisible(visible) {
 }
 
 /**
- * Returns the element that has the user selection within it
+ * Returns the element that has the user's focus
  *
  * @returns {jQuery|null}
  */
-function getSelectionElement() {
-    if (selectedText.length === 0) {
-        return null
-    }
+function getFocusedElement() {
     if (currentModule.hasClass("section-content")) {
         if (currentParagraph == null && currentList == null) {
             return null
@@ -488,7 +523,7 @@ function addNewParagraph(p) {
     var elementHTML = currentParagraphElement.html();
 
     currentParagraphElement.remove();
-    container.insertAt(currentParagraphIndex + 1, strings[0] + strings[10] + elementHTML + "</div></div>");
+    container.insertAt(currentParagraphIndex + 1, strings[0] + strings[10] + elementHTML + "</span></div>");
     container.children().eq(currentParagraphIndex + 1).children().eq(0).focus();
 
     currentParagraph = container.children().eq(currentParagraphIndex + 1);
@@ -506,7 +541,7 @@ function addNewParagraphElement(element) {
     var p = element.parent();
     var prevHTML = element.html();
 
-    p.insertAt(currentParagraphElementIndex + 1, strings[11] + prevHTML.substring(mostRecentCaretPos) + "</div>");
+    p.insertAt(currentParagraphElementIndex + 1, strings[11] + prevHTML.substring(mostRecentCaretPos) + "</span>");
     element.html(prevHTML.substring(0, mostRecentCaretPos));
     p.children().eq(currentParagraphElementIndex + 1).focus();
 
@@ -621,7 +656,6 @@ function insertLink(element) {
     var elementHTML = element.html();
     var toInsert = "<a rel=\"nofollow\" href=\"" + linkAddress + "\">" + selectedText + "</a>";
     var fromSelected = elementHTML.substring(mostRecentCaretPos);
-    console.log(fromSelected);
     var replaced = fromSelected.replace(selectedText, toInsert);
     var newHTML = elementHTML.substring(0, mostRecentCaretPos) + replaced;
     element.html(newHTML)
