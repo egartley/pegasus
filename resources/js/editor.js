@@ -197,7 +197,7 @@ function initLinkDialog(node) {
 }
 
 /**
- * Ran when the "Save" toolbar button is clicked/tapped
+ * Ran after the "Save" button is pressed, and "/editor/?action=save" is navigated to
  */
 function action_save() {
     setToolbarSpinnerVisible(true);
@@ -334,7 +334,7 @@ function action_save() {
  * Registers event handlers for various things, while also clearing any previous declarations
  */
 function registerEventHandlers() {
-    // TODO: only update events for the modified/added module(s) instead of the entire page (performance with large amounts of content)
+    // TODO: only update events for the modified/added module(s) instead of the entire page (prevent performance issues with large amounts of content)
     $("div.paragraph").off("keyup keypress focus");
     $("div.paragraph").each(function () {
         // elements
@@ -371,13 +371,11 @@ function registerEventHandlers() {
                                 .parent()
                                 .children()
                                 .eq(currentParagraphElementIndex - 1);
-                            console.log(prevElement == null);
                             if (prevElement !== null) {
                                 $(this).remove();
                                 prevElement.focus();
                             }
-                        } else {
-                            // not empty, and not at beginning
+                        } else if (empty) {
                             // merge with above paragraph or element
                             if (currentParagraphElementIndex === 0) {
                                 // backspace-ing in the first element, so merge into the above paragraph
@@ -398,7 +396,14 @@ function registerEventHandlers() {
                             // pressed enter in a morph element, therefore make a whole new paragraph instead of just another element
                             addNewParagraph($(this).parent());
                         }
-                    } else if (enter && !isElementHTMLEmpty($(this))) {
+                    } else if (enter) {
+                        // pressed enter in a non-morph element
+                        if (selectionLength > 0) {
+                            // this actually worked on the first try... wow (thanks coffee!)
+                            var prev = $(this).html();
+                            var replace = $(this).html().substring(caretHTMLIndex).replace(selectedText, "");
+                            $(this).html(prev.substring(0, caretHTMLIndex) + replace);
+                        }
                         addNewParagraphElement($(this));
                         resetCaretIndexes();
                     }
@@ -440,13 +445,13 @@ function registerEventHandlers() {
     $("div.module.heading span#removesection").off("click");
     $("div.module.heading span#removesection").on("click", function () {
         var headingModule = $(this).parent();
-        // first remove the paragraph container
+        // first remove the paragraph container (i.e. section content)
         headingModule
             .parent()
             .children()
             .eq(headingModule.index() + 1)
             .remove();
-        // then remove the actual heading module
+        // then remove the actual heading (i.e. section title)
         headingModule.remove();
     });
 
@@ -547,7 +552,7 @@ function setLinkModalVisible(visible) {
 }
 
 /**
- * Returns the element that has the user's focus
+ * Returns the element/node that has the user's focus
  *
  * @returns {jQuery|null}
  */
@@ -780,12 +785,18 @@ function insertNewProperty() {
  * @param element The element that contains the user selection
  */
 function insertLink(element) {
-    var linkAddress = $("div.link-dialog div.textbox-container input").val();
+    var url = $("div.link-dialog div.textbox-container input").val();
+    // Credit: https://stackoverflow.com/a/8234912
+    var re = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/;
+    var clean = re.exec(url);
+    if (!clean) {
+        console.log("Invaild URL! (" + url + ")");
+        // TODO: add option to allow "dirty", or unvalidated, URLs (but have it off by default)
+        return
+    }
     var elementHTML = element.html();
-    var toInsert =
-        '<a rel="nofollow" href="' + linkAddress + '">' + selectedText + "</a>";
-    var fromSelected = elementHTML.substring(caretTextIndex);
-    var replaced = fromSelected.replace(selectedText, toInsert);
+    var ins = '<a rel="nofollow" href="' + url + '">' + selectedText + "</a>";
+    var replaced = elementHTML.substring(caretTextIndex).replace(selectedText, ins);
     var newHTML = elementHTML.substring(0, caretTextIndex) + replaced;
     element.html(newHTML);
 }
