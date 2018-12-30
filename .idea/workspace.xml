@@ -31,17 +31,35 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/resources/js/editor.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="562">
-              <caret line="793" column="95" selection-start-line="793" selection-start-column="95" selection-end-line="793" selection-end-column="95" />
+            <state relative-caret-position="334">
+              <caret line="494" column="1" selection-start-line="494" selection-start-column="1" selection-end-line="494" selection-end-column="1" />
               <folding>
-                <element signature="n#!!block;n#getAbsoluteCaretPos#0" />
+                <element signature="e#94#390#0" />
+                <element signature="e#513#673#0" />
+                <element signature="e#817#838#0" />
                 <element signature="n#!!block;n#initLinkDialog#0" />
                 <element signature="n#!!block;n#action_save#0" />
+                <element signature="n#!!block;n#registerEventHandlers#0" />
+                <element signature="e#16040#16393#0" />
+                <element signature="e#16513#16702#0" />
+                <element signature="e#16763#16964#0" />
+                <element signature="e#17023#17358#0" />
+                <element signature="e#17542#17631#0" />
+                <element signature="e#17704#17863#0" />
+                <element signature="e#18039#18128#0" />
+                <element signature="e#18193#18282#0" />
+                <element signature="e#18347#18480#0" />
                 <element signature="n#!!block;n#resetCaretIndexes#0" />
                 <element signature="n#!!block;n#setToolbarStatusText#0" />
                 <element signature="n#!!block;n#setToolbarSpinnerVisible#0" />
                 <element signature="n#!!block;n#setLinkModalVisible#0" />
                 <element signature="n#!!block;n#getFocusedElement#0" />
+                <element signature="n#!!block;n#addNewLink#0" />
+                <element signature="n#!!block;n#addNewSection#0" />
+                <element signature="n#!!block;n#addNewList#0" />
+                <element signature="n#!!block;n#insertNewListItem#0" />
+                <element signature="n#!!block;n#insertNewSubHeading#0" />
+                <element signature="n#!!block;n#insertNewProperty#0" />
               </folding>
             </state>
           </provider>
@@ -70,15 +88,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="147">
               <caret line="7" column="1" selection-start-line="7" selection-start-column="1" selection-end-line="7" selection-end-column="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/data-storage/pages/0/content.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="651">
-              <caret column="31723" selection-start-column="31723" selection-end-column="31723" />
             </state>
           </provider>
         </entry>
@@ -115,6 +124,7 @@
       <find>/b&gt;</find>
       <find>&lt;</find>
       <find>getSelectionElement</find>
+      <find>&lt;a rel=\&quot;nofollow\&quot;</find>
     </findStrings>
     <replaceStrings>
       <replace>let</replace>
@@ -128,6 +138,21 @@
       <replace>&quot;type&quot;:&quot;text&quot;,&quot;value&quot;:&quot;</replace>
       <replace>&quot;type&quot;:&quot;text&quot;,&quot;value&quot;:&quot;&lt;div class=\&quot;e plain\&quot;&gt;</replace>
       <replace>\&quot;e plain\&quot; contenteditable=\&quot;true</replace>
+      <replace>&lt;a rel=\&quot;nofollow\&quot; id=\&quot;78673248324\&quot;</replace>
+      <replace>&lt;a rel=\&quot;nofollow\&quot; id=\&quot;786732111324\&quot;</replace>
+      <replace>&lt;a rel=\&quot;nofollow\&quot; id=\&quot;979470324\&quot;</replace>
+      <replace>&lt;a rel=\&quot;nofollow\&quot; id=\&quot;90707023\&quot;</replace>
+      <replace>&lt;a rel=\&quot;nofollow\&quot; id=\&quot;99183333\&quot;</replace>
+      <replace>&lt;a rel=\&quot;nofollow\&quot; id=\&quot;09893911\&quot;</replace>
+      <replace>&lt;a rel=\&quot;nofollow\&quot; id=\&quot;8783659835\&quot;</replace>
+      <replace>&lt;a rel=\&quot;nofollow\&quot; id=\&quot;65484642\&quot;</replace>
+      <replace>&lt;a rel=\&quot;nofollow\&quot; id=\&quot;264634444\&quot;</replace>
+      <replace>&lt;a rel=\&quot;nofollow\&quot; id=\&quot;9878946964\&quot;</replace>
+      <replace>&lt;a rel=\&quot;nofollow\&quot; id=\&quot;0918738644\&quot;</replace>
+      <replace>&lt;a rel=\&quot;nofollow\&quot; id=\&quot;7538951192\&quot;</replace>
+      <replace>&lt;a rel=\&quot;nofollow\&quot; id=\&quot;34309746482\&quot;</replace>
+      <replace>&lt;a rel=\&quot;nofollow\&quot; id=\&quot;8963539652\&quot;</replace>
+      <replace>&lt;a rel=\&quot;nofollow\&quot; id=\&quot;758496194\&quot;</replace>
     </replaceStrings>
   </component>
   <component name="IdeDocumentHistory">
@@ -149,8 +174,8 @@
         <option value="$PROJECT_DIR$/resources/js/page.js" />
         <option value="$PROJECT_DIR$/includes/html-builder/page-content.php" />
         <option value="$PROJECT_DIR$/resources/css/min.css" />
-        <option value="$PROJECT_DIR$/data-storage/pages/0/content.json" />
         <option value="$PROJECT_DIR$/resources/css/page-content.css" />
+        <option value="$PROJECT_DIR$/data-storage/pages/0/content.json" />
         <option value="$PROJECT_DIR$/resources/js/editor.js" />
       </list>
     </option>
@@ -254,7 +279,7 @@
   <component name="PropertiesComponent">
     <property name="JavaScriptWeakerCompletionTypeGuess" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last.edited.regexp" value="" />
+    <property name="last.edited.regexp" value="&quot;http://g" />
     <property name="last_opened_file_path" value="$USER_HOME$/AppData/Roaming/npm/node_modules/prettier" />
     <property name="node.js.detected.package.stylelint" value="true" />
     <property name="node.js.path.for.package.stylelint" value="node" />
@@ -416,6 +441,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/data-storage/pages/0/content.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret column="2260" selection-start-column="2260" selection-end-column="2260" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/resources/css/min.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="147">
@@ -423,26 +455,37 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/data-storage/pages/0/content.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="651">
-          <caret column="31723" selection-start-column="31723" selection-end-column="31723" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/resources/js/editor.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="562">
-          <caret line="793" column="95" selection-start-line="793" selection-start-column="95" selection-end-line="793" selection-end-column="95" />
+        <state relative-caret-position="334">
+          <caret line="494" column="1" selection-start-line="494" selection-start-column="1" selection-end-line="494" selection-end-column="1" />
           <folding>
-            <element signature="n#!!block;n#getAbsoluteCaretPos#0" />
+            <element signature="e#94#390#0" />
+            <element signature="e#513#673#0" />
+            <element signature="e#817#838#0" />
             <element signature="n#!!block;n#initLinkDialog#0" />
             <element signature="n#!!block;n#action_save#0" />
+            <element signature="n#!!block;n#registerEventHandlers#0" />
+            <element signature="e#16040#16393#0" />
+            <element signature="e#16513#16702#0" />
+            <element signature="e#16763#16964#0" />
+            <element signature="e#17023#17358#0" />
+            <element signature="e#17542#17631#0" />
+            <element signature="e#17704#17863#0" />
+            <element signature="e#18039#18128#0" />
+            <element signature="e#18193#18282#0" />
+            <element signature="e#18347#18480#0" />
             <element signature="n#!!block;n#resetCaretIndexes#0" />
             <element signature="n#!!block;n#setToolbarStatusText#0" />
             <element signature="n#!!block;n#setToolbarSpinnerVisible#0" />
             <element signature="n#!!block;n#setLinkModalVisible#0" />
             <element signature="n#!!block;n#getFocusedElement#0" />
+            <element signature="n#!!block;n#addNewLink#0" />
+            <element signature="n#!!block;n#addNewSection#0" />
+            <element signature="n#!!block;n#addNewList#0" />
+            <element signature="n#!!block;n#insertNewListItem#0" />
+            <element signature="n#!!block;n#insertNewSubHeading#0" />
+            <element signature="n#!!block;n#insertNewProperty#0" />
           </folding>
         </state>
       </provider>

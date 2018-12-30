@@ -6,20 +6,18 @@ jQuery.fn.insertAt = function (index, element) {
     }
     this.append(element);
     if (index < lastIndex) {
-        this.children()
-            .eq(index)
-            .before(this.children().last());
+        this.children().eq(index).before(this.children().last());
     }
     return this;
 };
 
 // Credit: https://coderamblings.wordpress.com/2012/07/09/insert-a-string-at-a-specific-index/
 String.prototype.insert = function (index, string) {
-    if (index > 0)
-        return (
-            this.substring(0, index) + string + this.substring(index, this.length)
-        );
-    else return string + this;
+    if (index > 0) {
+        return this.substring(0, index) + string + this.substring(index, this.length);
+    } else {
+        return string + this;
+    }
 };
 
 // initialize the editor when the page itself is finished loading (i.e. "ready")
@@ -27,11 +25,6 @@ $(document).ready(function () {
     initEditor();
 });
 
-/**
- * Constant strings for various things, such as the default HTML for a new paragraph
- *
- * @type {string[]}
- */
 var strings = [
     /* 0 */
     '<div class="sub-module paragraph">',
@@ -69,6 +62,8 @@ var currentParagraphIndex = 0;
 var currentParagraphElement = null;
 var currentParagraphElementIndex = 0;
 var currentInfoboxIndex = 0;
+var currentLinkID = "";
+var isInLink = false;
 
 // selection
 var selectionLength = 0;
@@ -79,9 +74,6 @@ var selectedText = "";
 // modals
 var isDisplayingLinkModal = false;
 
-/**
- * Initializes various elements of the editor, such as toolbar buttons and selection handling
- */
 function initEditor() {
     // TOOLBAR BUTTONS ("actionables")
     $(document).on("mouseup", function () {
@@ -111,20 +103,14 @@ function initEditor() {
         addNewLink(getFocusedElement());
     });
     $("div.toolbar div.actionable.action-options").on("click", function () {
-        // window.location = "/editor/?action=delete&id=" + getHiddenMeta("id")
+        /* window.location = "/editor/?action=delete&id=" + getHiddenMeta("id")*/
     });
-    $("div.toolbar div.actionable.action-addinfoboxsubheading").on(
-        "click",
-        function () {
-            insertNewSubHeading();
-        }
-    );
-    $("div.toolbar div.actionable.action-addinfoboxproperty").on(
-        "click",
-        function () {
-            insertNewProperty();
-        }
-    );
+    $("div.toolbar div.actionable.action-addinfoboxsubheading").on("click", function () {
+        insertNewSubHeading();
+    });
+    $("div.toolbar div.actionable.action-addinfoboxproperty").on("click", function () {
+        insertNewProperty();
+    });
 
     // ABSOLUTE EVENTS (amount/element will not change)
     document.onselectionchange = function () {
@@ -134,7 +120,6 @@ function initEditor() {
         var s = window.getSelection();
         selectionLength = selectedText.length;
         selectedText = s.toString();
-
         caretTextIndex = getAbsoluteCaretPos(s, true);
         caretHTMLIndex = getAbsoluteCaretPos(s, false);
     };
@@ -147,8 +132,17 @@ function getAbsoluteCaretPos(s, textonly) {
     var me = s.anchorNode;
     var parent = me.parentNode;
     if (parent.nodeName.length <= 2) {
+        if (parent.nodeName.toLowerCase() === "a") {
+            isInLink = true;
+            onLinkFocus(parent)
+        } else {
+            isInLink = false
+        }
+        // probably <b>, <i> or <a> element (as opposed to normal <div> or <span>), therefore go "up" one "level"
         me = me.parentNode;
         parent = me.parentNode;
+    } else {
+        isInLink = false
     }
     var childs = parent.childNodes;
     var myIndex = -1;
@@ -176,9 +170,7 @@ function initLinkDialog(node) {
     // unfocus container
     node.trigger("blur");
     // focus dialog, specifically textbox
-    $("div.link-modal div.link-dialog div.textbox-container input").trigger(
-        "focus"
-    );
+    $("div.link-modal div.link-dialog div.textbox-container input").trigger("focus");
 
     $("div.link-modal").off("click");
     $("div.link-modal").on("click", function (e) {
@@ -196,82 +188,43 @@ function initLinkDialog(node) {
     });
 }
 
-/**
- * Ran after the "Save" button is pressed, and "/editor/?action=save" is navigated to
- */
 function action_save() {
     setToolbarSpinnerVisible(true);
     setToolbarStatusText(strings[8]);
 
     // minimum JSON
-    var content = {
-        modules: [],
-        infobox: {
-            heading: "",
-            image: {
-                file: "",
-                caption: ""
-            },
-            items: []
-        }
-    };
+    var content = {modules: [], infobox: {heading: "", image: {file: "", caption: ""}, items: []}};
 
     $("div.module").each(function () {
         var classlist = this.classList;
-        var mod = {
-            type: "",
-            value: []
-        };
+        var mod = {type: "", value: []};
         if (classlist.contains("section-content")) {
             mod.type = "section-content";
-            $(this)
-                .children(".sub-module")
-                .each(function () {
-                    if (this.classList.contains("paragraph")) {
-                        var elements = [];
-                        $(this)
-                            .children()
-                            .each(function () {
-                                if (this.classList.contains("plain")) {
-                                    elements.push({
-                                        type: "plain",
-                                        value: $(this).html()
-                                    });
-                                } else if (this.classList.contains("link")) {
-                                    elements.push({
-                                        type: "link",
-                                        value: {
-                                            displaytext: $(this).html(),
-                                            url: $(this).attr("url")
-                                        }
-                                    });
-                                }
+            $(this).children(".sub-module").each(function () {
+                if (this.classList.contains("paragraph")) {
+                    var elements = [];
+                    $(this).children().each(function () {
+                        if (this.classList.contains("plain")) {
+                            elements.push({type: "plain", value: $(this).html()});
+                        } else if (this.classList.contains("link")) {
+                            elements.push({
+                                type: "link",
+                                value: {displaytext: $(this).html(), url: $(this).attr("url")}
                             });
-                        mod.value.push({
-                            type: "paragraph",
-                            value: elements
-                        });
-                    } else if (this.classList.contains("list")) {
-                        var listitems = [];
-                        $(this)
-                            .children()
-                            .eq(0)
-                            .children()
-                            .each(function () {
-                                listitems.push($(this).html());
-                            });
-                        mod.value.push({
-                            type: "list",
-                            value: listitems
-                        });
-                    }
-                });
+                        }
+                    });
+                    mod.value.push({type: "paragraph", value: elements});
+                } else if (this.classList.contains("list")) {
+                    var listitems = [];
+                    $(this).children().eq(0).children().each(function () {
+                        listitems.push($(this).html());
+                    });
+                    mod.value.push({type: "list", value: listitems});
+                }
+            });
         } else if (classlist.contains("heading")) {
             mod.type = "heading";
-            mod.value = $(this)
-                .children("span")
-                .eq(0)
-                .html();
+            mod.value = $(this).children("span").eq(0).html();
         } else {
             mod = null;
         }
@@ -330,115 +283,82 @@ function action_save() {
     });
 }
 
-/**
- * Registers event handlers for various things, while also clearing any previous declarations
- */
 function registerEventHandlers() {
     // TODO: only update events for the modified/added module(s) instead of the entire page (prevent performance issues with large amounts of content)
+
     $("div.paragraph").off("keyup keypress focus");
     $("div.paragraph").each(function () {
-        // elements
-        $(this)
-            .children()
-            .each(function () {
-                $(this).off("focus keyup keydown");
-                $(this).on("focus", function () {
-                    currentParagraphElement = $(this);
-                    currentParagraphElementIndex = currentParagraphElement.index();
-                    currentParagraph = $(this).parent();
-                    currentParagraphIndex = currentParagraph.index();
-                    currentModule = $(this)
-                        .parent()
-                        .parent();
-                    currentModuleIndex = currentModule.index();
-                });
-                $(this).on("keydown", function (e) {
-                    // prevent spamming of enter key while holding it down
-                    // this makes enter only do something when it is released
-                    if ((e.keyCode || e.which) === 13) {
-                        e.preventDefault();
-                    }
-                });
-                $(this).on("keyup", function (e) {
-                    var enter = (e.keyCode || e.which) === 13;
-                    var backspace = (e.keyCode || e.which) === 8;
-                    var isMorph = $(this)[0].classList.contains("morph");
-                    var empty = isElementHTMLEmpty($(this));
-                    if (backspace) {
-                        if (empty && caretHTMLIndex === 0) {
-                            // delete this element
-                            var prevElement = $(this)
-                                .parent()
-                                .children()
-                                .eq(currentParagraphElementIndex - 1);
-                            if (prevElement !== null) {
-                                $(this).remove();
-                                prevElement.focus();
-                            }
-                        } else if (empty) {
-                            // merge with above paragraph or element
-                            if (currentParagraphElementIndex === 0) {
-                                // backspace-ing in the first element, so merge into the above paragraph
-                                mergeParagraph($(this).parent());
-                                resetCaretIndexes();
-                            } else {
-                                // backspace-ing NOT in the first element, so merge into the above element (same paragraph)
-                                mergeParagraphElement($(this));
-                                resetCaretIndexes();
-                            }
-                        }
-                        return;
-                    }
-                    // did not press backspace at beginning of an empty element
-                    if (isMorph) {
-                        $(this).attr("class", strings[9] + " plain");
-                        if (enter) {
-                            // pressed enter in a morph element, therefore make a whole new paragraph instead of just another element
-                            addNewParagraph($(this).parent());
-                        }
-                    } else if (enter) {
-                        // pressed enter in a non-morph element
-                        if (selectionLength > 0) {
-                            // this actually worked on the first try... wow (thanks coffee!)
-                            var prev = $(this).html();
-                            var replace = $(this).html().substring(caretHTMLIndex).replace(selectedText, "");
-                            $(this).html(prev.substring(0, caretHTMLIndex) + replace);
-                        }
-                        addNewParagraphElement($(this));
-                        resetCaretIndexes();
-                    }
-                });
+        // this paragraph's elements
+        $(this).children().each(function () {
+            $(this).off("focus keyup keydown");
+            $(this).on("focus", function () {
+                // element (this)
+                currentParagraphElement = $(this);
+                currentParagraphElementIndex = currentParagraphElement.index();
+                // element -> paragraph (aka section content)
+                currentParagraph = $(this).parent();
+                currentParagraphIndex = currentParagraph.index();
+                // element -> paragraph (aka section content) -> module
+                currentModule = $(this).parent().parent();
+                currentModuleIndex = currentModule.index();
             });
-        // keyup
-        if (
-            $(this) !==
-            $(this)
-                .parent()
-                .parent()
-                .children()
-                .eq(1)
-                .children()
-                .eq(0)
-        ) {
-            // not the first/intro paragraph, so it can be removed
-            $(this).on("keyup", function (e) {
-                if (caretTextIndex === 0 && (e.keyCode || e.which) === 8) {
-                    // pressed backspace at beginning of paragraph, merge with the one above it
-                    // mergeParagraph($(this))
-                } else if (isElementHTMLEmpty($(this))) {
-                    // $(this).remove()
+            $(this).on("keydown", function (e) {
+                // prevent spamming of enter key while holding it down
+                // this makes enter only do something when it is released
+                if ((e.keyCode || e.which) === 13) {
+                    e.preventDefault();
                 }
             });
-        }
-        // focus
-        $(this).on("focus", function () {
-        });
-        // keypress
-        $(this).on("keypress", function (e) {
-            if ((e.keyCode || e.which) === 13) {
-                e.preventDefault();
-                addNewParagraph($(this));
-            }
+            $(this).on("keyup", function (e) {
+                var enter = (e.keyCode || e.which) === 13;
+                var backspace = (e.keyCode || e.which) === 8;
+                var isMorph = $(this)[0].classList.contains("morph");
+                var empty = isElementHTMLEmpty($(this));
+                if (backspace) {
+                    if (empty && caretHTMLIndex === 0) {
+                        // check to make sure this is not the first paragraph/element in the entire page
+                        if (currentParagraphIndex === 0) {
+                            return
+                        }
+                        // delete this element, knowing that it's not the first paragraph/element in the page
+                        var preceding = $(this).parent().children().eq(currentParagraphElementIndex - 1);
+                        if (preceding !== null) {
+                            $(this).remove();
+                            preceding.focus();
+                        }
+                    } else if (empty) {
+                        // merge with above paragraph or element
+                        if (currentParagraphElementIndex === 0) {
+                            // backspace-ing in the first element, so merge into the above paragraph
+                            mergeParagraph($(this).parent());
+                            resetCaretIndexes();
+                        } else {
+                            // backspace-ing NOT in the first element, so merge into the above element (same paragraph)
+                            mergeParagraphElement($(this));
+                            resetCaretIndexes();
+                        }
+                    }
+                    return;
+                }
+                // did not press backspace at beginning of an empty element
+                if (isMorph) {
+                    $(this).attr("class", strings[9] + " plain");
+                    if (enter) {
+                        // pressed enter in a morph element, therefore make a whole new paragraph instead of just another element
+                        addNewParagraph($(this).parent());
+                    }
+                } else if (enter) {
+                    // pressed enter in a non-morph element
+                    if (selectionLength > 0) {
+                        // this actually worked on the first try... wow (thanks coffee!)
+                        var prev = $(this).html();
+                        var replace = $(this).html().substring(caretHTMLIndex).replace(selectedText, "");
+                        $(this).html(prev.substring(0, caretHTMLIndex) + replace);
+                    }
+                    addNewParagraphElement($(this));
+                    resetCaretIndexes();
+                }
+            });
         });
     });
 
@@ -446,11 +366,7 @@ function registerEventHandlers() {
     $("div.module.heading span#removesection").on("click", function () {
         var headingModule = $(this).parent();
         // first remove the paragraph container (i.e. section content)
-        headingModule
-            .parent()
-            .children()
-            .eq(headingModule.index() + 1)
-            .remove();
+        headingModule.parent().children().eq(headingModule.index() + 1).remove();
         // then remove the actual heading (i.e. section title)
         headingModule.remove();
     });
@@ -485,36 +401,25 @@ function registerEventHandlers() {
     $("table.infobox tr.sub-heading td").off("focus");
     $("table.infobox tr.sub-heading td span").off("keyup");
     $("table.infobox tr.sub-heading td").on("focus", function () {
-        currentInfoboxIndex = $(this)
-            .parent()
-            .index();
+        currentInfoboxIndex = $(this).parent().index();
     });
     $("table.infobox tr.sub-heading td span").on("keyup", function () {
         if (isElementHTMLEmpty($(this))) {
-            $(this)
-                .parent()
-                .parent()
-                .remove();
+            $(this).parent().parent().remove();
         }
     });
 
     $("table.infobox tr.property td").off("focus keyup");
     $("table.infobox tr.property th").off("focus");
     $("table.infobox tr.property td").on("focus", function () {
-        currentInfoboxIndex = $(this)
-            .parent()
-            .index();
+        currentInfoboxIndex = $(this).parent().index();
     });
     $("table.infobox tr.property th").on("focus", function () {
-        currentInfoboxIndex = $(this)
-            .parent()
-            .index();
+        currentInfoboxIndex = $(this).parent().index();
     });
     $("table.infobox tr.property td").on("keyup", function () {
         if (isElementHTMLEmpty($(this))) {
-            $(this)
-                .parent()
-                .remove();
+            $(this).parent().remove();
         }
     });
 }
@@ -539,23 +444,14 @@ function setToolbarSpinnerVisible(visible) {
 
 function setLinkModalVisible(visible) {
     if (visible) {
-        $("div.link-modal")
-            .fadeIn("fast")
-            .removeClass("hidden");
+        $("div.link-modal").fadeIn("fast").removeClass("hidden");
         isDisplayingLinkModal = true;
     } else {
-        $("div.link-modal")
-            .fadeOut("fast")
-            .addClass("hidden");
+        $("div.link-modal").fadeOut("fast").addClass("hidden");
         isDisplayingLinkModal = false;
     }
 }
 
-/**
- * Returns the element/node that has the user's focus
- *
- * @returns {jQuery|null}
- */
 function getFocusedElement() {
     if (currentModule.hasClass("section-content")) {
         if (currentParagraph == null && currentList == null) {
@@ -584,36 +480,41 @@ function getFocusedElement() {
     }
 }
 
-/**
- * Initiates the process of inserting a link, assuming the provided container is not null
- *
- * @param container The container, or "node", that contains the user selection
- */
+function onLinkFocus(elementNode) {
+    // wrap/convert to jQuery object for easier use
+    var link = $(elementNode);
+    if (link.attr("id") !== undefined) {
+        currentLinkID = link.attr("id")
+    } else {
+        currentLinkID = ""
+    }
+}
+
+function removeLinkFrom(html, link) {
+    return html.replace(link.prop("outerHTML"), link.html());
+}
+
+function removeLink(html) {
+    return removeLinkFrom(html, $("a#" + currentLinkID))
+}
+
 function addNewLink(container) {
     if (container == null) {
-        return;
+        return
     }
     initLinkDialog(container);
 }
 
 function addNewParagraph(p) {
     if (p == null) {
-        return;
+        return
     }
     var container = p.parent();
     var elementHTML = currentParagraphElement.html();
 
     currentParagraphElement.remove();
-    container.insertAt(
-        currentParagraphIndex + 1,
-        strings[0] + strings[10] + elementHTML + "</span></div>"
-    );
-    container
-        .children()
-        .eq(currentParagraphIndex + 1)
-        .children()
-        .eq(0)
-        .focus();
+    container.insertAt(currentParagraphIndex + 1, strings[0] + strings[10] + elementHTML + "</span></div>");
+    container.children().eq(currentParagraphIndex + 1).children().eq(0).focus();
 
     currentParagraph = container.children().eq(currentParagraphIndex + 1);
     currentParagraphIndex = currentParagraph.index();
@@ -623,36 +524,32 @@ function addNewParagraph(p) {
     registerEventHandlers();
 }
 
-// TODO: fix when breaking from within links
 function addNewParagraphElement(element) {
     if (element == null) {
-        return;
+        return
     }
-    var p = element.parent();
+    var paragraph = element.parent();
     var html = element.html();
+
+    // check to see if user pressed enter inside a link
+    if (isInLink) {
+        // remove it
+        html = removeLink(html)
+    }
+
     var beforeHTML = html.substring(0, caretHTMLIndex);
     var afterHTML = html.substring(caretHTMLIndex);
 
-    p.insertAt(
-        currentParagraphElementIndex + 1,
-        strings[11] + afterHTML + "</span>"
-    );
+    paragraph.insertAt(currentParagraphElementIndex + 1, strings[11] + afterHTML + "</span>");
     element.html(beforeHTML);
-    p.children()
-        .eq(currentParagraphElementIndex + 1)
-        .focus();
+    paragraph.children().eq(currentParagraphElementIndex + 1).focus();
 
-    currentParagraphElement = p.children().eq(currentParagraphElementIndex + 1);
+    currentParagraphElement = paragraph.children().eq(currentParagraphElementIndex + 1);
     currentParagraphElementIndex = currentParagraphElement.index();
 
     registerEventHandlers();
 }
 
-/**
- * Combines, or "merges", the given paragraph with the one preceding it
- *
- * @param toMerge The paragraph as a jQuery object
- */
 function mergeParagraph(toMerge) {
     if (currentParagraphIndex === 0) {
         // can't merge into non-existent paragraph (there is not one before it)
@@ -660,43 +557,27 @@ function mergeParagraph(toMerge) {
         return;
     }
     var html = toMerge.html();
-    var aboveP = toMerge
-        .parent()
-        .children()
-        .eq(currentParagraphIndex - 1);
-    var aboveHTML = aboveP.html();
-    aboveP.html(aboveHTML + html);
+    var paragraphAbove = toMerge.parent().children().eq(currentParagraphIndex - 1);
+    paragraphAbove.html(paragraphAbove.html() + html);
     toMerge.remove();
-
-    currentParagraph = aboveP;
+    currentParagraph = paragraphAbove;
     currentParagraphIndex = currentParagraph.index();
-    currentParagraphElement = currentParagraph
-        .children()
-        .eq(currentParagraph.children().length - 1);
+    currentParagraphElement = currentParagraph.children().eq(currentParagraph.children().length - 1);
     currentParagraphElementIndex = currentParagraphElement.index();
     currentParagraphElement.focus();
     registerEventHandlers();
 }
 
-/**
- * Combines, or "merges", the given paragraph element with the one preceding it
- *
- * @param toMerge The paragraph element as a jQuery object
- */
 function mergeParagraphElement(toMerge) {
     if (currentParagraphElementIndex === 0) {
         // can't merge into non-existent element (there is not one before it)
         return;
     }
     var html = toMerge.html();
-    var aboveElement = toMerge
-        .parent()
-        .children()
-        .eq(currentParagraphElementIndex - 1);
+    var aboveElement = toMerge.parent().children().eq(currentParagraphElementIndex - 1);
     var aboveHTML = aboveElement.html();
     aboveElement.html(aboveHTML + html);
     toMerge.remove();
-
     currentParagraphElement = aboveElement;
     currentParagraphElementIndex = currentParagraphElement.index();
     currentParagraphElement.focus();
@@ -709,14 +590,8 @@ function addNewSection(invoker) {
     }
     var allModules = invoker.parent();
     allModules.insertAt(currentModuleIndex + 1, strings[1]);
-    allModules.insertAt(
-        currentModuleIndex + 2,
-        strings[2] + strings[0] + "</div>"
-    );
-    allModules
-        .children()
-        .eq(currentModuleIndex + 1)
-        .focus();
+    allModules.insertAt(currentModuleIndex + 2, strings[2] + strings[0] + "</div>");
+    allModules.children().eq(currentModuleIndex + 1).focus();
     registerEventHandlers();
 }
 
@@ -726,16 +601,8 @@ function addNewList(invoker) {
     }
     var paragraphContainer = invoker.parent();
     var insertIndex = invoker.index() + 1;
-    paragraphContainer.insertAt(
-        insertIndex,
-        strings[4] + strings[5] + "</ul></div>"
-    );
-    paragraphContainer
-        .children()
-        .eq(insertIndex)
-        .children()
-        .eq(0)
-        .focus();
+    paragraphContainer.insertAt(insertIndex, strings[4] + strings[5] + "</ul></div>");
+    paragraphContainer.children().eq(insertIndex).children().eq(0).focus();
     registerEventHandlers();
 }
 
@@ -743,60 +610,43 @@ function insertNewListItem() {
     if (currentListIndex === -1) return;
     currentList.insertAt(currentListIndex + 1, strings[5]);
     currentListIndex++;
-    currentList
-        .children()
-        .eq(currentListIndex)
-        .focus();
+    currentList.children().eq(currentListIndex).focus();
     registerEventHandlers();
 }
 
 function insertNewSubHeading() {
-    if (currentInfoboxIndex === -1) return;
-    $("table.infobox tbody")
-        .eq(0)
-        .insertAt(currentInfoboxIndex + 1, strings[6]);
+    if (currentInfoboxIndex === -1) {
+        return
+    }
+    $("table.infobox tbody").eq(0).insertAt(currentInfoboxIndex + 1, strings[6]);
     currentInfoboxIndex++;
-    $("table.infobox tbody")
-        .children()
-        .eq(currentInfoboxIndex)
-        .children("td")
-        .children("span")
-        .focus();
+    $("table.infobox tbody").children().eq(currentInfoboxIndex).children("td").children("span").focus();
     registerEventHandlers();
 }
 
 function insertNewProperty() {
-    if (currentInfoboxIndex === -1) return;
-    $("table.infobox tbody")
-        .eq(0)
-        .insertAt(currentInfoboxIndex + 1, strings[7]);
+    if (currentInfoboxIndex === -1) {
+        return
+    }
+    $("table.infobox tbody").eq(0).insertAt(currentInfoboxIndex + 1, strings[7]);
     currentInfoboxIndex++;
-    $("table.infobox tbody")
-        .children()
-        .eq(currentInfoboxIndex)
-        .children("th")
-        .focus();
+    $("table.infobox tbody").children().eq(currentInfoboxIndex).children("th").focus();
     registerEventHandlers();
 }
 
-/**
- * Actually inserts the URL as a link into the provided container at the previously specified location
- *
- * @param element The element that contains the user selection
- */
 function insertLink(element) {
     var url = $("div.link-dialog div.textbox-container input").val();
     // Credit: https://stackoverflow.com/a/8234912
-    var re = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/;
-    var clean = re.exec(url);
-    if (!clean) {
+    var re = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%\/.\w-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[\w]*))?)/;
+    if (!re.exec(url)) {
         console.log("Invaild URL! (" + url + ")");
         // TODO: add option to allow "dirty", or unvalidated, URLs (but have it off by default)
         return
     }
     var elementHTML = element.html();
-    var ins = '<a rel="nofollow" href="' + url + '">' + selectedText + "</a>";
-    var replaced = elementHTML.substring(caretTextIndex).replace(selectedText, ins);
+    var linkID = Date.now().toString();
+    var insert = '<a rel="nofollow" href="' + url + '" id="' + linkID + '">' + selectedText + '</a>';
+    var replaced = elementHTML.substring(caretTextIndex).replace(selectedText, insert);
     var newHTML = elementHTML.substring(0, caretTextIndex) + replaced;
     element.html(newHTML);
 }
