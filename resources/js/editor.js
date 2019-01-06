@@ -182,6 +182,19 @@ function shortcut_k() {
     addNewLink(getFocusedElement())
 }
 
+function shortcut_b() {
+    if (selectionLength === 0 || selectedText === "") {
+        return
+    }
+    insertBold(getFocusedElement())
+}
+
+function shortcut_i() {
+    if (selectionLength === 0 || selectedText === "") {
+        return
+    }
+    insertItalics(getFocusedElement())
+}
 
 function initLinkDialog(node) {
     setLinkModalVisible(true);
@@ -301,6 +314,10 @@ function action_save() {
     });
 }
 
+function key(e, code) {
+    return (e.keyCode || e.which) === code
+}
+
 function registerEventHandlers() {
     // TODO: only update events for the modified/added module(s) instead of the entire page (prevent performance issues with large amounts of content)
 
@@ -323,23 +340,29 @@ function registerEventHandlers() {
             $(this).on("keydown", function (e) {
                 // prevent spamming of enter key while holding it down
                 // this makes enter only do something when it is released
-                if ((e.keyCode || e.which) === 13) {
+                if (key(e, 13)) {
                     e.preventDefault();
                 }
                 // keyboard shortcuts
-                var letter_k = (e.keyCode || e.which) === 75;
+                var letter_k = key(e, 75);
+                var letter_b = key(e, 66);
+                var letter_i = key(e, 73);
                 var ctrl = e.ctrlKey;
                 if (ctrl) {
+                    e.preventDefault();
+                    e.stopPropagation();
                     if (letter_k) {
-                        e.preventDefault();
-                        e.stopPropagation();
                         shortcut_k()
+                    } else if (letter_b) {
+                        shortcut_b()
+                    } else if (letter_i) {
+                        shortcut_i()
                     }
                 }
             });
             $(this).on("keyup", function (e) {
-                var enter = (e.keyCode || e.which) === 13;
-                var backspace = (e.keyCode || e.which) === 8;
+                var enter = key(e, 13);
+                var backspace = key(e, 8);
                 var isMorph = $(this)[0].classList.contains("morph");
                 var empty = isElementHTMLEmpty($(this));
                 if (backspace) {
@@ -406,8 +429,8 @@ function registerEventHandlers() {
         currentModule = currentList.parent();
         currentModuleIndex = currentModule.index();
     });
-    $("div.sub-module.list li").on("keydown", function () {
-        if (event.which === 13 && currentList != null && currentListIndex !== -1) {
+    $("div.sub-module.list li").on("keydown", function (e) {
+        if (key(e, 13) && currentList != null && currentListIndex !== -1) {
             // enter or return
             event.preventDefault();
             insertNewListItem();
@@ -665,18 +688,28 @@ function insertNewProperty() {
     registerEventHandlers();
 }
 
+function commonSelectionInsert(element, before, after) {
+    var html = element.html();
+    var replaced = html.substring(caretTextIndex).replace(selectedText, before + selectedText + after);
+    element.html(html.substring(0, caretTextIndex) + replaced)
+}
+
 function insertLink(element) {
     var url = $("div.link-dialog div.textbox-container input").val();
     // Credit: https://stackoverflow.com/a/8234912
     var re = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%\/.\w-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[\w]*))?)/;
     if (!re.exec(url)) {
-        console.log("Invaild URL! (" + url + ")");
+        alert("Invaild URL! (" + url + ")");
         // TODO: add option to allow "dirty", or unvalidated, URLs (but have it off by default)
         return
     }
-    var elementHTML = element.html();
-    var linkID = Date.now().toString();
-    var insert = '<a rel="nofollow" href="' + url + '" id="' + linkID + '">' + selectedText + '</a>';
-    var replaced = elementHTML.substring(caretTextIndex).replace(selectedText, insert);
-    element.html(elementHTML.substring(0, caretTextIndex) + replaced);
+    commonSelectionInsert(element, '<a rel="nofollow" href="' + url + '" id="' + Date.now().toString() + '">', '</a>')
+}
+
+function insertBold(element) {
+    commonSelectionInsert(element, '<b>', '</b>')
+}
+
+function insertItalics(element)  {
+    commonSelectionInsert(element, '<i>', '</i>')
 }
