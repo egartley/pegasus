@@ -22,7 +22,7 @@
             $valid = valid_id($_POST["id"]);
         }
         // check for url params
-        if ($action === "unknown" || $valid === null) {
+        if ($action !== "new" && ($action === "unknown" || $valid === null)) {
             echo "<p>You must specify a page ID and action</p>";
             return;
         }
@@ -46,7 +46,7 @@
             header("Location: /editor/?action=save&id=" . $workingpage->id . "&isnew=yes");
             return;
         } else if ($action == "save") {
-            // ex. "/editor/?action=save&id=2&isnew=no&contentjson=blahblah&title=My%20Awesome%20Page" (POST)
+            // ex. "/editor/?action=save&id=2&isnew=no&contentjson=blahblah&title=My%20Awesome%20Page" (POST or GET)
             if ($_GET["isnew"] == "yes") {
                 // not previously saved, need to move from temp to normal
                 $newpost = array(
@@ -56,7 +56,7 @@
                     "title" => Page::$defaultTitle
                 );
                 if (Page::action_save($newpost)) {
-                    header("Location: /editor/?action=edit&id=" . $_GET["id"]);
+                    header("Location: /editor/?action=edit&id=" . $newpost["id"]);
                 } else {
                     echo "<p>Something went wrong while trying to save the page</p>";
                 }
@@ -67,7 +67,11 @@
             }
             // was previously saved
             if (Page::action_save($_POST)) {
-                header("Location: /editor/?action=edit&id=" . $_POST["id"]);
+                $myid = $_GET["id"];
+                if ($myid == "") {
+                    $myid = $_POST["id"];
+                }
+                header("Location: /editor/?action=edit&id=" . $myid);
             } else {
                 echo "<p>Something went wrong while trying to save the page</p>";
             }
@@ -113,8 +117,16 @@
         }
         return true;
     }
+
     ?>
-    <title><?php if (get_action() == "edit") { echo "Editing \"" . get_page($_GET["id"])->title . "\""; } else if (get_action() == "new") { echo "New Page"; } else { echo "Working..."; } echo " - Pegasus"; ?></title>
+    <title><?php if (get_action() == "edit") {
+            echo "Editing \"" . get_page($_GET["id"])->title . "\"";
+        } else if (get_action() == "new") {
+            echo "New Page";
+        } else {
+            echo "Working...";
+        }
+        echo " - Pegasus"; ?></title>
 </head>
 <body>
 <?php

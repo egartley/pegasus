@@ -417,9 +417,9 @@ function registerEventHandlers() {
     $("div.module.heading span#removesection").on("click", function () {
         var headingModule = $(this).parent();
         // first remove the paragraph container (i.e. section content)
-        headingModule.parent().children().eq(headingModule.index() + 1).remove();
+        headingModule.parent().children().eq(headingModule.index() + 1).fadeOut();
         // then remove the actual heading (i.e. section title)
-        headingModule.remove();
+        headingModule.fadeOut()
     });
 
     $("div.sub-module.list li").off("focus keydown keyup");

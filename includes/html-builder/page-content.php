@@ -73,8 +73,6 @@ function page_content_html($content, $page, $edit)
                         }
                         if ($ptype == "text" || $ptype == "plain") {
                             $html .= ">" . $pmodule["value"];
-                        } else if ($pmodule["type"] == "link") {
-                            // $html .= " url=\"" . $pmodule["value"]["url"] . "\">" . $pmodule["value"]["displaytext"];
                         } else {
                             $html .= "Unknown type!";
                         }
