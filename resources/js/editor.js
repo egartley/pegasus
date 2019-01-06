@@ -66,10 +66,10 @@ var currentLinkID = "";
 var isInLink = false;
 
 // selection
+var selectedText = "";
 var selectionLength = 0;
 var caretTextIndex = 0;
 var caretHTMLIndex = 0;
-var selectedText = "";
 
 // modals
 var isDisplayingLinkModal = false;
@@ -174,6 +174,14 @@ function setCaretPosFromAfterMerge(nowinfocus, offset) {
     sel.removeAllRanges();
     sel.addRange(range)
 }
+
+function shortcut_k() {
+    if (selectionLength === 0 || selectedText === "") {
+        return
+    }
+    addNewLink(getFocusedElement())
+}
+
 
 function initLinkDialog(node) {
     setLinkModalVisible(true);
@@ -318,6 +326,16 @@ function registerEventHandlers() {
                 if ((e.keyCode || e.which) === 13) {
                     e.preventDefault();
                 }
+                // keyboard shortcuts
+                var letter_k = (e.keyCode || e.which) === 75;
+                var ctrl = e.ctrlKey;
+                if (ctrl) {
+                    if (letter_k) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        shortcut_k()
+                    }
+                }
             });
             $(this).on("keyup", function (e) {
                 var enter = (e.keyCode || e.which) === 13;
@@ -327,7 +345,7 @@ function registerEventHandlers() {
                 if (backspace) {
                     if (empty && caretHTMLIndex === 0) {
                         // check to make sure this is not the first paragraph/element in the entire page
-                        if (currentParagraphIndex === 0) {
+                        if (currentParagraphIndex === 0 && currentModuleIndex === 0 && currentParagraphElementIndex === 0) {
                             return
                         }
                         // delete this element, knowing that it's not the first paragraph/element in the page
@@ -336,7 +354,7 @@ function registerEventHandlers() {
                             $(this).remove();
                             preceding.focus();
                         }
-                    } else {
+                    } else if (caretHTMLIndex === 0) {
                         // merge with above paragraph or element
                         if (currentParagraphElementIndex === 0) {
                             // backspace-ing in the first element, so merge into the above paragraph
@@ -491,7 +509,6 @@ function getFocusedElement() {
 }
 
 function onLinkFocus(elementNode) {
-    // wrap/convert to jQuery object for easier use
     var link = $(elementNode);
     if (link.attr("id") !== undefined) {
         currentLinkID = link.attr("id")
@@ -604,8 +621,8 @@ function addNewSection(invoker) {
     }
     var allModules = invoker.parent();
     allModules.insertAt(currentModuleIndex + 1, strings[1]);
-    allModules.insertAt(currentModuleIndex + 2, strings[2] + strings[0] + "</div>");
-    allModules.children().eq(currentModuleIndex + 1).focus();
+    allModules.insertAt(currentModuleIndex + 2, strings[2] + strings[0] + strings[10] + "</span></div></div>");
+    allModules.children().eq(currentModuleIndex + 2).focus();
     registerEventHandlers();
 }
 
@@ -661,6 +678,5 @@ function insertLink(element) {
     var linkID = Date.now().toString();
     var insert = '<a rel="nofollow" href="' + url + '" id="' + linkID + '">' + selectedText + '</a>';
     var replaced = elementHTML.substring(caretTextIndex).replace(selectedText, insert);
-    var newHTML = elementHTML.substring(0, caretTextIndex) + replaced;
-    element.html(newHTML);
+    element.html(elementHTML.substring(0, caretTextIndex) + replaced);
 }
