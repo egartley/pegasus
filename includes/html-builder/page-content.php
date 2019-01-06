@@ -40,6 +40,10 @@ function page_content_html($content, $page, $edit)
         </div>
         <button class=\"insert-link\">Insert</button>
     </div>
+</div>
+<div class=\"link-hoverer hidden\">
+    <input type=\"text\" autocomplete=\"off\" min=\"12\" max=\"2048\" placeholder=\"http://example.com\">
+    <button>Apply</button>
 </div>";
 
     // start of actual content

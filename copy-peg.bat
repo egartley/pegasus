@@ -1,10 +1,8 @@
-rmdir /s "C:\Users\egart\Documents\GitHub\pegasus\.idea" /Q
 rmdir /s "C:\Users\egart\Documents\GitHub\pegasus\dashboard" /Q
 rmdir /s "C:\Users\egart\Documents\GitHub\pegasus\data-storage" /Q
 rmdir /s "C:\Users\egart\Documents\GitHub\pegasus\editor" /Q
 rmdir /s "C:\Users\egart\Documents\GitHub\pegasus\includes" /Q
 rmdir /s "C:\Users\egart\Documents\GitHub\pegasus\resources" /Q
-xcopy "C:\Users\egart\XAMPP\htdocs\.idea" "C:\Users\egart\Documents\GitHub\pegasus\.idea" /H /E /Y /K /I
 xcopy "C:\Users\egart\XAMPP\htdocs\dashboard" "C:\Users\egart\Documents\GitHub\pegasus\dashboard" /H /E /Y /K /I
 xcopy "C:\Users\egart\XAMPP\htdocs\data-storage" "C:\Users\egart\Documents\GitHub\pegasus\data-storage" /H /E /Y /K /I
 xcopy "C:\Users\egart\XAMPP\htdocs\editor" "C:\Users\egart\Documents\GitHub\pegasus\editor" /H /E /Y /K /I

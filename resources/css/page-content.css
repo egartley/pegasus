@@ -40,6 +40,13 @@
     background-color: #111
 }
 
+.link-hoverer {
+    position: absolute;
+    background-color: #444;
+    width: 256px;
+    height: 72px
+}
+
 .content {
     padding: 8px 16px 8px 8px;
     max-width: 1400px;

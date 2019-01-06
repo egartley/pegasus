@@ -71,8 +71,9 @@ var selectionLength = 0;
 var caretTextIndex = 0;
 var caretHTMLIndex = 0;
 
-// modals
+// is displaying
 var isDisplayingLinkModal = false;
+var isDisplayingLinkHoverer = false;
 
 function initEditor() {
     // TOOLBAR BUTTONS ("actionables")
@@ -124,12 +125,21 @@ function initEditor() {
         caretHTMLIndex = getAbsoluteCaretPos(s, false);
     };
 
+    $("div.link-hoverer button").off("click");
+    $("div.link-hoverer button").on("click", function () {
+        // TODO: sanitize input, remove link itself if input is blank
+        $("div.sub-module.paragraph .e a#" + currentLinkID).attr("href", $("div.link-hoverer input").val())
+    });
+
     // DYNAMIC EVENTS (amount/element can change)
     registerEventHandlers();
 }
 
 function getAbsoluteCaretPos(s, textonly) {
     var me = s.anchorNode;
+    if (me === null) {
+        return
+    }
     var parent = me.parentNode;
     if (parent.nodeName.length <= 2) {
         if (parent.nodeName.toLowerCase() === "a") {
@@ -232,12 +242,12 @@ function action_save() {
         if (classlist.contains("section-content")) {
             mod.type = "section-content";
             $(this).children(".sub-module").each(function () {
-                if (this.classList.contains("paragraph")) {
+                if ($(this)[0].classList.contains("paragraph")) {
                     var elements = [];
                     $(this).children().each(function () {
-                        if (this.classList.contains("plain")) {
+                        if ($(this)[0].classList.contains("plain")) {
                             elements.push({type: "plain", value: $(this).html()});
-                        } else if (this.classList.contains("link")) {
+                        } else if ($(this)[0].classList.contains("link")) {
                             elements.push({
                                 type: "link",
                                 value: {displaytext: $(this).html(), url: $(this).attr("url")}
@@ -245,7 +255,7 @@ function action_save() {
                         }
                     });
                     mod.value.push({type: "paragraph", value: elements});
-                } else if (this.classList.contains("list")) {
+                } else if ($(this)[0].classList.contains("list")) {
                     var listitems = [];
                     $(this).children().eq(0).children().each(function () {
                         listitems.push($(this).html());
@@ -316,6 +326,12 @@ function action_save() {
 
 function key(e, code) {
     return (e.keyCode || e.which) === code
+}
+
+function onWindowScroll() {
+    if (isDisplayingLinkHoverer) {
+        setLinkHovererVisible(false, "")
+    }
 }
 
 function registerEventHandlers() {
@@ -413,6 +429,22 @@ function registerEventHandlers() {
         });
     });
 
+    $("div.sub-module.paragraph .e a").off("click");
+    $("div.sub-module.paragraph .e a").on("click", function () {
+        if (isDisplayingLinkHoverer) {
+            return
+        }
+        setLinkHovererVisible(true, $(this).attr("href"));
+        $("div.link-hoverer").css("top", $(this).offset().top + 32);
+        $("div.link-hoverer").css("left", $(this).offset().left);
+        $("div.link-hoverer input").focus();
+        currentLinkID = $(this).attr("id")
+    });
+    $("div.link-hoverer input").off("blur");
+    $("div.link-hoverer input").on("blur", function () {
+        setLinkHovererVisible(false, "")
+    });
+
     $("div.module.heading span#removesection").off("click");
     $("div.module.heading span#removesection").on("click", function () {
         var headingModule = $(this).parent();
@@ -496,10 +528,21 @@ function setToolbarSpinnerVisible(visible) {
 function setLinkModalVisible(visible) {
     if (visible) {
         $("div.link-modal").fadeIn("fast").removeClass("hidden");
-        isDisplayingLinkModal = true;
+        isDisplayingLinkModal = true
     } else {
         $("div.link-modal").fadeOut("fast").addClass("hidden");
-        isDisplayingLinkModal = false;
+        isDisplayingLinkModal = false
+    }
+}
+
+function setLinkHovererVisible(visible, linkURL) {
+    if (visible) {
+        $("div.link-hoverer").removeClass("hidden");
+        $("div.link-hoverer input").val(linkURL);
+        isDisplayingLinkHoverer = true
+    } else {
+        $("div.link-hoverer").addClass("hidden");
+        isDisplayingLinkHoverer = false
     }
 }
 
