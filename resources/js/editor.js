@@ -165,6 +165,16 @@ function getAbsoluteCaretPos(s, textonly) {
     return allbeforelength;
 }
 
+// Credit: https://stackoverflow.com/a/6249440
+function setCaretPosFromAfterMerge(nowinfocus, offset) {
+    var range = document.createRange();
+    var sel = window.getSelection();
+    range.setStart(nowinfocus, offset - 1);
+    range.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(range)
+}
+
 function initLinkDialog(node) {
     setLinkModalVisible(true);
     // unfocus container
@@ -326,7 +336,7 @@ function registerEventHandlers() {
                             $(this).remove();
                             preceding.focus();
                         }
-                    } else if (empty) {
+                    } else {
                         // merge with above paragraph or element
                         if (currentParagraphElementIndex === 0) {
                             // backspace-ing in the first element, so merge into the above paragraph
@@ -553,19 +563,21 @@ function addNewParagraphElement(element) {
 function mergeParagraph(toMerge) {
     if (currentParagraphIndex === 0) {
         // can't merge into non-existent paragraph (there is not one before it)
-        console.log("cannot merge " + Math.random());
-        return;
+        return
     }
-    var html = toMerge.html();
     var paragraphAbove = toMerge.parent().children().eq(currentParagraphIndex - 1);
-    paragraphAbove.html(paragraphAbove.html() + html);
+    if (paragraphAbove === null) {
+        return
+    }
+    var aboveHTML = paragraphAbove.html();
+    paragraphAbove.html(aboveHTML + toMerge.html());
     toMerge.remove();
     currentParagraph = paragraphAbove;
     currentParagraphIndex = currentParagraph.index();
     currentParagraphElement = currentParagraph.children().eq(currentParagraph.children().length - 1);
     currentParagraphElementIndex = currentParagraphElement.index();
     currentParagraphElement.focus();
-    registerEventHandlers();
+    registerEventHandlers()
 }
 
 function mergeParagraphElement(toMerge) {
@@ -573,15 +585,17 @@ function mergeParagraphElement(toMerge) {
         // can't merge into non-existent element (there is not one before it)
         return;
     }
-    var html = toMerge.html();
-    var aboveElement = toMerge.parent().children().eq(currentParagraphElementIndex - 1);
-    var aboveHTML = aboveElement.html();
-    aboveElement.html(aboveHTML + html);
+    var elementAbove = toMerge.parent().children().eq(currentParagraphElementIndex - 1);
+    if (elementAbove === null) {
+        return
+    }
+    var aboveHTML = elementAbove.html();
+    elementAbove.html(aboveHTML + toMerge.html());
     toMerge.remove();
-    currentParagraphElement = aboveElement;
+    currentParagraphElement = elementAbove;
     currentParagraphElementIndex = currentParagraphElement.index();
     currentParagraphElement.focus();
-    registerEventHandlers();
+    registerEventHandlers()
 }
 
 function addNewSection(invoker) {
