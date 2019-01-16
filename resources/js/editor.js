@@ -393,16 +393,16 @@ function registerEventHandlers() {
                             $(this).remove();
                             preceding.focus();
                         }
-                    } else if (caretHTMLIndex === 0) {
+                    } else if (caretHTMLIndex === 0 || caretTextIndex === 0) {
                         // merge with above paragraph or element
                         if (currentParagraphElementIndex === 0) {
                             // backspace-ing in the first element, so merge into the above paragraph
                             mergeParagraph($(this).parent());
-                            resetCaretIndexes();
+                            resetCaretIndexes()
                         } else {
                             // backspace-ing NOT in the first element, so merge into the above element (same paragraph)
                             mergeParagraphElement($(this));
-                            resetCaretIndexes();
+                            resetCaretIndexes()
                         }
                     }
                     return;
@@ -412,18 +412,18 @@ function registerEventHandlers() {
                     $(this).attr("class", strings[9] + " plain");
                     if (enter) {
                         // pressed enter in a morph element, therefore make a whole new paragraph instead of just another element
-                        addNewParagraph($(this).parent());
+                        addNewParagraph($(this).parent(), caretTextIndex === $(this)[0].textContent.length)
                     }
                 } else if (enter) {
                     // pressed enter in a non-morph element
                     if (selectionLength > 0) {
-                        // this actually worked on the first try... wow (thanks coffee!)
+                        // this actually worked on the first try (Thank you Kayne, very cool!)
                         var prev = $(this).html();
                         var replace = $(this).html().substring(caretHTMLIndex).replace(selectedText, "");
-                        $(this).html(prev.substring(0, caretHTMLIndex) + replace);
+                        $(this).html(prev.substring(0, caretHTMLIndex) + replace)
                     }
                     addNewParagraphElement($(this));
-                    resetCaretIndexes();
+                    resetCaretIndexes()
                 }
             });
         });
@@ -509,7 +509,7 @@ function registerEventHandlers() {
 
 function resetCaretIndexes() {
     caretTextIndex = 0;
-    caretHTMLIndex = 0;
+    caretHTMLIndex = 0
 }
 
 function setToolbarStatusText(text) {
@@ -598,7 +598,7 @@ function addNewLink(container) {
     initLinkDialog(container);
 }
 
-function addNewParagraph(p) {
+function addNewParagraph(p, isCarryingContent) {
     if (p == null) {
         return
     }
@@ -606,7 +606,11 @@ function addNewParagraph(p) {
     var elementHTML = currentParagraphElement.html();
 
     currentParagraphElement.remove();
-    container.insertAt(currentParagraphIndex + 1, strings[0] + strings[10] + elementHTML + "</span></div>");
+    if (!isCarryingContent) {
+        container.insertAt(currentParagraphIndex + 1, strings[0] + strings[10] + elementHTML + "</span></div>")
+    } else {
+        container.insertAt(currentParagraphIndex + 1, strings[0] + elementHTML + "</div>")
+    }
     container.children().eq(currentParagraphIndex + 1).children().eq(0).focus();
 
     currentParagraph = container.children().eq(currentParagraphIndex + 1);
