@@ -15,6 +15,7 @@
 
 /* Credit: https://stackoverflow.com/a/2260788 */
 [contenteditable]:focus {
+    /* Gets rid of Chrome's blue-ish outline upon focusing */
     outline: 0 solid transparent
 }
 
@@ -43,8 +44,23 @@
 .link-hoverer {
     position: absolute;
     background-color: #444;
-    width: 256px;
-    height: 72px
+    padding: 6px;
+    border: #666 solid 1px;
+    border-radius: 3px;
+    box-shadow: 0 0 3px 2px black
+}
+
+.link-hoverer span {
+    display: block
+}
+
+.link-hoverer span button {
+    width: 72px;
+    height: 32px;
+    font-weight: bold
+}
+.link-hoverer span button#remove {
+    color: #ff3636
 }
 
 .content {

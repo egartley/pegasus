@@ -33,3 +33,37 @@ a:hover {
     justify-content: center;
     align-items: center
 }
+
+button,
+input[type=text] {
+    padding: 4px;
+    background-color: black;
+    color: whitesmoke;
+    border: #222 solid 1px;
+    border-radius: 3px;
+    height: 1.65em
+}
+
+button.content-only {
+    background-color: transparent;
+    border: none
+}
+
+input[type=text] {
+    min-width: 200px
+}
+
+/* Not working for some reason, fix later */
+/*input[type=checkbox] {
+    background-color: black;
+    color: whitesmoke;
+    border: #222 solid 1px;
+    border-radius: 2px
+}*/
+
+label {
+    font-size: 13px
+}
+
+::-webkit-input-placeholder { color: darkgrey }
+::-moz-placeholder { color: darkgrey }

@@ -30,20 +30,26 @@ function page_content_html($content, $page, $edit)
         $html .= get_editing_toolbar_html();
     }
 
-    // modals
+    // modals/hoverers/etc.
     $html .= "
 <div class=\"link-modal hidden\">
     <div class=\"link-dialog\">
         <div class=\"textbox-container\">
             <span id=\"text\">Link to:</span>
-            <input type=\"text\" autocomplete=\"off\" min=\"12\" max=\"2048\" placeholder=\"http://example.com\">
+            <input type=\"text\" autocomplete=\"off\" max=\"2048\" placeholder=\"http://example.com\">
         </div>
         <button class=\"insert-link\">Insert</button>
     </div>
 </div>
 <div class=\"link-hoverer hidden\">
-    <input type=\"text\" autocomplete=\"off\" min=\"12\" max=\"2048\" placeholder=\"http://example.com\">
-    <button>Apply</button>
+    <span>
+        <input type=\"text\" id=\"linkURL\" autocomplete=\"off\" max=\"2048\" placeholder=\"http://example.com\">
+        <button id=\"apply\">Apply</button>
+    </span>
+    <span style=\"margin-top:4px\">
+        <input type=\"checkbox\" id=\"newtab\"><label for=\"newtab\">New tab</label>
+        <button class=\"content-only\" id=\"remove\">Remove</button>
+    </span>
 </div>";
 
     // start of actual content
@@ -117,7 +123,7 @@ function page_content_html($content, $page, $edit)
         $html .= "</div>";
     }
     // footer (hardcoded for now)
-    $html .= "<div class=\"module footer\">Copyright 2018</div>";
+    $html .= "<div class=\"module footer\">Copyright 2019</div>";
     // end all modules
     $html .= "
     </div>";

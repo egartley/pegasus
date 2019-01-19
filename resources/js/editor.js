@@ -64,6 +64,7 @@ var currentParagraphElementIndex = 0;
 var currentInfoboxIndex = 0;
 var currentLinkID = "";
 var isInLink = false;
+var linkHovererFocus = false;
 
 // selection
 var selectedText = "";
@@ -125,8 +126,8 @@ function initEditor() {
         caretHTMLIndex = getAbsoluteCaretPos(s, false);
     };
 
-    $("div.link-hoverer button").off("click");
-    $("div.link-hoverer button").on("click", function () {
+    $("div.link-hoverer span button").off("click");
+    $("div.link-hoverer span button#apply").on("click", function () {
         // TODO: sanitize input, remove link itself if input is blank
         $("div.sub-module.paragraph .e a#" + currentLinkID).attr("href", $("div.link-hoverer input").val())
     });
@@ -337,12 +338,11 @@ function onWindowScroll() {
 function registerEventHandlers() {
     // TODO: only update events for the modified/added module(s) instead of the entire page (prevent performance issues with large amounts of content)
 
-    $("div.paragraph").off("keyup keypress focus");
     $("div.paragraph").each(function () {
         // this paragraph's elements
         $(this).children().each(function () {
             $(this).off("focus keyup keydown");
-            $(this).on("focus", function () {
+            $(this).on("focus", function (e) {
                 // element (this)
                 currentParagraphElement = $(this);
                 currentParagraphElementIndex = currentParagraphElement.index();
@@ -351,7 +351,7 @@ function registerEventHandlers() {
                 currentParagraphIndex = currentParagraph.index();
                 // element -> paragraph (aka section content) -> module
                 currentModule = $(this).parent().parent();
-                currentModuleIndex = currentModule.index();
+                currentModuleIndex = currentModule.index()
             });
             $(this).on("keydown", function (e) {
                 // prevent spamming of enter key while holding it down
@@ -429,20 +429,23 @@ function registerEventHandlers() {
         });
     });
 
-    $("div.sub-module.paragraph .e a").off("click");
-    $("div.sub-module.paragraph .e a").on("click", function () {
-        if (isDisplayingLinkHoverer) {
-            return
-        }
-        setLinkHovererVisible(true, $(this).attr("href"));
+    $("div.sub-module.paragraph .e a").off("mouseup mousedown");
+    $("div.sub-module.paragraph .e a").on("mouseup", function () {
+        linkHovererFocus = false;
+        setLinkHovererVisible(true, $(this).attr("href"), $(this).attr("target") !== undefined);
         $("div.link-hoverer").css("top", $(this).offset().top + 32);
         $("div.link-hoverer").css("left", $(this).offset().left);
-        $("div.link-hoverer input").focus();
+        $("div.link-hoverer span > input#linkURL").eq(0).focus();
         currentLinkID = $(this).attr("id")
     });
-    $("div.link-hoverer input").off("blur");
-    $("div.link-hoverer input").on("blur", function () {
-        setLinkHovererVisible(false, "")
+    $("div.sub-module.paragraph .e a").on("mousedown", function () {
+        linkHovererFocus = true
+    });
+    $("div.link-hoverer > span > *").off("blur");
+    $("div.link-hoverer > span > *").on("blur", function (e) {
+        if ($(e.relatedTarget).parent().parent()[0] !== $("div.link-hoverer")[0] && !linkHovererFocus) {
+            setLinkHovererVisible(false, "", false)
+        }
     });
 
     $("div.module.heading span#removesection").off("click");
@@ -535,15 +538,20 @@ function setLinkModalVisible(visible) {
     }
 }
 
-function setLinkHovererVisible(visible, linkURL) {
+function setLinkHovererVisible(visible, linkURL, newtab) {
     if (visible) {
-        $("div.link-hoverer").removeClass("hidden");
-        $("div.link-hoverer input").val(linkURL);
+        setLinkHovererContent(linkURL, newtab);
+        $("div.link-hoverer").removeClass("hidden").fadeIn("fast");
         isDisplayingLinkHoverer = true
     } else {
-        $("div.link-hoverer").addClass("hidden");
+        $("div.link-hoverer").fadeOut("fast").addClass("hidden");
         isDisplayingLinkHoverer = false
     }
+}
+
+function setLinkHovererContent(linkURL, newtab) {
+    $("div.link-hoverer span > input#linkURL").val(linkURL);
+    $("div.link-hoverer span > input#newtab").prop('checked', newtab);
 }
 
 function getFocusedElement() {
@@ -750,13 +758,13 @@ function insertLink(element) {
         // TODO: add option to allow "dirty", or unvalidated, URLs (but have it off by default)
         return
     }
-    commonSelectionInsert(element, '<a rel="nofollow" href="' + url + '" id="' + Date.now().toString() + '">', '</a>')
+    commonSelectionInsert(element, '<a rel="nofollow noopener noreferrer" href="' + url + '" id="' + Date.now().toString() + '">', '</a>')
 }
 
 function insertBold(element) {
     commonSelectionInsert(element, '<b>', '</b>')
 }
 
-function insertItalics(element)  {
+function insertItalics(element) {
     commonSelectionInsert(element, '<i>', '</i>')
 }
