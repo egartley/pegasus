@@ -1,4 +1,4 @@
-// https://stackoverflow.com/a/488073
+// Credit: https://stackoverflow.com/a/488073
 function isWithinView(e, full) {
     var pageTop = $(window).scrollTop();
     var pageBottom = pageTop + $(window).height();
@@ -18,6 +18,11 @@ function getHiddenMeta(meta) {
 
 function isElementHTMLEmpty(element) {
     return element.html().length === 0 || element.html().indexOf("<br") === 0;
+}
+
+// Credit: https://stackoverflow.com/a/8234912
+function isURLSanitary(url) {
+    return (/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%\/.\w-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[\w]*))?)/).exec(url)
 }
 
 var showingInfobox = true;

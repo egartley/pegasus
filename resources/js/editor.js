@@ -77,17 +77,12 @@ var isDisplayingLinkModal = false;
 var isDisplayingLinkHoverer = false;
 
 function initEditor() {
-    // TOOLBAR BUTTONS ("actionables")
-    $(document).on("mouseup", function () {
-        $("div.toolbar div.actionable").each(function () {
-            $(this).removeClass("actionable-clicked");
-        });
+    // TOOLBAR BUTTONS
+    $("div.toolbar div.actionable").on("mouseup", function () {
+        $(this).removeClass("actionable-clicked")
     });
     $("div.toolbar div.actionable").on("mousedown", function () {
-        $(this).addClass("actionable-clicked");
-    });
-    $("div.toolbar div.actionable").on("mouseup", function () {
-        $(this).removeClass("actionable-clicked");
+        $(this).addClass("actionable-clicked")
     });
     $("div.toolbar div.actionable.action-save").on("click", function () {
         action_save();
@@ -114,7 +109,7 @@ function initEditor() {
         insertNewProperty();
     });
 
-    // ABSOLUTE EVENTS (amount/element will not change)
+    // ABSOLUTE EVENTS
     document.onselectionchange = function () {
         if (isDisplayingLinkModal) {
             return;
@@ -126,10 +121,25 @@ function initEditor() {
         caretHTMLIndex = getAbsoluteCaretPos(s, false);
     };
 
-    $("div.link-hoverer span button").off("click");
     $("div.link-hoverer span button#apply").on("click", function () {
-        // TODO: sanitize input, remove link itself if input is blank
-        $("div.sub-module.paragraph .e a#" + currentLinkID).attr("href", $("div.link-hoverer input").val())
+        var url = $("div.link-hoverer input#linkURL").val();
+        if (!isURLSanitary(url)) {
+            return
+        }
+        $("div.sub-module.paragraph .e a#" + currentLinkID).attr("href", url)
+    });
+    $("div.link-hoverer span button#remove").on("click", function () {
+        removeCurrentLink();
+        setLinkHovererVisible(false);
+        registerEventHandlers()
+    });
+    $("div.link-hoverer span input#newtab").on("click", function () {
+        var link = $("a#" + currentLinkID);
+        if (link.attr("target") === "_default") {
+            link.attr("target", "_blank")
+        } else {
+            link.attr("target", "_default")
+        }
     });
 
     // DYNAMIC EVENTS (amount/element can change)
@@ -432,7 +442,7 @@ function registerEventHandlers() {
     $("div.sub-module.paragraph .e a").off("mouseup mousedown");
     $("div.sub-module.paragraph .e a").on("mouseup", function () {
         linkHovererFocus = false;
-        setLinkHovererVisible(true, $(this).attr("href"), $(this).attr("target") !== undefined);
+        setLinkHovererVisible(true, $(this).attr("href"), $(this).attr("target") === "_blank");
         $("div.link-hoverer").css("top", $(this).offset().top + 32);
         $("div.link-hoverer").css("left", $(this).offset().left);
         $("div.link-hoverer span > input#linkURL").eq(0).focus();
@@ -541,10 +551,12 @@ function setLinkModalVisible(visible) {
 function setLinkHovererVisible(visible, linkURL, newtab) {
     if (visible) {
         setLinkHovererContent(linkURL, newtab);
-        $("div.link-hoverer").removeClass("hidden").fadeIn("fast");
+        $("div.link-hoverer").fadeIn("fast");
+        $("div.link-hoverer").removeClass("hidden");
         isDisplayingLinkHoverer = true
     } else {
-        $("div.link-hoverer").fadeOut("fast").addClass("hidden");
+        $("div.link-hoverer").fadeOut("fast");
+        $("div.link-hoverer").addClass("hidden");
         isDisplayingLinkHoverer = false
     }
 }
@@ -592,11 +604,11 @@ function onLinkFocus(elementNode) {
 }
 
 function removeLinkFrom(html, link) {
-    return html.replace(link.prop("outerHTML"), link.html());
+    return html.replace(link.prop("outerHTML"), link.html())
 }
 
-function removeLink(html) {
-    return removeLinkFrom(html, $("a#" + currentLinkID))
+function removeCurrentLink() {
+    currentParagraphElement.html(removeLinkFrom(currentParagraphElement.html(), $("a#" + currentLinkID)))
 }
 
 function addNewLink(container) {
@@ -639,7 +651,7 @@ function addNewParagraphElement(element) {
     // check to see if user pressed enter inside a link
     if (isInLink) {
         // remove it
-        html = removeLink(html)
+        html = removeLinkFrom(html, $("a#" + currentLinkID))
     }
 
     var beforeHTML = html.substring(0, caretHTMLIndex);
@@ -751,14 +763,13 @@ function commonSelectionInsert(element, before, after) {
 
 function insertLink(element) {
     var url = $("div.link-dialog div.textbox-container input").val();
-    // Credit: https://stackoverflow.com/a/8234912
-    var re = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%\/.\w-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[\w]*))?)/;
-    if (!re.exec(url)) {
+    if (!isURLSanitary(url)) {
         alert("Invaild URL! (" + url + ")");
+        // TODO: custom error/warning dialog
         // TODO: add option to allow "dirty", or unvalidated, URLs (but have it off by default)
         return
     }
-    commonSelectionInsert(element, '<a rel="nofollow noopener noreferrer" href="' + url + '" id="' + Date.now().toString() + '">', '</a>')
+    commonSelectionInsert(element, '<a rel="nofollow noopener noreferrer" target=\"_default\" href="' + url + '" id="' + Date.now().toString() + '">', '</a>')
 }
 
 function insertBold(element) {
