@@ -68,7 +68,7 @@ div.actionable {
     user-select: none
 }
 
-div.actionable:hover {
+div.actionable:not(.actionable-disabled):hover {
     background-color: #111
 }
 
@@ -94,12 +94,12 @@ div.actionable > span#text {
     font-weight: bold
 }
 
-div.actionable-clicked {
+div.actionable-clicked:not(.actionable-disabled) {
     background-color: #777 !important
 }
 
 div.actionable-disabled {
-    color: #000
+    color: #666
 }
 
 div.actionable.action-back {

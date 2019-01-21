@@ -78,40 +78,63 @@ var isDisplayingLinkHoverer = false;
 
 function initEditor() {
     // TOOLBAR BUTTONS
-    $("div.toolbar div.actionable").on("mouseup", function () {
+    $("div.toolbar div.actionable").on("mouseup mouseleave", function () {
         $(this).removeClass("actionable-clicked")
     });
     $("div.toolbar div.actionable").on("mousedown", function () {
         $(this).addClass("actionable-clicked")
     });
     $("div.toolbar div.actionable.action-save").on("click", function () {
-        action_save();
+        if (!$(this).hasClass("actionable-disabled")) {
+            action_save();
+        }
     });
     $("div.toolbar div.actionable.action-back").on("click", function () {
-        window.location = "/dashboard/";
+        if (!$(this).hasClass("actionable-disabled")) {
+            window.location = "/dashboard/";
+        }
     });
     $("div.toolbar div.actionable.action-newsection").on("click", function () {
-        addNewSection(currentModule);
+        if (!$(this).hasClass("actionable-disabled")) {
+            addNewSection(currentModule);
+        }
     });
     $("div.toolbar div.actionable.action-newlist").on("click", function () {
-        addNewList(currentParagraph);
+        if (!$(this).hasClass("actionable-disabled")) {
+            addNewList(currentParagraph)
+        }
     });
     $("div.toolbar div.actionable.action-addlink").on("click", function () {
-        addNewLink(getFocusedElement());
+        if (!$(this).hasClass("actionable-disabled")) {
+            addNewLink(getFocusedElement())
+        }
     });
     $("div.toolbar div.actionable.action-options").on("click", function () {
-        /* window.location = "/editor/?action=delete&id=" + getHiddenMeta("id")*/
+        if (!$(this).hasClass("actionable-disabled")) {
+            // show options modal
+        }
     });
     $("div.toolbar div.actionable.action-addinfoboxsubheading").on("click", function () {
-        insertNewSubHeading();
+        if (!$(this).hasClass("actionable-disabled")) {
+            insertNewSubHeading()
+        }
     });
     $("div.toolbar div.actionable.action-addinfoboxproperty").on("click", function () {
-        insertNewProperty();
+        if (!$(this).hasClass("actionable-disabled")) {
+            insertNewProperty()
+        }
     });
+
+    // disable these buttons because there is initially no context and current elements/indexes are null/0
+    actionButton_disable("newsection", "plus");
+    actionButton_disable("newlist", "list");
+    actionButton_disable("addlink", "link");
+    actionButton_disable("addinfoboxsubheading", "plus");
+    actionButton_disable("addinfoboxproperty", "plus");
 
     // ABSOLUTE EVENTS
     document.onselectionchange = function () {
-        if (isDisplayingLinkModal) {
+        if (isDisplayingLinkModal || isDisplayingLinkHoverer) {
             return;
         }
         var s = window.getSelection();
@@ -119,6 +142,13 @@ function initEditor() {
         selectedText = s.toString();
         caretTextIndex = getAbsoluteCaretPos(s, true);
         caretHTMLIndex = getAbsoluteCaretPos(s, false);
+
+        // determine context
+        if (s.anchorNode.parentNode.nodeName === "TD" || s.anchorNode.parentNode.nodeName === "TH" || s.anchorNode.parentNode.parentNode.nodeName === "TD") {
+            context_infobox()
+        } else {
+            context_content()
+        }
     };
 
     $("div.link-hoverer span button#apply").on("click", function () {
@@ -144,6 +174,22 @@ function initEditor() {
 
     // DYNAMIC EVENTS (amount/element can change)
     registerEventHandlers();
+}
+
+function context_infobox() {
+    actionButton_disable("newsection", "plus");
+    actionButton_disable("newlist", "list");
+    actionButton_disable("addlink", "link");
+    actionButton_enable("addinfoboxsubheading", "plus");
+    actionButton_enable("addinfoboxproperty", "plus");
+}
+
+function context_content() {
+    actionButton_enable("newsection", "plus");
+    actionButton_enable("newlist", "list");
+    actionButton_enable("addlink", "link");
+    actionButton_disable("addinfoboxsubheading", "plus");
+    actionButton_disable("addinfoboxproperty", "plus");
 }
 
 function getAbsoluteCaretPos(s, textonly) {
@@ -564,6 +610,30 @@ function setLinkHovererVisible(visible, linkURL, newtab) {
 function setLinkHovererContent(linkURL, newtab) {
     $("div.link-hoverer span > input#linkURL").val(linkURL);
     $("div.link-hoverer span > input#newtab").prop('checked', newtab);
+}
+
+function actionButton_disable(classname, iconfile) {
+    var ab = $(".actionable.action-" + classname);
+    if (ab.hasClass("actionable-disabled")) {
+        // already disabled
+        return
+    }
+    var icon = ab.children("span#icon").children("img");
+    ab.addClass("actionable-disabled");
+    // set icon to its disabled variation
+    icon.attr("src", icon.attr("src").replace(iconfile, iconfile + "_disabled"))
+}
+
+function actionButton_enable(classname, iconfile) {
+    var ab = $(".actionable.action-" + classname);
+    if (!ab.hasClass("actionable-disabled")) {
+        // already enabled
+        return
+    }
+    var icon = ab.children("span#icon").children("img");
+    ab.removeClass("actionable-disabled");
+    // set icon to its enabled variation
+    icon.attr("src", icon.attr("src").replace(iconfile + "_disabled", iconfile))
 }
 
 function getFocusedElement() {
