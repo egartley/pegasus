@@ -7,14 +7,14 @@ class Page
     public static $storageFilePath = "../data-storage/pages";
     public static $tempStorageFilePath = "../data-storage/temporary-page";
     public static $maxNumberOfPages = 5000;
-    public static $emptyContentRawJSON = "{\"modules\": [{\"type\": \"section-content\", \"value\": [{\"type\": \"paragraph\", \"value\": [{\"type\": \"text\", \"value\": \"This is a paragraph. Click or tap to change its text.\"}] }] }, {\"type\": \"heading\", \"value\": \"New Section\"}, {\"type\": \"section-content\", \"value\": [{\"type\": \"paragraph\", \"value\": [{\"type\": \"text\", \"value\": \"This is another paragraph. Additional, more detailed content can go here.\"}] }] }], \"infobox\": {\"heading\": \"Infobox\", \"image\": {\"file\": \"/resources/png/infobox-default.png\", \"caption\": \"Add your own picture\"}, \"items\": [{\"type\": \"property\", \"label\": \"Property\", \"value\": \"value\"}] } }";
-    public static $defaultTitle = "Untitled Page";
+    public static $emptyContentRawJSON = "{\"modules\": [{\"type\": \"section-content\", \"value\": [{\"type\": \"paragraph\", \"value\": [{\"type\": \"plain\", \"value\": \"Type anything\"}] }] }], \"infobox\": {\"heading\": \"Infobox\", \"image\": {\"file\": \"/resources/png/infobox-default.png\", \"caption\": \"Add your own picture that best represents this page\"}, \"items\": [{\"type\": \"property\", \"label\": \"Property\", \"value\": \"value\"}] } }";
+    public static $defaultTitle = "Untitled";
 
     public $filePath = "";
     public $metaFilePath = "";
     public $contentFilePath = "";
 
-    public $title = "Untitled Page";
+    public $title = "Untitled";
     public $id = 0;
     public $isnew = "no";
 
