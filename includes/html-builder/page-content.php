@@ -33,7 +33,7 @@ function page_content_html($content, $page, $edit)
     // modals/hoverers/etc.
     $html .= "
 <div class=\"link-modal hidden\">
-    <div class=\"link-dialog\">
+    <div class=\"link-dialog base-dialog-modal\">
         <div class=\"textbox-container\">
             <span id=\"text\">Link to:</span>
             <input type=\"text\" autocomplete=\"off\" max=\"2048\" placeholder=\"http://example.com\">
@@ -41,7 +41,7 @@ function page_content_html($content, $page, $edit)
         <button class=\"insert-link\">Insert</button>
     </div>
 </div>
-<div class=\"link-hoverer hidden\">
+<div class=\"link-hoverer base-dialog-modal hidden\" tabindex=\"-1\">
     <span>
         <input type=\"text\" id=\"linkURL\" autocomplete=\"off\" max=\"2048\" placeholder=\"http://example.com\">
         <button id=\"apply\">Apply</button>

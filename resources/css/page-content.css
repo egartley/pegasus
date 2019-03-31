@@ -19,6 +19,13 @@
     outline: 0 solid transparent
 }
 
+.base-dialog-modal {
+    background-color: #0a0a0a;
+    border: #666 solid 1px;
+    border-radius: 3px;
+    box-shadow: 0 0 3px 2px black
+}
+
 .link-modal {
     display: none;
     position: fixed;
@@ -37,17 +44,12 @@
     height: var(--modal-dialog-height);
     position: absolute;
     top: calc(50% - (var(--modal-dialog-height) / 2));
-    left: calc(50% - (var(--modal-dialog-width) / 2));
-    background-color: #111
+    left: calc(50% - (var(--modal-dialog-width) / 2))
 }
 
 .link-hoverer {
     position: absolute;
-    background-color: #444;
-    padding: 6px;
-    border: #666 solid 1px;
-    border-radius: 3px;
-    box-shadow: 0 0 3px 2px black
+    padding: 6px
 }
 
 .link-hoverer span {

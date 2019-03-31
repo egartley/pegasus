@@ -43,8 +43,8 @@
 </head>
 <body>
 <?php
-echo get_dashboard_toolbar_html();
-// echo get_all_pages_list_html();
+    echo get_dashboard_toolbar_html();
+    // echo get_all_pages_list_html();
 ?>
 <!--<h2 style="margin-top:48px;margin-left:32px"><a rel="noopener" href="/editor/?action=new">Create new page</a></h2>-->
 <div class="wrapper">

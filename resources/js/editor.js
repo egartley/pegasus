@@ -75,6 +75,7 @@ var caretHTMLIndex = 0;
 // is displaying
 var isDisplayingLinkModal = false;
 var isDisplayingLinkHoverer = false;
+var finishedShowingLinkHoverer = false;
 
 function initEditor() {
     // TOOLBAR BUTTONS
@@ -397,7 +398,7 @@ function registerEventHandlers() {
     $("div.paragraph").each(function () {
         // this paragraph's elements
         $(this).children().each(function () {
-            $(this).off("focus keyup keydown");
+            $(this).off("focus keyup keydown mouseup");
             $(this).on("focus", function (e) {
                 // element (this)
                 currentParagraphElement = $(this);
@@ -407,7 +408,7 @@ function registerEventHandlers() {
                 currentParagraphIndex = currentParagraph.index();
                 // element -> paragraph (aka section content) -> module
                 currentModule = $(this).parent().parent();
-                currentModuleIndex = currentModule.index()
+                currentModuleIndex = currentModule.index();
             });
             $(this).on("keydown", function (e) {
                 // prevent spamming of enter key while holding it down
@@ -446,7 +447,7 @@ function registerEventHandlers() {
                         // delete this element, knowing that it's not the first paragraph/element in the page
                         var preceding = $(this).parent().children().eq(currentParagraphElementIndex - 1);
                         if (preceding !== null) {
-                            $(this).remove();
+                            $(this).parent().remove();
                             preceding.focus();
                         }
                     } else if (caretHTMLIndex === 0 || caretTextIndex === 0) {
@@ -482,26 +483,32 @@ function registerEventHandlers() {
                     resetCaretIndexes()
                 }
             });
+            $(this).on("mouseup", function () {
+                if (isDisplayingLinkHoverer && !finishedShowingLinkHoverer) {
+                    setLinkHovererVisible(false, "", false)
+                }
+                finishedShowingLinkHoverer = false;
+            })
         });
     });
 
-    $("div.sub-module.paragraph .e a").off("mouseup mousedown");
+    $("div.sub-module.paragraph .e a").off("mouseup");
     $("div.sub-module.paragraph .e a").on("mouseup", function () {
-        linkHovererFocus = false;
         setLinkHovererVisible(true, $(this).attr("href"), $(this).attr("target") === "_blank");
+
         $("div.link-hoverer").css("top", $(this).offset().top + 32);
         $("div.link-hoverer").css("left", $(this).offset().left);
-        $("div.link-hoverer span > input#linkURL").eq(0).focus();
+        $("div.link-hoverer").trigger("focus");
+        finishedShowingLinkHoverer = true;
+
         currentLinkID = $(this).attr("id")
     });
-    $("div.sub-module.paragraph .e a").on("mousedown", function () {
-        linkHovererFocus = true
-    });
-    $("div.link-hoverer > span > *").off("blur");
-    $("div.link-hoverer > span > *").on("blur", function (e) {
-        if ($(e.relatedTarget).parent().parent()[0] !== $("div.link-hoverer")[0] && !linkHovererFocus) {
+    $("div.link-hoverer").off("blur");
+    $("div.link-hoverer").on("blur", function (e) {
+        if (isDisplayingLinkHoverer && !finishedShowingLinkHoverer && !$(e.relatedTarget).parent().parent().hasClass("link-hoverer")) {
             setLinkHovererVisible(false, "", false)
         }
+        finishedShowingLinkHoverer = false;
     });
 
     $("div.module.heading span#removesection").off("click");
