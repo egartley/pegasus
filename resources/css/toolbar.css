@@ -72,6 +72,10 @@ div.actionable:not(.actionable-disabled):hover {
     background-color: #111
 }
 
+div.actionable.actionable-disabled:hover {
+    cursor: default
+}
+
 div.actionable > *:not(:last-child) {
     margin-right: 6px
 }

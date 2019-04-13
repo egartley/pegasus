@@ -30,7 +30,6 @@ var showingInfobox = true;
 $(document).ready(function () {
     var infobox = $("table.infobox");
     $(window).scroll(function () {
-        onWindowScroll();
         if (!isWithinView(infobox, false)) {
             if (showingInfobox) {
                 // not visible, but still showing, so hide it

@@ -131,7 +131,7 @@ function page_content_html($content, $page, $edit)
     // infobox
     $infobox = $content["infobox"];
     $html .= "
-    <table class=\"infobox\"><tbody><tr class=\"heading\"><td colspan=\"2\"><div class=\"bold-text\"";
+    <table class=\"infobox base-dialog-modal\"><tbody><tr class=\"heading\"><td colspan=\"2\"><div class=\"bold-text\"";
     if ($edit) {
         $html .= " contenteditable=\"true\"";
     }
@@ -181,6 +181,9 @@ function page_content_html($content, $page, $edit)
  */
 function get_page_content_html(Page $page, $edit)
 {
+    if ($page == null) {
+        return "The page supplied to get_page_content_html was null";
+    }
     $rawjsonstring = $page->get_content_rawjson();
     if ($rawjsonstring != null) {
         // was able to get raw json

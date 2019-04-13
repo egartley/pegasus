@@ -14,7 +14,8 @@
 }
 
 /* Credit: https://stackoverflow.com/a/2260788 */
-[contenteditable]:focus {
+[contenteditable]:focus,
+.link-hoverer:focus {
     /* Gets rid of Chrome's blue-ish outline upon focusing */
     outline: 0 solid transparent
 }
@@ -126,11 +127,8 @@
 .infobox {
     max-width: calc(400px - 32px);
     min-width: calc(200px - 32px);
-    border: 1px solid grey;
-    border-radius: 4px;
     text-align: center;
     margin-top: 16px;
-    background-color: #111;
     padding: 0.2em
 }
 

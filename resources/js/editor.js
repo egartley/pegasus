@@ -85,6 +85,11 @@ function initEditor() {
     $("div.toolbar div.actionable").on("mousedown", function () {
         $(this).addClass("actionable-clicked")
     });
+    $("div.toolbar div.actionable.action-livepage").on("click", function () {
+        if (!$(this).hasClass("actionable-disabled")) {
+            window.open("/viewer/?id=" + getHiddenMeta("id"), '_blank');
+        }
+    });
     $("div.toolbar div.actionable.action-save").on("click", function () {
         if (!$(this).hasClass("actionable-disabled")) {
             action_save();
@@ -171,6 +176,10 @@ function initEditor() {
         } else {
             link.attr("target", "_default")
         }
+    });
+
+    $(window).scroll(function () {
+        onWindowScroll()
     });
 
     // DYNAMIC EVENTS (amount/element can change)
