@@ -4,11 +4,11 @@ Lightweight, simpler alternative to Wikipedia
 
 ## Status
 
-Focusing on functionality and modularity, rather than making everything look nice (that comes later). Due to the use of HTML5, mainly [`contenteditable`](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/contenteditable), everything works best in Chrome.
+Focusing on functionality and modularity, rather than making everything look nice (that comes later). Due to the use of HTML5, mainly [`contenteditable`](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/contenteditable), everything works best in Chromium.
 
 ## Demo
 
-You can view an example page [here](https://go.egartley.net/pegasusexamplepage/?via=githubreadme1811)
+You can view an example page [here](https://go.egartley.net/pegasusexamplepage/?via=githubreadme1904)
 
 ## Goals
 
