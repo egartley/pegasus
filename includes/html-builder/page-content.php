@@ -21,9 +21,10 @@ function page_content_html($content, $page, $edit)
 
     // meta/other
     $html .= "
-<span class=\"hidden\" id=\"hiddenpageid\">" . $page->id . "</span>
-<span class=\"hidden\" id=\"hiddenpageisnew\">" . $page->isnew . "</span>
-<span class=\"hidden\" id=\"hiddenedit\">" . $edit . "</span>";
+<span class=\"hidden\" id=\"hiddenpageid\">{$page->id}</span>
+<span class=\"hidden\" id=\"hiddenpageisnew\">{$page->isnew}</span>
+<span class=\"hidden\" id=\"hiddenpageslug\">{$page->slug}</span>
+<span class=\"hidden\" id=\"hiddenedit\">{$edit}</span>";
 
     // toolbar when editing
     if ($edit) {
@@ -32,23 +33,42 @@ function page_content_html($content, $page, $edit)
 
     // modals/hoverers/etc.
     $html .= "
-<div class=\"link-modal hidden\">
-    <div class=\"link-dialog base-dialog-modal\">
-        <div class=\"textbox-container\">
-            <span id=\"text\">Link to:</span>
-            <input type=\"text\" autocomplete=\"off\" max=\"2048\" placeholder=\"http://example.com\">
+<div class=\"base-modal link-modal hidden\">
+    <div class=\"link-dialog base-dialog-modal base-dialog\">
+        <div class=\"dialog-title\">
+            <span>New Link</span>
         </div>
-        <button class=\"insert-link\">Insert</button>
+        <div class=\"dialog-content\">
+            <div class=\"textbox-container\">
+                <span id=\"text\">Link to:</span>
+                <input type=\"text\" autocomplete=\"off\" max=\"2048\" placeholder=\"http://example.com\">
+            </div>
+            <button class=\"insert-link\">Insert</button>
+        </div>
+    </div>
+</div>
+<div class=\"base-modal options-modal hidden\">
+    <div class=\"options-dialog base-dialog-modal base-dialog\">
+        <div class=\"dialog-title\">
+            <span>Options</span>
+        </div>
+        <div class=\"dialog-content\">
+            <div class=\"textbox-container\">
+                <span id=\"text\">URL slug:</span>
+                <input type=\"text\" id=\"urlSlug\" autocomplete=\"off\" max=\"512\" placeholder=\"Untitled_Page\">
+            </div>
+            <button id=\"apply\">Apply</button>
+        </div>
     </div>
 </div>
 <div class=\"link-hoverer base-dialog-modal hidden\" tabindex=\"-1\">
     <span>
         <input type=\"text\" id=\"linkURL\" autocomplete=\"off\" max=\"2048\" placeholder=\"http://example.com\">
-        <button id=\"apply\">Apply</button>
+        <button id=\"apply\" class=\"small-button bold-text\">Apply</button>
     </span>
     <span style=\"margin-top:4px\">
         <input type=\"checkbox\" id=\"newtab\"><label for=\"newtab\">New tab</label>
-        <button class=\"content-only\" id=\"remove\">Remove</button>
+        <button class=\"content-only small-button\" id=\"remove\">Remove</button>
     </span>
 </div>";
 
@@ -60,7 +80,7 @@ function page_content_html($content, $page, $edit)
     if ($edit) {
         $html .= " contenteditable=\"true\"";
     }
-    $html .= ">" . $page->title . "</div>";
+    $html .= ">{$page->title}</div>";
 
     // modules (paragraphs, inline images, data tables, etc.)
     foreach ($content["modules"] as $module) {
@@ -77,7 +97,7 @@ function page_content_html($content, $page, $edit)
                     foreach ($submodule["value"] as $pmodule) {
                         // start element div
                         $ptype = $pmodule["type"];
-                        $html .= "<span class=\"e " . $ptype . "\"";
+                        $html .= "<span class=\"e {$ptype}\"";
                         if ($edit) {
                             $html .= " contenteditable=\"true\"";
                         }
@@ -97,7 +117,7 @@ function page_content_html($content, $page, $edit)
                         if ($edit) {
                             $html .= " contenteditable=\"true\"";
                         }
-                        $html .= ">" . $listitem . "</li>";
+                        $html .= ">{$listitem}</li>";
                     }
                     $html .= "</ul>";
                 } else {
@@ -112,18 +132,19 @@ function page_content_html($content, $page, $edit)
             if ($edit) {
                 $html .= " contenteditable=\"true\"";
             }
-            $html .= ">" . $module["value"] . "</span>";
+            $html .= ">{$module["value"]}</span>";
             if ($edit) {
                 $html .= "<span id=\"removesection\"><img src=\"../resources/png/trash.png\" alt=\"[X]\" title=\"Remove this section\"></span>";
             }
         } else {
-            $html .= "\">Unknown type!";
+            $html .= "\">Unknown module type!";
         }
         // end module
         $html .= "</div>";
     }
     // footer (hardcoded for now)
-    $html .= "<div class=\"module footer\">Copyright 2019</div>";
+    $html .= "
+    <div class=\"module footer small-text\"><b>Last updated:</b>  {$page->asPrettyString_updated()}<br><b>Published:</b>  {$page->asPrettyString_created()}</div>";
     // end all modules
     $html .= "
     </div>";
@@ -136,12 +157,12 @@ function page_content_html($content, $page, $edit)
         $html .= " contenteditable=\"true\"";
     }
     // heading/title and main image
-    $html .= ">" . $infobox["heading"] . "</div></td></tr><tr class=\"main-image\"><td colspan=\"2\"><span class=\"flex-centered\"><table><tbody><tr><td><img alt=\"image\" src=\"" . $infobox["image"]["file"] . "\"></td></tr><tr><td class=\"small-text\" id=\"caption\"";
+    $html .= ">{$infobox["heading"]}</div></td></tr><tr class=\"main-image\"><td colspan=\"2\"><span class=\"flex-centered\"><table><tbody><tr><td><img alt=\"image\" src=\"{$infobox["image"]["file"]}\"></td></tr><tr><td class=\"small-text\" id=\"caption\"";
     if ($edit) {
         $html .= " contenteditable=\"true\"";
     }
     // main image caption
-    $html .= ">" . $infobox["image"]["caption"] . "</td></tr></tbody></table></span></td></tr>";
+    $html .= ">{$infobox["image"]["caption"]}</td></tr></tbody></table></span></td></tr>";
     // properties & sub-headings
     foreach ($infobox["items"] as $item) {
         $html .= "<tr class=\"";
@@ -150,17 +171,17 @@ function page_content_html($content, $page, $edit)
             if ($edit) {
                 $html .= " contenteditable=\"true\"";
             }
-            $html .= ">" . $item["label"] . "</th><td id=\"value\"";
+            $html .= ">{$item["label"]}</th><td id=\"value\"";
             if ($edit) {
                 $html .= " contenteditable=\"true\"";
             }
-            $html .= ">" . $item["value"] . "</td>";
+            $html .= ">{$item["value"]}</td>";
         } else if ($item["type"] == "sub-heading") {
             $html .= "sub-heading\"><td colspan=\"2\"><span class=\"bold-text\"";
             if ($edit) {
                 $html .= " contenteditable=\"true\"";
             }
-            $html .= ">" . $item["value"] . "</span></td>";
+            $html .= ">{$item["value"]}</span></td>";
         } else {
             $html .= "\"><td>Unknown type!</td>";
         }

@@ -44,6 +44,28 @@ input[type=text] {
     height: 1.65em
 }
 
+button {
+    border: #666 solid 1px;
+    border-radius: 2px;
+    transition: border-color 0.2s linear;
+    padding: 6px 12px;
+    height: 32px
+}
+
+button:hover {
+    cursor: pointer;
+    border-color: whitesmoke
+}
+
+button.small-button {
+    width: 72px
+}
+
+button.wide-button {
+    width: 128px;
+    height: 32px
+}
+
 button.content-only {
     background-color: transparent;
     border: none

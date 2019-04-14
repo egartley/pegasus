@@ -27,7 +27,7 @@
     box-shadow: 0 0 3px 2px black
 }
 
-.link-modal {
+.base-modal {
     display: none;
     position: fixed;
     z-index: 1;
@@ -39,29 +39,31 @@
     background-color: rgba(0, 0, 0, 0.4)
 }
 
-.link-dialog {
+.base-dialog {
     display: block;
     width: var(--modal-dialog-width);
     height: var(--modal-dialog-height);
     position: absolute;
     top: calc(50% - (var(--modal-dialog-height) / 2));
-    left: calc(50% - (var(--modal-dialog-width) / 2))
+    left: calc(50% - (var(--modal-dialog-width) / 2));
+    padding: 16px
+}
+
+.dialog-title {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 18px
 }
 
 .link-hoverer {
     position: absolute;
-    padding: 6px
+    padding: 8px
 }
 
 .link-hoverer span {
     display: block
 }
 
-.link-hoverer span button {
-    width: 72px;
-    height: 32px;
-    font-weight: bold
-}
 .link-hoverer span button#remove {
     color: #ff3636
 }
@@ -101,15 +103,17 @@
 
 .module.section-content {
     padding-top: 18px;
-    line-height: 1.82575em;
-    font-size: 15px
+    line-height: 2em;
+    font-size: 15px;
+    color: #DEDEDE
 }
 
 .module.footer {
     padding-top: 28px;
     border: solid 0 transparent;
     border-top-width: 2px;
-    border-top-color: #444
+    border-top-color: #444;
+    color: #777777
 }
 
 .sub-module {

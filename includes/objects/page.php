@@ -1,14 +1,16 @@
 <?php
 
-// this entire thing is a complete shitshow, but at least it works...
+// this entire thing is a complete shitshow, but at least it works... kind of...
 
 class Page
 {
     public static $storageFilePath = "../data-storage/pages";
     public static $tempStorageFilePath = "../data-storage/temporary-page";
     public static $maxNumberOfPages = 5000;
-    public static $emptyContentRawJSON = "{\"modules\": [{\"type\": \"section-content\", \"value\": [{\"type\": \"paragraph\", \"value\": [{\"type\": \"plain\", \"value\": \"Type anything\"}] }] }], \"infobox\": {\"heading\": \"Infobox\", \"image\": {\"file\": \"/resources/png/infobox-default.png\", \"caption\": \"Add your own picture that best represents this page\"}, \"items\": [{\"type\": \"property\", \"label\": \"Property\", \"value\": \"value\"}] } }";
+    public static $emptyContentRawJSON = "{\"modules\": [{\"type\": \"section-content\", \"value\": [{\"type\": \"paragraph\", \"value\": [{\"type\": \"plain\", \"value\": \"Type anything\"}] }] }], \"infobox\": {\"heading\": \"Infobox\", \"image\": {\"file\": \"/resources/png/infobox-default.png\", \"caption\": \"Add your own image here\"}, \"items\": [{\"type\": \"property\", \"label\": \"Property\", \"value\": \"value\"}] } }";
     public static $defaultTitle = "Untitled";
+    public static $defaultDateFormat = "F jS, Y, \a\\t g:i A";
+    public static $defaultSlug = "Untitled";
 
     public $filePath = "";
     public $metaFilePath = "";
@@ -17,6 +19,7 @@ class Page
     public $title = "Untitled";
     public $id = 0;
     public $isnew = "no";
+    public $slug = "Untitled";
 
     public $created = "0";
     public $updated = "0";
@@ -51,6 +54,13 @@ class Page
         return new Page(-1);
     }
 
+    public function get_url_slug_from_title()
+    {
+        // See also: http://www.faqs.org/rfcs/rfc1738.html
+        // only alphanumeric and $-_.+!*'(), characters are allowed in URls
+        return str_replace([" ", "`", "{", "}", "|", "\\", "^", "~", "[", "]", ";", "/", "?", ":", "@", "=", "&", "#", "<", ">"], "_", $this->title);
+    }
+
     private static function get_meta_by_id($id)
     {
         return json_decode(file_get_contents(Page::$storageFilePath . "/" . $id . "/meta.json"), true);
@@ -66,6 +76,7 @@ class Page
         fwrite($metafile, json_encode(array(
             "title" => $post["title"], // title from url
             "id" => $post["id"], // id from url
+            "slug" => $post["slug"],
             "created" => strtotime("now"), // created just now
             "updated" => strtotime("now") // updated just now
         )));
@@ -164,6 +175,7 @@ class Page
             return Page::save_meta_normal(array(
                     "title" => $post["title"], // updated title
                     "id" => $oldmeta["id"], // id doesn't change
+                    "slug" => $post["slug"], // updated slug
                     "created" => $oldmeta["created"], // created doesn't change
                     "updated" => strtotime("now") // update just now
                 )) && Page::save_content_normal($post);
@@ -189,11 +201,11 @@ class Page
 
     private function load_meta_from_file()
     {
-        // meta (title, dates/times, etc.)
         if ($rawmetajson = file_get_contents($this->metaFilePath)) {
             $meta = json_decode($rawmetajson, true);
             $this->title = $meta["title"];
             $this->id = $meta["id"];
+            $this->slug = $meta["slug"];
             $this->created = $meta["created"];
             $this->updated = $meta["updated"];
         } else {
@@ -207,6 +219,7 @@ class Page
         $meta = array(
             "title" => $this->title,
             "id" => $this->id,
+            "slug" => $this->slug,
             "created" => $this->created,
             "updated" => $this->updated
         );
@@ -259,14 +272,12 @@ class Page
 
     function asPrettyString_created()
     {
-        // TODO: convert from unix to pretty
-        return $this->created;
+        return date(Page::$defaultDateFormat, $this->created);
     }
 
     function asPrettyString_updated()
     {
-        // TODO: convert from unix to pretty
-        return $this->updated;
+        return date(Page::$defaultDateFormat, $this->updated);
     }
 
     public function __toString()

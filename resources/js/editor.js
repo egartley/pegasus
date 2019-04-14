@@ -20,7 +20,6 @@ String.prototype.insert = function (index, string) {
     }
 };
 
-// initialize the editor when the page itself is finished loading (i.e. "ready")
 $(document).ready(function () {
     initEditor();
 });
@@ -64,7 +63,6 @@ var currentParagraphElementIndex = 0;
 var currentInfoboxIndex = 0;
 var currentLinkID = "";
 var isInLink = false;
-var linkHovererFocus = false;
 
 // selection
 var selectedText = "";
@@ -73,7 +71,7 @@ var caretTextIndex = 0;
 var caretHTMLIndex = 0;
 
 // is displaying
-var isDisplayingLinkModal = false;
+var isDisplayingModal = false;
 var isDisplayingLinkHoverer = false;
 var finishedShowingLinkHoverer = false;
 
@@ -116,9 +114,7 @@ function initEditor() {
         }
     });
     $("div.toolbar div.actionable.action-options").on("click", function () {
-        if (!$(this).hasClass("actionable-disabled")) {
-            // show options modal
-        }
+        initOptionsDialog(getFocusedElement())
     });
     $("div.toolbar div.actionable.action-addinfoboxsubheading").on("click", function () {
         if (!$(this).hasClass("actionable-disabled")) {
@@ -131,7 +127,7 @@ function initEditor() {
         }
     });
 
-    // disable these buttons because there is initially no context and current elements/indexes are null/0
+    // disable these buttons because there is initially no context and current elements/indexes are null or 0
     actionButton_disable("newsection", "plus");
     actionButton_disable("newlist", "list");
     actionButton_disable("addlink", "link");
@@ -140,7 +136,7 @@ function initEditor() {
 
     // ABSOLUTE EVENTS
     document.onselectionchange = function () {
-        if (isDisplayingLinkModal || isDisplayingLinkHoverer) {
+        if (isDisplayingModal || isDisplayingLinkHoverer) {
             return;
         }
         var s = window.getSelection();
@@ -157,6 +153,7 @@ function initEditor() {
         }
     };
 
+    // DIALOG/MODAL EVENTS
     $("div.link-hoverer span button#apply").on("click", function () {
         var url = $("div.link-hoverer input#linkURL").val();
         if (!isURLSanitary(url)) {
@@ -177,7 +174,11 @@ function initEditor() {
             link.attr("target", "_default")
         }
     });
+    $("div.options-dialog div.dialog-content button#apply").on("click", function () {
+        // submit new slug
+    });
 
+    // OTHER EVENTS
     $(window).scroll(function () {
         onWindowScroll()
     });
@@ -273,12 +274,12 @@ function shortcut_i() {
     insertItalics(getFocusedElement())
 }
 
-function initLinkDialog(node) {
+function initLinkDialog(focusedelement) {
     setLinkModalVisible(true);
-    // unfocus container
-    node.trigger("blur");
+    // unfocus whatever was focused before
+    focusedelement.trigger("blur");
     // focus dialog, specifically textbox
-    $("div.link-modal div.link-dialog div.textbox-container input").trigger("focus");
+    $("div.link-modal div.link-dialog div.dialog-content div.textbox-container input").trigger("focus");
 
     $("div.link-modal").off("click");
     $("div.link-modal").on("click", function (e) {
@@ -290,9 +291,25 @@ function initLinkDialog(node) {
     });
     $("button.insert-link").off("click");
     $("button.insert-link").on("click", function () {
-        insertLink(node);
-        $("div.link-dialog div.textbox-container input").val("");
+        insertLink(focusedelement);
+        $("div.link-dialog div.dialog-content div.textbox-container input").val("");
         setLinkModalVisible(false);
+    });
+}
+
+function initOptionsDialog(focusedelement) {
+    setOptionsModalVisible(true);
+    if (focusedelement !== null) {
+        focusedelement.trigger("blur")
+    }
+    $("div.options-modal div.options-dialog div.dialog-title span").trigger("focus");
+    $("div.options-modal").off("click");
+    $("div.options-modal").on("click", function (e) {
+        // hide if click was not anywhere in the dialog
+        if ($(e.target).hasClass("options-modal")) {
+            // only change visibility if clicked on modal itself, not dialog
+            setOptionsModalVisible(false);
+        }
     });
 }
 
@@ -592,32 +609,42 @@ function setToolbarStatusText(text) {
 }
 
 function setToolbarSpinnerVisible(visible) {
-    var spin = $("div.toolbar div.toolbar-spinner");
     if (visible) {
-        spin.removeClass("hidden");
+        $("div.toolbar div.toolbar-spinner").removeClass("hidden");
     } else {
-        spin.addClass("hidden");
+        $("div.toolbar div.toolbar-spinner").addClass("hidden");
     }
 }
 
 function setLinkModalVisible(visible) {
+    isDisplayingModal = visible;
     if (visible) {
         $("div.link-modal").fadeIn("fast").removeClass("hidden");
-        isDisplayingLinkModal = true
     } else {
         $("div.link-modal").fadeOut("fast").addClass("hidden");
-        isDisplayingLinkModal = false
+    }
+}
+
+function setOptionsModalVisible(visible) {
+    isDisplayingModal = visible;
+    if (visible) {
+        setOptionsDialogContent();
+        $("div.options-modal").fadeIn("fast").removeClass("hidden");
+    } else {
+        $("div.options-modal").fadeOut("fast").addClass("hidden");
     }
 }
 
 function setLinkHovererVisible(visible, linkURL, newtab) {
     if (visible) {
         setLinkHovererContent(linkURL, newtab);
-        $("div.link-hoverer").fadeIn("fast");
-        $("div.link-hoverer").removeClass("hidden");
-        isDisplayingLinkHoverer = true
+        if (!isDisplayingLinkHoverer) {
+            $("div.link-hoverer").fadeIn("fast");
+            $("div.link-hoverer").removeClass("hidden");
+            isDisplayingLinkHoverer = true
+        }
     } else {
-        $("div.link-hoverer").fadeOut("fast");
+        $("div.link-hoverer").fadeOut(125);
         $("div.link-hoverer").addClass("hidden");
         isDisplayingLinkHoverer = false
     }
@@ -626,6 +653,10 @@ function setLinkHovererVisible(visible, linkURL, newtab) {
 function setLinkHovererContent(linkURL, newtab) {
     $("div.link-hoverer span > input#linkURL").val(linkURL);
     $("div.link-hoverer span > input#newtab").prop('checked', newtab);
+}
+
+function setOptionsDialogContent() {
+    $("div.options-dialog div.dialog-content div.textbox-container input#urlSlug").val(getHiddenMeta("slug"))
 }
 
 function actionButton_disable(classname, iconfile) {
@@ -653,6 +684,9 @@ function actionButton_enable(classname, iconfile) {
 }
 
 function getFocusedElement() {
+    if (currentModule == null) {
+        return null
+    }
     if (currentModule.hasClass("section-content")) {
         if (currentParagraph == null && currentList == null) {
             return null;
@@ -670,10 +704,7 @@ function getFocusedElement() {
         }
     } else if (currentModule.hasClass("heading")) {
         return currentModule.children().eq(0);
-    } else if (
-        currentModule.hasClass("page-title") ||
-        currentModule.hasClass("footer")
-    ) {
+    } else if (currentModule.hasClass("page-title") || currentModule.hasClass("footer")) {
         return null;
     } else {
         return null;
@@ -848,7 +879,7 @@ function commonSelectionInsert(element, before, after) {
 }
 
 function insertLink(element) {
-    var url = $("div.link-dialog div.textbox-container input").val();
+    var url = $("div.link-dialog div.dialog-content div.textbox-container input").val();
     if (!isURLSanitary(url)) {
         alert("Invaild URL! (" + url + ")");
         // TODO: custom error/warning dialog
