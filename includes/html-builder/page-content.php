@@ -32,7 +32,8 @@ function page_content_html($content, $page, $edit)
     }
 
     // modals/hoverers/etc.
-    $html .= "
+    if ($edit) {
+        $html .= "
 <div class=\"base-modal link-modal hidden\">
     <div class=\"link-dialog base-dialog-modal base-dialog\">
         <div class=\"dialog-title\">
@@ -60,7 +61,9 @@ function page_content_html($content, $page, $edit)
             <button id=\"apply\">Apply</button>
         </div>
     </div>
-</div>
+</div>";
+    }
+    $html .= "
 <div class=\"link-hoverer base-dialog-modal hidden\" tabindex=\"-1\">
     <span>
         <input type=\"text\" id=\"linkURL\" autocomplete=\"off\" max=\"2048\" placeholder=\"http://example.com\">

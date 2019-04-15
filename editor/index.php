@@ -52,6 +52,7 @@
                 $newpost = array(
                     "isnew" => "yes",
                     "id" => $_GET["id"],
+                    "slug" => $_GET["slug"],
                     "contentjson" => Page::$emptyContentRawJSON,
                     "title" => Page::$defaultTitle
                 );
@@ -104,18 +105,6 @@
             return $_POST["action"];
         }
         return "unknown";
-    }
-
-    function valid_id($checkid)
-    {
-        if (!isset($checkid)) {
-            return "Page ID not specified";
-        } else if (!is_numeric($checkid)) {
-            return "Page ID must be a number";
-        } else if ($checkid <= -1 || $checkid >= Page::$maxNumberOfPages) {
-            return "Page ID must be between 0 and " . (Page::$maxNumberOfPages - 1) . ", inclusive";
-        }
-        return true;
     }
 
     ?>

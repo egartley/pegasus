@@ -6,6 +6,7 @@ class Page
 {
     public static $storageFilePath = "../data-storage/pages";
     public static $tempStorageFilePath = "../data-storage/temporary-page";
+    public static $publishedFilePath = "../page/";
     public static $maxNumberOfPages = 5000;
     public static $emptyContentRawJSON = "{\"modules\": [{\"type\": \"section-content\", \"value\": [{\"type\": \"paragraph\", \"value\": [{\"type\": \"plain\", \"value\": \"Type anything\"}] }] }], \"infobox\": {\"heading\": \"Infobox\", \"image\": {\"file\": \"/resources/png/infobox-default.png\", \"caption\": \"Add your own image here\"}, \"items\": [{\"type\": \"property\", \"label\": \"Property\", \"value\": \"value\"}] } }";
     public static $defaultTitle = "Untitled";
@@ -73,12 +74,14 @@ class Page
             // not found or has wrong permissions
             return false;
         }
+        // ensure created and update times are the same
+        $now = strtotime("now");
         fwrite($metafile, json_encode(array(
             "title" => $post["title"], // title from url
             "id" => $post["id"], // id from url
             "slug" => $post["slug"],
-            "created" => strtotime("now"), // created just now
-            "updated" => strtotime("now") // updated just now
+            "created" => $now, // created just now
+            "updated" => $now // updated just now
         )));
         fclose($metafile);
         return true;
@@ -254,6 +257,23 @@ class Page
         // write the empty content json to it
         fwrite($file, Page::$emptyContentRawJSON);
         fclose($file);
+    }
+
+    function write_contents_to_slug(string $customslug = "")
+    {
+        require_once '../includes/html-builder/published-page.php';
+        $slugpath = Page::$publishedFilePath . $this->slug . "/index.html";
+        if ($customslug !== "") {
+            // replace this slug with specified slug
+            $slugpath = str_replace($this->slug, $customslug, $slugpath);
+        }
+        $indexhtml = fopen($slugpath, "w");
+        if ($indexhtml === false) {
+            return false;
+        }
+        fwrite($indexhtml, get_published_page_html($this));
+        fclose($indexhtml);
+        return true;
     }
 
     /**

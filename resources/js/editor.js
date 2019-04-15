@@ -140,8 +140,8 @@ function initEditor() {
             return;
         }
         var s = window.getSelection();
-        selectionLength = selectedText.length;
         selectedText = s.toString();
+        selectionLength = selectedText.length;
         caretTextIndex = getAbsoluteCaretPos(s, true);
         caretHTMLIndex = getAbsoluteCaretPos(s, false);
 
@@ -149,7 +149,7 @@ function initEditor() {
         if (s.anchorNode.parentNode.nodeName === "TD" || s.anchorNode.parentNode.nodeName === "TH" || s.anchorNode.parentNode.parentNode.nodeName === "TD") {
             context_infobox()
         } else {
-            context_content()
+            context_content();
         }
     };
 
@@ -175,7 +175,17 @@ function initEditor() {
         }
     });
     $("div.options-dialog div.dialog-content button#apply").on("click", function () {
-        // submit new slug
+        // TODO: sanitize input
+        var newslug = $("div.options-dialog div.dialog-content input#urlSlug").val();
+        setHiddenMeta("slug", newslug);
+        $.post("/submit/", {
+            action: "updateslug",
+            id: getHiddenMeta("id"),
+            isnew: getHiddenMeta("isnew"),
+            value: newslug
+        }).done(function (data) {
+            alert(data)
+        });
     });
 
     // OTHER EVENTS
@@ -198,7 +208,11 @@ function context_infobox() {
 function context_content() {
     actionButton_enable("newsection", "plus");
     actionButton_enable("newlist", "list");
-    actionButton_enable("addlink", "link");
+    if (selectionLength !== 0) {
+        actionButton_enable("addlink", "link");
+    } else {
+        actionButton_disable("addlink", "link")
+    }
     actionButton_disable("addinfoboxsubheading", "plus");
     actionButton_disable("addinfoboxproperty", "plus");
 }
@@ -397,6 +411,7 @@ function action_save() {
         contentjson: encodeURIComponent(JSON.stringify(content)),
         id: getHiddenMeta("id"),
         isnew: getHiddenMeta("isnew"),
+        slug: getHiddenMeta("slug"),
         title: $("div.page-title").html(),
         action: "save"
     }).done(function () {

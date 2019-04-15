@@ -16,6 +16,10 @@ function getHiddenMeta(meta) {
     return $("span#hiddenpage" + meta).html();
 }
 
+function setHiddenMeta(meta, value) {
+    $("span#hiddenpage" + meta).html(value);
+}
+
 function isElementHTMLEmpty(element) {
     return element.html().length === 0 || element.html().indexOf("<br") === 0;
 }
