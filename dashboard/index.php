@@ -6,8 +6,11 @@
     require_once '../includes/html-builder/all-pages-list.php';
 
     get_stylesheet_link("toolbar.css");
-    get_stylesheet_link("all-pages-list.css");
     ?>
+    <!-- <style>.all-pages-list-scroller { max-width: 350px; max-height: 500px; overflow-y: auto; margin: 32px }
+    .all-pages-list-scroller .all-pages-list .listing > span { display: inline-block }
+    .all-pages-list-scroller .all-pages-list .listing > span { margin-top: 14px; margin-bottom: 14px; padding-left: 8px }
+    .all-pages-list-scroller .all-pages-list .listing:nth-child(even) { background-color: #0a0a0a }</style> !-->
     <style>
         html, body {
             height: 100%
@@ -44,9 +47,7 @@
 <body>
 <?php
     echo get_dashboard_toolbar_html();
-    // echo get_all_pages_list_html();
 ?>
-<!--<h2 style="margin-top:48px;margin-left:32px"><a rel="noopener" href="/editor/?action=new">Create new page</a></h2>-->
 <div class="wrapper">
 <div class="block-container">
     <div class="block">

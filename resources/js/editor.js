@@ -1,3 +1,5 @@
+// functions for the page editor, see initEditor()
+
 // Credit: https://stackoverflow.com/a/5086688
 jQuery.fn.insertAt = function (index, element) {
     var lastIndex = this.children().length;
@@ -9,15 +11,6 @@ jQuery.fn.insertAt = function (index, element) {
         this.children().eq(index).before(this.children().last());
     }
     return this;
-};
-
-// Credit: https://coderamblings.wordpress.com/2012/07/09/insert-a-string-at-a-specific-index/
-String.prototype.insert = function (index, string) {
-    if (index > 0) {
-        return this.substring(0, index) + string + this.substring(index, this.length);
-    } else {
-        return string + this;
-    }
 };
 
 $(document).ready(function () {
@@ -51,7 +44,6 @@ var strings = [
     '<span class="e morph" contenteditable="true">'
 ];
 
-// editing
 var currentModule = null;
 var currentModuleIndex = 0;
 var currentList = null;
@@ -64,13 +56,11 @@ var currentInfoboxIndex = 0;
 var currentLinkID = "";
 var isInLink = false;
 
-// selection
 var selectedText = "";
 var selectionLength = 0;
 var caretTextIndex = 0;
 var caretHTMLIndex = 0;
 
-// is displaying
 var isDisplayingModal = false;
 var isDisplayingLinkHoverer = false;
 var finishedShowingLinkHoverer = false;
@@ -85,7 +75,7 @@ function initEditor() {
     });
     $("div.toolbar div.actionable.action-livepage").on("click", function () {
         if (!$(this).hasClass("actionable-disabled")) {
-            window.open("/viewer/?id=" + getHiddenMeta("id"), '_blank');
+            window.open(getHiddenMeta("livepath") + getHiddenMeta("slug"), '_blank');
         }
     });
     $("div.toolbar div.actionable.action-save").on("click", function () {
@@ -174,17 +164,23 @@ function initEditor() {
             link.attr("target", "_default")
         }
     });
+
     $("div.options-dialog div.dialog-content button#apply").on("click", function () {
         // TODO: sanitize input
-        var newslug = $("div.options-dialog div.dialog-content input#urlSlug").val();
+        // get the inputted slug
+        var newslug = $("div.options-dialog div.dialog-content input#urlslug").val();
+        // set it to hidden meta
         setHiddenMeta("slug", newslug);
+        $("div.options-dialog div.dialog-content span#debugtext").html("Submitting new slug...");
         $.post("/submit/", {
             action: "updateslug",
             id: getHiddenMeta("id"),
             isnew: getHiddenMeta("isnew"),
-            value: newslug
+            value: newslug,
+            savemeta: "yes"
         }).done(function (data) {
-            alert(data)
+            // alert(data);
+            $("div.options-dialog div.dialog-content span#debugtext").html(data)
         });
     });
 
@@ -258,14 +254,14 @@ function getAbsoluteCaretPos(s, textonly) {
 }
 
 // Credit: https://stackoverflow.com/a/6249440
-function setCaretPosFromAfterMerge(nowinfocus, offset) {
+/*function setCaretPosFromAfterMerge(nowinfocus, offset) {
     var range = document.createRange();
     var sel = window.getSelection();
     range.setStart(nowinfocus, offset - 1);
     range.collapse(true);
     sel.removeAllRanges();
     sel.addRange(range)
-}
+}*/
 
 function shortcut_k() {
     if (selectionLength === 0 || selectedText === "") {
@@ -671,7 +667,7 @@ function setLinkHovererContent(linkURL, newtab) {
 }
 
 function setOptionsDialogContent() {
-    $("div.options-dialog div.dialog-content div.textbox-container input#urlSlug").val(getHiddenMeta("slug"))
+    $("div.options-dialog div.dialog-content div.textbox-container input#urlslug").val(getHiddenMeta("slug"))
 }
 
 function actionButton_disable(classname, iconfile) {

@@ -44,29 +44,38 @@ function copy_slug(string $oldslug, string $newslug)
     if (file_exists(Page::$publishedFilePath . $newslug)
         || !file_exists(Page::$publishedFilePath . $oldslug)) {
         // new slug already exists or the old slug does not
-        return false;
+        return;
     }
+
+    // make the new directory
     mkdir(Page::$publishedFilePath . $newslug);
+    // copy old to new
     recurse_copy(Page::$publishedFilePath . $oldslug, Page::$publishedFilePath . $newslug);
-    return file_exists(Page::$publishedFilePath . $newslug);
 }
 
 function add_slug(Page $page, string $slug = "")
 {
     $custom = true;
     if ($slug === "") {
-        // get slug from page if not specified
+        // use page's slug if not specified otherwise
         $slug = $page->slug;
         $custom = false;
     }
     if (file_exists(Page::$publishedFilePath . $slug)) {
-        // already exists
+        // already exists, don't want to overwrite
         return false;
     }
+
+    // actually make the slug directory
     mkdir(Page::$publishedFilePath . $slug);
+
+    // check what slug to use
     if ($custom) {
+        // using a different slug than the page's slug
         return $page->write_contents_to_slug($slug);
     }
+
+    // using the page's own slug
     return $page->write_contents_to_slug();
 }
 
@@ -83,15 +92,19 @@ function valid_id($checkid)
 }
 
 // Credit: https://stackoverflow.com/a/2050909
-function recurse_copy(string $src, string $dst)
+function recurse_copy(string $from, string $to)
 {
-    $dir = opendir($src);
+    $dir = opendir($from);
+    if ($dir === false) {
+        // not a directory or does not exist
+        return;
+    }
     while (false !== ($file = readdir($dir))) {
         if ($file != '.' && $file != '..') {
-            if (is_dir($src . '/' . $file)) {
-                recurse_copy($src . '/' . $file, $dst . '/' . $file);
+            if (is_dir($from . '/' . $file)) {
+                recurse_copy($from . '/' . $file, $to . '/' . $file);
             } else {
-                copy($src . '/' . $file, $dst . '/' . $file);
+                copy($from . '/' . $file, $to . '/' . $file);
             }
         }
     }
@@ -109,7 +122,7 @@ function get_page($id)
         // page with that id exists
         return new Page($id);
     } else {
-        // id was fine, but there is no page with it
+        // id is valid, but there is no page with it
         return null;
     }
 }

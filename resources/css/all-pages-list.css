@@ -1,4 +1,0 @@
-.all-pages-list-scroller { max-width: 350px; max-height: 500px; overflow-y: auto; margin: 32px }
-.all-pages-list-scroller .all-pages-list .listing > span { display: inline-block }
-.all-pages-list-scroller .all-pages-list .listing > span { margin-top: 14px; margin-bottom: 14px; padding-left: 8px }
-.all-pages-list-scroller .all-pages-list .listing:nth-child(even) { background-color: #0a0a0a }

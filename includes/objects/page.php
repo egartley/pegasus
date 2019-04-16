@@ -16,6 +16,7 @@ class Page
     public $filePath = "";
     public $metaFilePath = "";
     public $contentFilePath = "";
+    public $slugPath = "";
 
     public $title = "Untitled";
     public $id = 0;
@@ -42,9 +43,11 @@ class Page
             // update paths and meta
             $this->update_paths();
             $this->set_meta();
+            // write default/empty content so that it will load in the editor
             $this->set_empty_content();
         } else {
             // previously saved page (assuming)
+            // so just set path strings and meta
             $this->update_paths();
             $this->load_meta_from_file();
         }
@@ -67,7 +70,7 @@ class Page
         return json_decode(file_get_contents(Page::$storageFilePath . "/" . $id . "/meta.json"), true);
     }
 
-    private static function save_meta_to_temp($post)
+    private static function save_meta_temp($post)
     {
         $metafile = fopen(Page::$tempStorageFilePath . "/meta.json", "w");
         if ($metafile === false) {
@@ -87,7 +90,13 @@ class Page
         return true;
     }
 
-    private static function save_content_to_temp($post)
+    /**
+     * Saves the given $post["contentjson"] to the temporary content file
+     *
+     * @param $post array Data containing the content JSON
+     * @return bool
+     */
+    private static function save_content_temp(array $post)
     {
         $contentfile = fopen(Page::$tempStorageFilePath . "/content.json", "w");
         if ($contentfile === false) {
@@ -99,7 +108,11 @@ class Page
         return true;
     }
 
-    private static function save_meta_normal($meta)
+    /**
+     * @param $meta
+     * @return bool
+     */
+    private static function save_meta($meta)
     {
         $metafile = fopen(Page::$storageFilePath . "/" . $meta["id"] . "/meta.json", "w");
         if ($metafile === false) {
@@ -111,7 +124,7 @@ class Page
         return true;
     }
 
-    private static function save_content_normal($post)
+    private static function save_content($post)
     {
         $contentfile = fopen(Page::$storageFilePath . "/" . $post["id"] . "/content.json", "w");
         if ($contentfile === false) {
@@ -155,16 +168,18 @@ class Page
             // make sure temp directory exists
             Page::check_temporary_page_directory();
             // save files to temp
-            if (Page::save_meta_to_temp($post) && Page::save_content_to_temp($post)) {
+            if (Page::save_meta_temp($post) && Page::save_content_temp($post)) {
                 // create its "normal" storage directory
                 $normalPath = Page::$storageFilePath . "/" . $post["id"];
                 if (!file_exists($normalPath)) {
                     mkdir($normalPath);
                 }
-                // move meta from temp to normal
+                // move content/meta from temp to "normal"
                 rename(Page::$tempStorageFilePath . "/meta.json", $normalPath . "/meta.json");
-                // move content from temp to normal
                 rename(Page::$tempStorageFilePath . "/content.json", $normalPath . "/content.json");
+                // delete temp files
+                unlink(Page::$tempStorageFilePath . "/meta.json");
+                unlink(Page::$tempStorageFilePath . "/content.json");
             } else {
                 // could not save to temp
                 return false;
@@ -175,13 +190,13 @@ class Page
             // not new, has been previously saved, get that meta
             $oldmeta = Page::get_meta_by_id($post["id"]);
             // save meta and content
-            return Page::save_meta_normal(array(
+            return Page::save_meta(array(
                     "title" => $post["title"], // updated title
                     "id" => $oldmeta["id"], // id doesn't change
                     "slug" => $post["slug"], // updated slug
                     "created" => $oldmeta["created"], // created doesn't change
                     "updated" => strtotime("now") // update just now
-                )) && Page::save_content_normal($post);
+                )) && Page::save_content($post);
         }
     }
 
@@ -200,6 +215,7 @@ class Page
         $this->filePath = Page::$storageFilePath . "/" . $this->id;
         $this->metaFilePath = $this->filePath . "/meta.json";
         $this->contentFilePath = $this->filePath . "/content.json";
+        $this->slugPath = Page::$publishedFilePath . $this->slug;
     }
 
     private function load_meta_from_file()
@@ -217,7 +233,7 @@ class Page
         }
     }
 
-    private function set_meta()
+    public function set_meta()
     {
         $meta = array(
             "title" => $this->title,
@@ -262,7 +278,7 @@ class Page
     function write_contents_to_slug(string $customslug = "")
     {
         require_once '../includes/html-builder/published-page.php';
-        $slugpath = Page::$publishedFilePath . $this->slug . "/index.html";
+        $slugpath = $this->slugPath . "/index.html";
         if ($customslug !== "") {
             // replace this slug with specified slug
             $slugpath = str_replace($this->slug, $customslug, $slugpath);
@@ -300,6 +316,9 @@ class Page
         return date(Page::$defaultDateFormat, $this->updated);
     }
 
+    /**
+     * @return string $title ($id)
+     */
     public function __toString()
     {
         return $this->title . " (" . $this->id . ")";

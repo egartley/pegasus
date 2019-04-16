@@ -3,12 +3,12 @@
 /**
  * Returns HTML for page content, with editing capabilities if specified
  *
- * @param $content
- * @param $page
- * @param $edit
- * @return string
+ * @param $content array Content in a JSON array
+ * @param $page Page The page to get meta from
+ * @param $edit bool Whether or not the content is editable
+ * @return string Semi-formatted HTML for displaying the page and its contents
  */
-function page_content_html($content, $page, $edit)
+function page_content_html(array $content, Page $page, bool $edit)
 {
     // script
     $html = "
@@ -24,7 +24,8 @@ function page_content_html($content, $page, $edit)
 <span class=\"hidden\" id=\"hiddenpageid\">{$page->id}</span>
 <span class=\"hidden\" id=\"hiddenpageisnew\">{$page->isnew}</span>
 <span class=\"hidden\" id=\"hiddenpageslug\">{$page->slug}</span>
-<span class=\"hidden\" id=\"hiddenedit\">{$edit}</span>";
+<span class=\"hidden\" id=\"hiddenedit\">{$edit}</span>
+<span class=\"hidden\" id=\"hiddenpagelivepath\">" . Page::$publishedFilePath . "</span>";
 
     // toolbar when editing
     if ($edit) {
@@ -42,7 +43,7 @@ function page_content_html($content, $page, $edit)
         <div class=\"dialog-content\">
             <div class=\"textbox-container\">
                 <span id=\"text\">Link to:</span>
-                <input type=\"text\" autocomplete=\"off\" max=\"2048\" placeholder=\"http://example.com\">
+                <input type=\"text\" autocomplete=\"off\" max=\"2000\" placeholder=\"http://example.com\">
             </div>
             <button class=\"insert-link\">Insert</button>
         </div>
@@ -56,9 +57,10 @@ function page_content_html($content, $page, $edit)
         <div class=\"dialog-content\">
             <div class=\"textbox-container\">
                 <span id=\"text\">URL slug:</span>
-                <input type=\"text\" id=\"urlSlug\" autocomplete=\"off\" max=\"512\" placeholder=\"Untitled_Page\">
+                <input type=\"text\" id=\"urlslug\" autocomplete=\"off\" max=\"512\" placeholder=\"Example: My_Awesome_Page\">
             </div>
             <button id=\"apply\">Apply</button>
+            <span id=\"debugtext\"></span>
         </div>
     </div>
 </div>";
@@ -66,7 +68,7 @@ function page_content_html($content, $page, $edit)
     $html .= "
 <div class=\"link-hoverer base-dialog-modal hidden\" tabindex=\"-1\">
     <span>
-        <input type=\"text\" id=\"linkURL\" autocomplete=\"off\" max=\"2048\" placeholder=\"http://example.com\">
+        <input type=\"text\" id=\"linkURL\" autocomplete=\"off\" max=\"2000\" placeholder=\"http://example.com\">
         <button id=\"apply\" class=\"small-button bold-text\">Apply</button>
     </span>
     <span style=\"margin-top:4px\">
