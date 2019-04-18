@@ -4,11 +4,15 @@ Lightweight, simpler alternative to Wikipedia
 
 ## Status
 
-Focusing on functionality and modularity, rather than making everything look nice (that comes later). Due to the use of HTML5, mainly [`contenteditable`](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/contenteditable), everything works best in Chromium.
+Focusing on functionality and modularity, rather than making everything look nice (that comes later). Due to the use of HTML5, mainly [`contenteditable`](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/contenteditable), everything will work best in a Chromium-based browser (Chrome, Edge, Yandex, Brave, Opera, or Vivaldi).
 
-## Demo
+Currently, you can create, edit and delete pages with content that includes different sections. Bold and italic text, as well as links are also supported.
 
-You can view an example page [here](https://go.egartley.net/pegasusexamplepage/?via=githubreadme1904)
+## Development
+
+[XAMPP](https://www.apachefriends.org) for running a selfhosted Apache server, and JetBrains' [PhpStorm](https://www.jetbrains.com/phpstorm/) for writing the code, both PHP and JavaScript.
+
+Note: The batch file `copy-peg.bat` included is not required, and therefore can be ignored. It is only for copying files from the XAMPP directory to the GitHub directory.
 
 ## Goals
 
