@@ -1,6 +1,6 @@
 <?php
 
-// this entire thing is a complete shitshow, but at least it works... kind of...
+require_once '../includes/core/page-storage.php';
 
 class Page
 {
@@ -11,7 +11,6 @@ class Page
     public static $emptyContentRawJSON = "{\"modules\": [{\"type\": \"section-content\", \"value\": [{\"type\": \"paragraph\", \"value\": [{\"type\": \"plain\", \"value\": \"Type anything\"}] }] }], \"infobox\": {\"heading\": \"Infobox\", \"image\": {\"file\": \"/resources/png/infobox-default.png\", \"caption\": \"Add your own image here\"}, \"items\": [{\"type\": \"property\", \"label\": \"Property\", \"value\": \"value\"}] } }";
     public static $defaultTitle = "Untitled";
     public static $defaultDateFormat = "F jS, Y, \a\\t g:i A";
-    public static $defaultSlug = "Untitled";
 
     public $filePath = "";
     public $metaFilePath = "";
@@ -20,7 +19,6 @@ class Page
 
     public $title = "Untitled";
     public $id = 0;
-    public $isnew = "no";
     public $slug = "Untitled";
 
     public $created = "0";
@@ -31,20 +29,23 @@ class Page
         $this->id = func_get_arg(0);
         if ($this->id == -1) {
             // make new page
-            $this->isnew = "yes";
             // get next available id
             for ($i = 0; $i < Page::$maxNumberOfPages - 1; $i++) {
                 if (file_exists(Page::$storageFilePath . "/" . $i)) {
                     continue;
                 }
                 $this->id = $i;
+                $this->title = Page::$defaultTitle;
+                $this->slug = Page::$defaultTitle . "_" . $i;
                 break;
             }
-            // update paths and meta
+            // update paths and set meta/content
             $this->update_paths();
-            $this->set_meta();
-            // write default/empty content so that it will load in the editor
-            $this->set_empty_content();
+            // create new storage directory
+            mkdir($this->filePath);
+            $this->write_new_meta();
+            $this->write_new_content();
+            add_slug($this);
         } else {
             // previously saved page (assuming)
             // so just set path strings and meta
@@ -53,7 +54,7 @@ class Page
         }
     }
 
-    public static function get_temp_page()
+    public static function new_page()
     {
         return new Page(-1);
     }
@@ -70,9 +71,9 @@ class Page
         return json_decode(file_get_contents(Page::$storageFilePath . "/" . $id . "/meta.json"), true);
     }
 
-    private static function save_meta_temp($post)
+    private function write_new_meta()
     {
-        $metafile = fopen(Page::$tempStorageFilePath . "/meta.json", "w");
+        $metafile = fopen($this->filePath . "/meta.json", "w");
         if ($metafile === false) {
             // not found or has wrong permissions
             return false;
@@ -80,41 +81,34 @@ class Page
         // ensure created and update times are the same
         $now = strtotime("now");
         fwrite($metafile, json_encode(array(
-            "title" => $post["title"], // title from url
-            "id" => $post["id"], // id from url
-            "slug" => $post["slug"],
+            "title" => $this->title, // title from url
+            "id" => $this->id, // id from url
+            "slug" => $this->slug,
             "created" => $now, // created just now
             "updated" => $now // updated just now
         )));
-        fclose($metafile);
-        return true;
+        return fclose($metafile);
     }
 
-    /**
-     * Saves the given $post["contentjson"] to the temporary content file
-     *
-     * @param $post array Data containing the content JSON
-     * @return bool
-     */
-    private static function save_content_temp(array $post)
+    private function write_new_content()
     {
-        $contentfile = fopen(Page::$tempStorageFilePath . "/content.json", "w");
-        if ($contentfile === false) {
-            // not found or has wrong permissions
-            return false;
+        $file = fopen($this->contentFilePath, "w");
+        if ($file === false) {
+            return;
         }
-        fwrite($contentfile, urldecode($post["contentjson"]));
-        fclose($contentfile);
-        return true;
+        fwrite($file, Page::$emptyContentRawJSON);
+        fclose($file);
     }
 
     /**
-     * @param $meta
+     * Writes the given meta values to the normal meta file
+     *
+     * @param $meta array
      * @return bool
      */
-    private static function save_meta($meta)
+    public function write_meta($meta)
     {
-        $metafile = fopen(Page::$storageFilePath . "/" . $meta["id"] . "/meta.json", "w");
+        $metafile = fopen($this->metaFilePath, "w");
         if ($metafile === false) {
             // not found or has wrong permissions
             return false;
@@ -124,9 +118,9 @@ class Page
         return true;
     }
 
-    private static function save_content($post)
+    public function write_content($post)
     {
-        $contentfile = fopen(Page::$storageFilePath . "/" . $post["id"] . "/content.json", "w");
+        $contentfile = fopen($this->contentFilePath, "w");
         if ($contentfile === false) {
             // not found or has wrong permissions
             return false;
@@ -156,58 +150,29 @@ class Page
 
     public static function action_delete($deleteID)
     {
-        Page::delete_page_directory(Page::$storageFilePath . "/" . $deleteID);
+        $p = get_page($deleteID);
+        if ($p !== null) {
+            remove_slug($p->slug);
+            Page::delete_page_directory(Page::$storageFilePath . "/" . $deleteID);
+        } else {
+            return false;
+        }
         return true;
     }
 
     public static function action_save($post)
     {
-        // ex. "/editor/?action=save&id=2&isnew=no" POST
-        if (isset($post["isnew"]) && $post["isnew"] == "yes") {
-            // we're saving a new page
-            // make sure temp directory exists
-            Page::check_temporary_page_directory();
-            // save files to temp
-            if (Page::save_meta_temp($post) && Page::save_content_temp($post)) {
-                // create its "normal" storage directory
-                $normalPath = Page::$storageFilePath . "/" . $post["id"];
-                if (!file_exists($normalPath)) {
-                    mkdir($normalPath);
-                }
-                // move content/meta from temp to "normal"
-                rename(Page::$tempStorageFilePath . "/meta.json", $normalPath . "/meta.json");
-                rename(Page::$tempStorageFilePath . "/content.json", $normalPath . "/content.json");
-                // delete temp files
-                unlink(Page::$tempStorageFilePath . "/meta.json");
-                unlink(Page::$tempStorageFilePath . "/content.json");
-            } else {
-                // could not save to temp
-                return false;
-            }
-            // everything went fine
-            return true;
-        } else {
-            // not new, has been previously saved, get that meta
-            $oldmeta = Page::get_meta_by_id($post["id"]);
-            // save meta and content
-            return Page::save_meta(array(
-                    "title" => $post["title"], // updated title
-                    "id" => $oldmeta["id"], // id doesn't change
-                    "slug" => $post["slug"], // updated slug
-                    "created" => $oldmeta["created"], // created doesn't change
-                    "updated" => strtotime("now") // update just now
-                )) && Page::save_content($post);
-        }
-    }
-
-    /**
-     * Checks for the temporary directory's existence, and creates it if needed
-     */
-    private static function check_temporary_page_directory()
-    {
-        if (!file_exists(Page::$tempStorageFilePath)) {
-            mkdir(Page::$tempStorageFilePath);
-        }
+        // ex. "/editor/?action=save&id=2" POST
+        $oldmeta = Page::get_meta_by_id($post["id"]);
+        // save meta and content
+        write_meta(array(
+            "title" => $post["title"], // updated title
+            "id" => $oldmeta["id"], // id doesn't change
+            "slug" => $post["slug"], // updated slug
+            "created" => $oldmeta["created"], // created doesn't change
+            "updated" => strtotime("now") // updated just now
+        ));
+        write_content($post);
     }
 
     private function update_paths()
@@ -218,6 +183,9 @@ class Page
         $this->slugPath = Page::$publishedFilePath . $this->slug;
     }
 
+    /**
+     * Sets all meta fields from the values in the meta file (make sure paths have been updated)
+     */
     private function load_meta_from_file()
     {
         if ($rawmetajson = file_get_contents($this->metaFilePath)) {
@@ -229,11 +197,14 @@ class Page
             $this->updated = $meta["updated"];
         } else {
             // meta.json doesn't exist
-            // all properties will stay at their defaults (except for id)
+            // all fields will stay at whatever they were
         }
     }
 
-    public function set_meta()
+    /**
+     * To be used outside of the Page class. Call this after changing a meta field value
+     */
+    public function public_write_meta()
     {
         $meta = array(
             "title" => $this->title,
@@ -242,37 +213,13 @@ class Page
             "created" => $this->created,
             "updated" => $this->updated
         );
-        if ($this->isnew == "yes") {
-            // this is a new page
-            $meta["created"] = strtotime("now");
-            $meta["updated"] = $meta["created"];
-            $this->check_temporary_page_directory();
-            $metafile = fopen(Page::$tempStorageFilePath . "/meta.json", "w");
-        } else {
-            // not a new page, save normally
-            $metafile = fopen($this->metaFilePath, "w");
-        }
+        $metafile = fopen($this->metaFilePath, "w");
         if ($metafile === false) {
             // not found or has wrong permissions
             return;
         }
         fwrite($metafile, json_encode($meta));
         fclose($metafile);
-    }
-
-    private function set_empty_content()
-    {
-        // make sure temp directory exists
-        $this->check_temporary_page_directory();
-        // get temp content json file
-        $file = fopen(Page::$tempStorageFilePath . "/content.json", "w");
-        if ($file === false) {
-            // not found or has wrong permissions
-            return;
-        }
-        // write the empty content json to it
-        fwrite($file, Page::$emptyContentRawJSON);
-        fclose($file);
     }
 
     function write_contents_to_slug(string $customslug = "")

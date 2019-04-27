@@ -11,10 +11,7 @@ if (isset($_POST["action"])) {
             return;
         }
 
-        if ($_POST["isnew"] == "yes") {
-            // new page, so create its slug
-            add_slug($workingpage, $_POST["value"]);
-        } else if (valid_id($_POST["id"])) {
+        if (valid_id($_POST["id"])) {
             // previously saved page, but change its slug
             if ($workingpage->slug === $_POST["value"]) {
                 // same slug, no point in "changing" it
@@ -32,7 +29,7 @@ if (isset($_POST["action"])) {
 
         if ($_POST["savemeta"] === "yes") {
             $workingpage->slug = $_POST["value"];
-            $workingpage->set_meta();
+            $workingpage->public_write_meta();
         }
     } else {
         echo "Please make sure all parameters for the action are correctly supplied";

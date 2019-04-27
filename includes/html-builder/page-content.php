@@ -22,7 +22,6 @@ function page_content_html(array $content, Page $page, bool $edit)
     // meta/other
     $html .= "
 <span class=\"hidden\" id=\"hiddenpageid\">{$page->id}</span>
-<span class=\"hidden\" id=\"hiddenpageisnew\">{$page->isnew}</span>
 <span class=\"hidden\" id=\"hiddenpageslug\">{$page->slug}</span>
 <span class=\"hidden\" id=\"hiddenedit\">{$edit}</span>
 <span class=\"hidden\" id=\"hiddenpagelivepath\">" . Page::$publishedFilePath . "</span>";

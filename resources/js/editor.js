@@ -175,9 +175,9 @@ function initEditor() {
         $.post("/submit/", {
             action: "updateslug",
             id: getHiddenMeta("id"),
-            isnew: getHiddenMeta("isnew"),
             value: newslug,
-            savemeta: "yes"
+            savemeta: "yes",
+            justadd: "no"
         }).done(function (data) {
             // alert(data);
             $("div.options-dialog div.dialog-content span#debugtext").html(data)
@@ -406,7 +406,6 @@ function action_save() {
     $.post("/editor/", {
         contentjson: encodeURIComponent(JSON.stringify(content)),
         id: getHiddenMeta("id"),
-        isnew: getHiddenMeta("isnew"),
         slug: getHiddenMeta("slug"),
         title: $("div.page-title").html(),
         action: "save"

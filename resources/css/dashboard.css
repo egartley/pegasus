@@ -1,0 +1,54 @@
+html, body {
+    height: 100%
+}
+
+/* Credit: https://stackoverflow.com/a/27869108/11074765 */
+div.wrapper {
+    display: flex;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0
+}
+
+div.block-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    align-content: space-around;
+    margin-left: auto;
+    margin-right: auto
+}
+
+div.block-container > div {
+    padding: 16px
+}
+
+div.listing {
+    background-color: #222222;
+    padding: 12px;
+}
+
+div.listing:nth-child(even) {
+    background-color: #444444;
+}
+
+div.listing > span {
+    display: block
+}
+
+div.listing > span#title {
+    font-size: 17px
+}
+
+div.listing > span#slug {
+    font-size: 12px;
+    color: #BBBBBB
+}
+
+div.listing > span#edit {
+    font-size: 14px
+}
