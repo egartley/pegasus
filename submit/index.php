@@ -4,7 +4,7 @@ require_once '../includes/core/page-storage.php';
 require_once '../includes/objects/page.php';
 
 if (isset($_POST["action"])) {
-    if ($_POST["action"] == "updateslug" && isset($_POST["id"]) && isset($_POST["value"]) && isset($_POST["isnew"]) && isset($_POST["savemeta"])) {
+    if ($_POST["action"] == "updateslug" && isset($_POST["id"]) && isset($_POST["value"]) && isset($_POST["savemeta"])) {
         $workingpage = get_page($_POST["id"]);
         if ($workingpage === null) {
             echo "There was an issue getting the page with the given ID of \"{$_POST["id"]}\"";

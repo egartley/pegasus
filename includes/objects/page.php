@@ -59,6 +59,33 @@ class Page
         return new Page(-1);
     }
 
+    public static function action_delete($deleteID)
+    {
+        $p = get_page($deleteID);
+        if ($p !== null) {
+            remove_slug($p->slug);
+            Page::delete_page_directory(Page::$storageFilePath . "/" . $deleteID);
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    public static function action_save($post)
+    {
+        // ex. "/editor/?action=save&id=2" POST
+        $p = get_page($post["id"]);
+        // save meta and content
+        $p->write_meta(array(
+            "title" => $post["title"], // updated title
+            "id" => $p->id, // id doesn't change
+            "slug" => $post["slug"], // updated slug
+            "created" => $p->created, // created doesn't change
+            "updated" => strtotime("now") // updated just now
+        ));
+        $p->write_content($post);
+    }
+
     public function get_url_slug_from_title()
     {
         // See also: http://www.faqs.org/rfcs/rfc1738.html
@@ -146,33 +173,6 @@ class Page
         }
         closedir($dir);
         rmdir($src);
-    }
-
-    public static function action_delete($deleteID)
-    {
-        $p = get_page($deleteID);
-        if ($p !== null) {
-            remove_slug($p->slug);
-            Page::delete_page_directory(Page::$storageFilePath . "/" . $deleteID);
-        } else {
-            return false;
-        }
-        return true;
-    }
-
-    public static function action_save($post)
-    {
-        // ex. "/editor/?action=save&id=2" POST
-        $oldmeta = Page::get_meta_by_id($post["id"]);
-        // save meta and content
-        write_meta(array(
-            "title" => $post["title"], // updated title
-            "id" => $oldmeta["id"], // id doesn't change
-            "slug" => $post["slug"], // updated slug
-            "created" => $oldmeta["created"], // created doesn't change
-            "updated" => strtotime("now") // updated just now
-        ));
-        write_content($post);
     }
 
     private function update_paths()

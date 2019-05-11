@@ -176,8 +176,7 @@ function initEditor() {
             action: "updateslug",
             id: getHiddenMeta("id"),
             value: newslug,
-            savemeta: "yes",
-            justadd: "no"
+            savemeta: "yes"
         }).done(function (data) {
             // alert(data);
             $("div.options-dialog div.dialog-content span#debugtext").html(data)
