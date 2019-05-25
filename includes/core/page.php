@@ -223,22 +223,15 @@ class Page
         fclose($metafile);
     }
 
-    function write_permalink_index_html(string $customslug = "")
+    function write_permalink_index_html(string $customslug)
     {
-        require_once '../includes/html-builder/published-page.php';
-
-        $path = "../" . $this->permalink . "/index.html";
-        if ($customslug !== "") {
-            // replace this slug with specified slug
-            $path = str_replace($this->slug, $customslug, $path);
-        }
-        $indexhtml = fopen($path, "w");
+        $indexhtml = fopen(ApplicationSettings::get_php_permalink_for_slug($customslug) . "/index.html", "w");
         if ($indexhtml === false) {
-            return false;
+            return;
         }
+        require_once '../includes/html-builder/published-page.php';
         fwrite($indexhtml, get_published_page_html($this));
         fclose($indexhtml);
-        return true;
     }
 
     /**

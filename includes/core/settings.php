@@ -39,6 +39,7 @@ class ApplicationSettings
     }
     static function get_url_permalink_for_slug($slug)
     {
+        settings_check(true);
         return str_replace("@SLUG", $slug, ApplicationSettings::$permalinkStructure);
     }
 

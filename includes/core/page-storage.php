@@ -6,39 +6,25 @@ require_once '../includes/core/settings.php';
 function remove_permalink(string $slug)
 {
     // move to trash/recyle bin instead of permanent?
-    settings_check(true);
     remove_directory(ApplicationSettings::get_php_permalink_for_slug($slug));
 }
 
-function add_permalink(Page $page, string $slug = "")
+function add_permalink(Page $page)
 {
-    $custom = true;
-    if ($slug === "") {
-        // use page's slug if not specified otherwise
-        $slug = $page->slug;
-        $custom = false;
-    }
+    $slug = $page->slug;
     if (file_exists(ApplicationSettings::get_php_permalink_for_slug($slug))) {
         // already exists, don't want to overwrite
-        return false;
+        return;
     }
 
     // actually make the permalink directory
     mkdir(ApplicationSettings::get_php_permalink_for_slug($slug), 0755, true);
 
-    // check what slug to use
-    if ($custom) {
-        // using a different slug than the page's slug
-        return $page->write_permalink_index_html($slug);
-    }
-
-    // using the page's own slug
-    return $page->write_permalink_index_html();
+    $page->write_permalink_index_html($slug);
 }
 
 function change_permalink_slug(string $oldslug, string $newslug)
 {
-    settings_check(true);
     // make the new directory
     mkdir(ApplicationSettings::get_php_permalink_for_slug($newslug));
     // copy old to new
