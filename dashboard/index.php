@@ -15,7 +15,7 @@
 </head>
 <body>
 <?php
-    echo get_dashboard_toolbar_html();
+    echo get_generic_toolbar_html("Dashboard");
 ?>
 <div class="outter">
     <div class="block-container">
@@ -25,15 +25,7 @@
             </div>
             <div class="dialog-content">
                 <?php echo get_all_pages_list_html() ?>
-                <button id="makenewpage" style="margin-top:12px">Make New</button>
-            </div>
-        </div>
-        <div class="base-dialog-modal">
-            <div class="dialog-title">
-                <span>Quick Links</span>
-            </div>
-            <div class="dialog-content">
-                <a href="/settings/">Settings</a>
+                <button id="makenewpage">Make New</button>
             </div>
         </div>
     </div>

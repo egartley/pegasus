@@ -1,59 +1,23 @@
 <?php
 
 require_once '../includes/core/page.php';
+require_once '../includes/core/settings.php';
 
-function get_page_dirs(bool $relative)
-{
-    $r = [];
-    if ($handle = opendir(Page::$storageFilePath)) {
-        while (false !== ($entry = readdir($handle))) {
-            $path = Page::$storageFilePath . "/" . $entry;
-            if ($entry != "." && $entry != ".." && is_dir($path)) {
-                if ($relative) {
-                    $r[] = $entry;
-                } else {
-                    $r[] = $path;
-                }
-            }
-        }
-        closedir($handle);
-    } else {
-        // something went wrong
-    }
-    return $r;
-}
-
-function remove_slug(string $slug)
+function remove_permalink(string $slug)
 {
     // move to trash/recyle bin instead of permanent?
-    $dir = opendir(Page::$publishedFilePath . $slug);
+    $dir = opendir(ApplicationSettings::get_php_permalink_for_slug($slug));
     while (false !== ($file = readdir($dir))) {
         if ($file != '.' && $file != '..') {
-            unlink(Page::$publishedFilePath . $slug . "/" . $file);
+            unlink(ApplicationSettings::get_php_permalink_for_slug($slug) . "/" . $file);
         }
     }
     // directory should now be empty, so it should be deleted successfully
     closedir($dir);
-    return rmdir(Page::$publishedFilePath . $slug);
+    return rmdir(ApplicationSettings::get_php_permalink_for_slug($slug));
 }
 
-function copy_slug(string $oldslug, string $newslug)
-{
-    // copy page from oldslug to newslug
-    // ex. "My_Page_1" to "My_Page_2"
-    if (file_exists(Page::$publishedFilePath . $newslug)
-        || !file_exists(Page::$publishedFilePath . $oldslug)) {
-        // new slug already exists or the old slug does not
-        return;
-    }
-
-    // make the new directory
-    mkdir(Page::$publishedFilePath . $newslug);
-    // copy old to new
-    recurse_copy(Page::$publishedFilePath . $oldslug, Page::$publishedFilePath . $newslug);
-}
-
-function add_slug(Page $page, string $slug = "")
+function add_permalink(Page $page, string $slug = "")
 {
     $custom = true;
     if ($slug === "") {
@@ -61,22 +25,46 @@ function add_slug(Page $page, string $slug = "")
         $slug = $page->slug;
         $custom = false;
     }
-    if (file_exists(Page::$publishedFilePath . $slug)) {
+    if (file_exists(ApplicationSettings::get_php_permalink_for_slug($slug))) {
         // already exists, don't want to overwrite
         return false;
     }
 
-    // actually make the slug directory
-    mkdir(Page::$publishedFilePath . $slug);
+    // actually make the permalink directory
+    mkdir(ApplicationSettings::get_php_permalink_for_slug($slug), 0755, true);
 
     // check what slug to use
     if ($custom) {
         // using a different slug than the page's slug
-        return $page->write_contents_to_slug($slug);
+        return $page->write_permalink_index_html($slug);
     }
 
     // using the page's own slug
-    return $page->write_contents_to_slug();
+    return $page->write_permalink_index_html();
+}
+
+function change_permalink_slug(string $oldslug, string $newslug)
+{
+    // copy page from oldslug to newslug
+    // ex. "My_Page_1" to "My_Page_2"
+    if (file_exists(ApplicationSettings::get_php_permalink_for_slug($newslug))
+        || !file_exists(ApplicationSettings::get_php_permalink_for_slug($oldslug))) {
+        // new permalink already exists or the old permalink does not
+        return;
+    }
+
+    // make the new directory
+    mkdir(ApplicationSettings::get_php_permalink_for_slug($newslug));
+    // copy old to new
+    recurse_copy(ApplicationSettings::get_php_permalink_for_slug($oldslug), ApplicationSettings::get_php_permalink_for_slug($newslug));
+}
+
+function update_permalink_structure($newpermalink)
+{
+    // assuming that the new permalink structure is valid and not the same as the current one
+    foreach (get_page_dirs(true) as $id) {
+        add_permalink(get_page($id));
+    }
 }
 
 function valid_id($checkid)
@@ -109,6 +97,27 @@ function recurse_copy(string $from, string $to)
         }
     }
     closedir($dir);
+}
+
+function get_page_dirs(bool $relative)
+{
+    $r = [];
+    if ($handle = opendir(Page::$storageFilePath)) {
+        while (false !== ($entry = readdir($handle))) {
+            $path = Page::$storageFilePath . "/" . $entry;
+            if ($entry != "." && $entry != ".." && is_dir($path)) {
+                if ($relative) {
+                    $r[] = $entry;
+                } else {
+                    $r[] = $path;
+                }
+            }
+        }
+        closedir($handle);
+    } else {
+        // something went wrong
+    }
+    return $r;
 }
 
 function num_pages()

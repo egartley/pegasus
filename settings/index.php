@@ -17,7 +17,7 @@
 </head>
 <body>
 <?php
-echo get_plain_toolbar_html("Settings");
+echo get_generic_toolbar_html("Settings")
 ?>
 <span class="hidden" id="onloadpermalink"><?php echo ApplicationSettings::$permalinkStructure ?></span>
 <div class="outter">
@@ -28,13 +28,13 @@ echo get_plain_toolbar_html("Settings");
             </div>
             <div class="dialog-content">
                 <div class="textbox-container">
-                    <input type="text" id="permalinktextbox" autocomplete="off" max="2000" placeholder="/page/@SLUG">
+                    <input type="text" id="permalinktextbox" autocomplete="off" max="2000" placeholder="/example/@SLUG">
                 </div>
                 <div>
-                    <span>Pages are publicly accessible by their permalink.<br>These variables can be used:</span>
+                    <span>Pages are publicly accessible by their permalink, which must include their slug with "@SLUG". Additional variables can be used.</span>
                 </div>
                 <div>
-                    @TITLE, @SLUG, @ID
+                    @TITLE, @ID
                 </div>
                 <div>
                     <button id="permalinkapply">Apply</button>

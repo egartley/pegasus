@@ -29,15 +29,20 @@ function get_editing_toolbar_html()
 </div>";
 }
 
-function get_plain_toolbar_html($text) {
-    return "
-<div class=\"toolbar\">
-    <div class=\"static-icon\"><span><img alt=\"X\" src=\"/resources/ico/favicon.ico\"></span></div>
-    <div class=\"static-text\"><span>{$text}</span></div>
-</div>";
-}
-
-function get_dashboard_toolbar_html()
+function get_generic_toolbar_html($current)
 {
-    return get_plain_toolbar_html("Dashboard");
+    $links = array("Dashboard", "Settings");
+    $html = "
+<div class=\"toolbar\">
+    <div class=\"static-icon\"><span><img alt=\"X\" src=\"/resources/ico/favicon.ico\"></span></div>";
+    foreach ($links as $link) {
+        $html .= "<div class=\"general-link\"><span";
+        if ($current === $link) {
+            $html .= " id=\"current\"";
+        }
+        $html .= "><a href=\"/" . strtolower($link) . "/\">" . $link . "</a></span></div>
+";
+    }
+    return $html . "
+</div>";
 }

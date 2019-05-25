@@ -24,7 +24,7 @@ function page_content_html(array $content, Page $page, bool $edit)
 <span class=\"hidden\" id=\"hiddenpageid\">{$page->id}</span>
 <span class=\"hidden\" id=\"hiddenpageslug\">{$page->slug}</span>
 <span class=\"hidden\" id=\"hiddenedit\">{$edit}</span>
-<span class=\"hidden\" id=\"hiddenpagelivepath\">" . Page::$publishedFilePath . "</span>";
+<span class=\"hidden\" id=\"hiddenpagelivepath\">" . ApplicationSettings::get_url_permalink_for_slug($page->slug) . "</span>";
 
     // toolbar when editing
     if ($edit) {

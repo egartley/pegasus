@@ -12,16 +12,35 @@ class ApplicationSettings
         ApplicationSettings::$permalinkStructure = ApplicationSettings::$default_permalinkStructure;
     }
 
-    static function set_values($jsonstring)
+    static function set_values($jsonstring, $write = false)
     {
         $json = json_decode($jsonstring, true);
         ApplicationSettings::$permalinkStructure = $json["permalink-structure"];
+        if ($write) {
+            ApplicationSettings::write_values_to_file();
+        }
+    }
+
+    static function write_values_to_file() {
+        $file = fopen(ApplicationSettings::$storageFilePath . ApplicationSettings::$storageFileName, "w");
+        fwrite($file, ApplicationSettings::get_json_string());
+        fclose($file);
     }
 
     static function get_json_string()
     {
         return "{\"permalink-structure\":\"" . ApplicationSettings::$permalinkStructure . "\"}";
     }
+
+    static function get_php_permalink_for_slug($slug)
+    {
+        return "../" . ApplicationSettings::get_url_permalink_for_slug($slug);
+    }
+    static function get_url_permalink_for_slug($slug)
+    {
+        return str_replace("@SLUG", $slug, ApplicationSettings::$permalinkStructure);
+    }
+
 }
 
 function check_settings_storage_file($set = false)

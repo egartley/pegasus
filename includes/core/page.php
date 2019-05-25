@@ -6,23 +6,22 @@ class Page
 {
     public static $storageFilePath = "../data-storage/pages";
     public static $tempStorageFilePath = "../data-storage/temporary-page";
-    public static $publishedFilePath = "../page/";
     public static $maxNumberOfPages = 5000;
-    public static $emptyContentRawJSON = "{\"modules\": [{\"type\": \"section-content\", \"value\": [{\"type\": \"paragraph\", \"value\": [{\"type\": \"plain\", \"value\": \"Type anything\"}] }] }], \"infobox\": {\"heading\": \"Infobox\", \"image\": {\"file\": \"/resources/png/infobox-default.png\", \"caption\": \"Add your own image here\"}, \"items\": [{\"type\": \"property\", \"label\": \"Property\", \"value\": \"value\"}] } }";
+    public static $emptyContentRawJSON = "{\"modules\":[{\"type\":\"section-content\",\"value\":[{\"type\":\"paragraph\",\"value\":[{\"type\":\"plain\",\"value\":\"Type anything\"}]}]}],\"infobox\":{\"heading\":\"Infobox\",\"image\":{\"file\":\"/resources/png/infobox-default.png\",\"caption\":\"Add your own image\"},\"items\":[{\"type\":\"property\",\"label\":\"Property\",\"value\":\"Value\"}]}}";
     public static $defaultTitle = "Untitled";
     public static $defaultDateFormat = "F jS, Y, \a\\t g:i A";
 
     public $filePath = "";
     public $metaFilePath = "";
     public $contentFilePath = "";
-    public $slugPath = "";
 
     public $title = "Untitled";
     public $id = 0;
     public $slug = "Untitled";
+    public $permalink = "";
 
-    public $created = "0";
-    public $updated = "0";
+    public $created = 0;
+    public $updated = 0;
 
     function __construct()
     {
@@ -45,12 +44,14 @@ class Page
             mkdir($this->filePath);
             $this->write_new_meta();
             $this->write_new_content();
-            add_slug($this);
+            add_permalink($this);
         } else {
             // previously saved page (assuming)
             // so just set path strings and meta
             $this->update_paths();
             $this->load_meta_from_file();
+            // update paths again so that the permalink is correct
+            $this->update_paths();
         }
     }
 
@@ -63,8 +64,8 @@ class Page
     {
         $p = get_page($deleteID);
         if ($p !== null) {
-            remove_slug($p->slug);
-            Page::delete_page_directory(Page::$storageFilePath . "/" . $deleteID);
+            remove_permalink($p->slug);
+            Page::delete_page_storage_directory(Page::$storageFilePath . "/" . $deleteID);
         } else {
             return false;
         }
@@ -93,10 +94,10 @@ class Page
         return str_replace([" ", "`", "{", "}", "|", "\\", "^", "~", "[", "]", ";", "/", "?", ":", "@", "=", "&", "#", "<", ">"], "_", $this->title);
     }
 
-    private static function get_meta_by_id($id)
+    /*private static function get_meta_by_id($id)
     {
         return json_decode(file_get_contents(Page::$storageFilePath . "/" . $id . "/meta.json"), true);
-    }
+    }*/
 
     private function write_new_meta()
     {
@@ -158,14 +159,14 @@ class Page
     }
 
     // Credit: http://php.net/manual/en/function.rmdir.php#117354
-    private static function delete_page_directory($src)
+    private static function delete_page_storage_directory($src)
     {
         $dir = opendir($src);
         while (false !== ($file = readdir($dir))) {
             if ($file != '.' && $file != '..') {
                 $full = $src . '/' . $file;
                 if (is_dir($full)) {
-                    Page::delete_page_directory($full);
+                    Page::delete_page_storage_directory($full);
                 } else {
                     unlink($full);
                 }
@@ -180,7 +181,7 @@ class Page
         $this->filePath = Page::$storageFilePath . "/" . $this->id;
         $this->metaFilePath = $this->filePath . "/meta.json";
         $this->contentFilePath = $this->filePath . "/content.json";
-        $this->slugPath = Page::$publishedFilePath . $this->slug;
+        $this->permalink = ApplicationSettings::get_url_permalink_for_slug($this->slug);
     }
 
     /**
@@ -222,15 +223,16 @@ class Page
         fclose($metafile);
     }
 
-    function write_contents_to_slug(string $customslug = "")
+    function write_permalink_index_html(string $customslug = "")
     {
         require_once '../includes/html-builder/published-page.php';
-        $slugpath = $this->slugPath . "/index.html";
+
+        $path = "../" . $this->permalink . "/index.html";
         if ($customslug !== "") {
             // replace this slug with specified slug
-            $slugpath = str_replace($this->slug, $customslug, $slugpath);
+            $path = str_replace($this->slug, $customslug, $path);
         }
-        $indexhtml = fopen($slugpath, "w");
+        $indexhtml = fopen($path, "w");
         if ($indexhtml === false) {
             return false;
         }

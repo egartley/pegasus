@@ -10,7 +10,8 @@ div.toolbar {
     border-width: 0;
     border-color: #444;
     box-shadow: 0 0 4px #000;
-    min-height: 44px
+    min-height: 44px;
+    z-index: 1
 }
 
 div.toolbar > div:not(:last-child):not(.delimiter) {
@@ -22,7 +23,8 @@ div.toolbar > div:not(.delimiter):not(.toolbar-spinner) {
     height: 28px
 }
 
-div.static-text {
+div.static-text,
+div.general-link {
     height: initial !important
 }
 
@@ -41,10 +43,15 @@ div.static-icon > span > img {
     height: 28px
 }
 
-div.static-text > span {
+div.static-text > span,
+div.general-link > span {
     color: #666;
     font-size: 14px;
     margin-right: 6px
+}
+
+div.general-link > span#current a {
+    color: white;
 }
 
 div.actionable {
