@@ -7,6 +7,7 @@ class ApplicationSettings
     public static $storageFilePath = "../data-storage/app/";
     public static $storageFileName = "settings.json";
     public static $permalinkStructure = "";
+    public static $protectedDirectories = array(".idea", "dashboard", "data-storage", "editor", "includes", "resources", "settings", "submit", "viewer");
 
     static function set_defaults()
     {
