@@ -76,6 +76,7 @@
             return;
         } else {
             echo "<p>Unknown action specified (\"{$action}\")</p>";
+            return;
         }
 
         // write html

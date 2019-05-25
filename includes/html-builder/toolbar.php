@@ -29,11 +29,15 @@ function get_editing_toolbar_html()
 </div>";
 }
 
-function get_dashboard_toolbar_html()
-{
+function get_plain_toolbar_html($text) {
     return "
 <div class=\"toolbar\">
     <div class=\"static-icon\"><span><img alt=\"X\" src=\"/resources/ico/favicon.ico\"></span></div>
-    <div class=\"static-text\"><span>Dashboard</span></div>
+    <div class=\"static-text\"><span>{$text}</span></div>
 </div>";
+}
+
+function get_dashboard_toolbar_html()
+{
+    return get_plain_toolbar_html("Dashboard");
 }

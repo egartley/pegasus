@@ -1,7 +1,7 @@
 <?php
 require_once '../includes/core/min-header.php';
 require_once '../includes/core/page-storage.php';
-require_once '../includes/objects/page.php';
+require_once '../includes/core/page.php';
 
 if (isset($_POST["action"])) {
     if ($_POST["action"] == "updateslug" && isset($_POST["id"]) && isset($_POST["value"]) && isset($_POST["savemeta"])) {
@@ -31,6 +31,8 @@ if (isset($_POST["action"])) {
             $workingpage->slug = $_POST["value"];
             $workingpage->public_write_meta();
         }
+    } else if ($_POST["action"] == "updatepermalink" && isset($_POST["value"])) {
+        echo "TODO";
     } else {
         echo "Please make sure all parameters for the action are correctly supplied";
     }

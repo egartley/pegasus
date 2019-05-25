@@ -1,3 +1,8 @@
+:root {
+    --modal-dialog-width: 480px;
+    --modal-dialog-height: 280px
+}
+
 body {
     font-family: sans-serif;
     background-color: black;
@@ -38,7 +43,8 @@ a:hover {
     background-color: #0a0a0a;
     border: #666 solid 1px;
     border-radius: 3px;
-    box-shadow: 0 0 3px 2px black
+    box-shadow: 0 0 3px 2px black;
+    max-width: 500px
 }
 
 .base-modal {
@@ -63,10 +69,19 @@ a:hover {
     padding: 16px
 }
 
-.dialog-title {
+.dialog-title,
+.dialog-subtitle {
     font-size: 22px;
     font-weight: bold;
     margin-bottom: 18px
+}
+
+.dialog-subtitle {
+    font-size: 20px
+}
+
+.dialog-content > *:not(:last-child) {
+    margin-bottom: 12px
 }
 
 button,
