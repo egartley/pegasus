@@ -6,15 +6,8 @@ require_once '../includes/core/settings.php';
 function remove_permalink(string $slug)
 {
     // move to trash/recyle bin instead of permanent?
-    $dir = opendir(ApplicationSettings::get_php_permalink_for_slug($slug));
-    while (false !== ($file = readdir($dir))) {
-        if ($file != '.' && $file != '..') {
-            unlink(ApplicationSettings::get_php_permalink_for_slug($slug) . "/" . $file);
-        }
-    }
-    // directory should now be empty, so it should be deleted successfully
-    closedir($dir);
-    return rmdir(ApplicationSettings::get_php_permalink_for_slug($slug));
+    settings_check(true);
+    remove_directory(ApplicationSettings::get_php_permalink_for_slug($slug));
 }
 
 function add_permalink(Page $page, string $slug = "")
@@ -45,25 +38,45 @@ function add_permalink(Page $page, string $slug = "")
 
 function change_permalink_slug(string $oldslug, string $newslug)
 {
-    // copy page from oldslug to newslug
-    // ex. "My_Page_1" to "My_Page_2"
-    if (file_exists(ApplicationSettings::get_php_permalink_for_slug($newslug))
-        || !file_exists(ApplicationSettings::get_php_permalink_for_slug($oldslug))) {
-        // new permalink already exists or the old permalink does not
-        return;
-    }
-
+    settings_check(true);
     // make the new directory
     mkdir(ApplicationSettings::get_php_permalink_for_slug($newslug));
     // copy old to new
     recurse_copy(ApplicationSettings::get_php_permalink_for_slug($oldslug), ApplicationSettings::get_php_permalink_for_slug($newslug));
 }
 
-function update_permalink_structure($newpermalink)
+function delete_permalink_structure()
 {
-    // assuming that the new permalink structure is valid and not the same as the current one
+    $currentpermalink = ApplicationSettings::get_url_permalink_for_slug("foo");
+    if ($currentpermalink !== "/foo") {
+        // not "/@SLUG"
+        $firstdir = substr($currentpermalink, 1, strpos(substr($currentpermalink, 1), "/"));
+        $currentpermalink = $firstdir;
+    }
+    remove_directory("../" . $currentpermalink);
+}
+
+function create_permalink_structure()
+{
     foreach (get_page_dirs(true) as $id) {
         add_permalink(get_page($id));
+    }
+}
+
+// Credit: https://stackoverflow.com/a/3338133
+function remove_directory($toremove)
+{
+    if (is_dir($toremove)) {
+        $objects = scandir($toremove);
+        foreach ($objects as $object) {
+            if ($object != "." && $object != "..") {
+                if (is_dir($toremove . "/" . $object))
+                    remove_directory($toremove . "/" . $object);
+                else
+                    unlink($toremove . "/" . $object);
+            }
+        }
+        rmdir($toremove);
     }
 }
 

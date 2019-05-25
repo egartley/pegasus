@@ -19,6 +19,7 @@ function page_content_html(array $content, Page $page, bool $edit)
 <script src=\"/resources/js/editor.js\" type=\"application/javascript\"></script>";
     }
 
+    settings_check(true);
     // meta/other
     $html .= "
 <span class=\"hidden\" id=\"hiddenpageid\">{$page->id}</span>

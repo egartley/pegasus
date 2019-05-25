@@ -2,6 +2,7 @@
 
 class ApplicationSettings
 {
+    public static $didLoad = false;
     public static $default_permalinkStructure = "/page/@SLUG";
     public static $storageFilePath = "../data-storage/app/";
     public static $storageFileName = "settings.json";
@@ -34,7 +35,7 @@ class ApplicationSettings
 
     static function get_php_permalink_for_slug($slug)
     {
-        return "../" . ApplicationSettings::get_url_permalink_for_slug($slug);
+        return ".." . ApplicationSettings::get_url_permalink_for_slug($slug);
     }
     static function get_url_permalink_for_slug($slug)
     {
@@ -43,8 +44,12 @@ class ApplicationSettings
 
 }
 
-function check_settings_storage_file($set = false)
+function settings_check($set = false)
 {
+    if (ApplicationSettings::$didLoad) {
+        return;
+    }
+    ApplicationSettings::$didLoad = true;
     $settingsjson = ApplicationSettings::$storageFilePath . ApplicationSettings::$storageFileName;
     if (file_exists($settingsjson)) {
         // all good

@@ -5,7 +5,7 @@ require_once '../includes/core/settings.php';
 
 function get_page_list_item_html($page)
 {
-    check_settings_storage_file(true);
+    settings_check(true);
     return "
         <div class=\"listing\">
             <span id=\"title\">{$page->title}</span>

@@ -69,15 +69,13 @@ a:hover {
     padding: 16px
 }
 
-.dialog-title,
-.dialog-subtitle {
+.dialog-title {
     font-size: 22px;
     font-weight: bold;
-    margin-bottom: 18px
-}
-
-.dialog-subtitle {
-    font-size: 20px
+    margin-bottom: 18px;
+    border: solid 0 transparent;
+    border-bottom-width: 2px;
+    border-bottom-color: #444
 }
 
 .dialog-content > *:not(:last-child) {
@@ -137,5 +135,10 @@ label {
     font-size: 13px
 }
 
-::-webkit-input-placeholder { color: darkgrey }
-::-moz-placeholder { color: darkgrey }
+::-webkit-input-placeholder {
+    color: darkgrey
+}
+
+::-moz-placeholder {
+    color: darkgrey
+}

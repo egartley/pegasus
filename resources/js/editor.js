@@ -75,7 +75,7 @@ function initEditor() {
     });
     $("div.toolbar div.actionable.action-livepage").on("click", function () {
         if (!$(this).hasClass("actionable-disabled")) {
-            window.open(getHiddenMeta("livepath") + getHiddenMeta("slug"), '_blank');
+            window.open(getHiddenMeta("livepath"), '_blank');
         }
     });
     $("div.toolbar div.actionable.action-save").on("click", function () {
@@ -178,7 +178,6 @@ function initEditor() {
             value: newslug,
             savemeta: "yes"
         }).done(function (data) {
-            // alert(data);
             $("div.options-dialog div.dialog-content span#debugtext").html(data)
         });
     });

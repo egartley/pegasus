@@ -34,12 +34,14 @@ if (isset($_POST["action"])) {
         }
     } else if ($_POST["action"] == "updatepermalink" && isset($_POST["value"])) {
         // TODO: validate new permalink value
-        check_settings_storage_file(true);
+        settings_check(true);
+
+        delete_permalink_structure();
+
         ApplicationSettings::$permalinkStructure = $_POST["value"];
         ApplicationSettings::set_values(ApplicationSettings::get_json_string(), true);
 
-        update_permalink_structure($_POST["value"]);
-        // TODO: remove old structure?
+        create_permalink_structure();
 
         echo "Successfully updated the permalink structure";
     } else {
