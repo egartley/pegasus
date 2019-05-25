@@ -56,10 +56,10 @@ function page_content_html(array $content, Page $page, bool $edit)
         <div class=\"dialog-content\">
             <div class=\"textbox-container\">
                 <span id=\"text\">URL slug:</span>
-                <input type=\"text\" id=\"urlslug\" autocomplete=\"off\" max=\"512\" placeholder=\"Example: My_Awesome_Page\">
+                <input type=\"text\" spellcheck=\"false\" id=\"sluginput\" autocomplete=\"off\" max=\"512\" placeholder=\"Untitled_Page\">
             </div>
-            <button id=\"apply\">Apply</button>
-            <span id=\"debugtext\"></span>
+            <button id=\"slugapply\">Apply</button>
+            <span class=\"statustext\" id=\"slugstatustext\"></span>
         </div>
     </div>
 </div>";

@@ -165,20 +165,20 @@ function initEditor() {
         }
     });
 
-    $("div.options-dialog div.dialog-content button#apply").on("click", function () {
+    $("div.options-dialog div.dialog-content button#slugapply").on("click", function () {
         // TODO: sanitize input
         // get the inputted slug
-        var newslug = $("div.options-dialog div.dialog-content input#urlslug").val();
+        var newslug = $("div.options-dialog div.dialog-content input#sluginput").val();
         // set it to hidden meta
         setHiddenMeta("slug", newslug);
-        $("div.options-dialog div.dialog-content span#debugtext").html("Submitting new slug...");
+        $("div.options-dialog div.dialog-content span#slugstatustext").html("Submitting new slug...");
         $.post("/submit/", {
             action: "updateslug",
             id: getHiddenMeta("id"),
             value: newslug,
             savemeta: "yes"
         }).done(function (data) {
-            $("div.options-dialog div.dialog-content span#debugtext").html(data)
+            $("div.options-dialog div.dialog-content span#slugstatustext").html(data)
         });
     });
 
@@ -294,14 +294,14 @@ function initLinkDialog(focusedelement) {
         // hide if click was not anywhere in the dialog
         if ($(e.target).hasClass("link-modal")) {
             // only change visibility if clicked on modal itself, not dialog
-            setLinkModalVisible(false);
+            setLinkModalVisible(false)
         }
     });
     $("button.insert-link").off("click");
     $("button.insert-link").on("click", function () {
         insertLink(focusedelement);
         $("div.link-dialog div.dialog-content div.textbox-container input").val("");
-        setLinkModalVisible(false);
+        setLinkModalVisible(false)
     });
 }
 
@@ -319,6 +319,8 @@ function initOptionsDialog(focusedelement) {
             setOptionsModalVisible(false);
         }
     });
+    // clear statuses
+    $("div.options-dialog div.dialog-content span#slugstatustext").html()
 }
 
 function action_save() {
@@ -664,7 +666,7 @@ function setLinkHovererContent(linkURL, newtab) {
 }
 
 function setOptionsDialogContent() {
-    $("div.options-dialog div.dialog-content div.textbox-container input#urlslug").val(getHiddenMeta("slug"))
+    $("div.options-dialog div.dialog-content div.textbox-container input#sluginput").val(getHiddenMeta("slug"))
 }
 
 function actionButton_disable(classname, iconfile) {

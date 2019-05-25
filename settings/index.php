@@ -20,51 +20,12 @@
             font-size: 14px
         }
 
-        span.statustext {
-            font-size: 12px;
-            margin-left: 8px
-        }
-
-        span.statustext.error {
-            color: #ff3636
-        }
-
         div.section-title:not(:first-child) {
             margin-top: 32px
         }
 
         div.section-title > span {
             font-size: 16px
-        }
-
-        div.switcher {
-            width: 192px;
-            background-color: black;
-            height: 30px;
-            display: flex;
-            border: solid 1px #666;
-            border-radius: 3px
-        }
-
-        div.switcher > span {
-            width: calc(50% - 1px);
-            height: calc(100% - 6px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: solid 1px;
-            border-color: transparent;
-            border-radius: 3px;
-            transition: background-color 0.175s ease-in;
-            margin: 2px
-        }
-
-        div.switcher > span.selected {
-            background-color: #444
-        }
-
-        div.switcher > span:hover {
-            cursor: pointer
         }
     </style>
 </head>
