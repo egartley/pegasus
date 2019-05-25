@@ -5,7 +5,7 @@
     require_once '../includes/core/page-storage.php';
     require_once '../includes/html-builder/toolbar.php';
     require_once '../includes/html-builder/page-content.php';
-    require_once '../includes/objects/page.php';
+    require_once '../includes/core/page.php';
 
     get_stylesheet_link("toolbar.css");
     get_stylesheet_link("page-content.css");
