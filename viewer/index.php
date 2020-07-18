@@ -5,8 +5,9 @@
         require_once '../includes/core/page-storage.php';
         require_once '../includes/html-builder/page-content.php';
 
-        get_stylesheet_link("page-content.css");
+        get_stylesheet("page-content.css");
     ?>
+    <!-- Shouldn't be able to see the title because of the iframe -->
     <title>Page Viewer</title>
 </head>
 <body>

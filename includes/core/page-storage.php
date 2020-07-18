@@ -35,10 +35,11 @@ function delete_permalink_structure()
 {
     $currentpermalink = ApplicationSettings::get_url_permalink_for_slug("foo");
     if ($currentpermalink !== "/foo") {
-        // not "/@SLUG"
-        $firstdir = substr($currentpermalink, 1, strpos(substr($currentpermalink, 1), "/"));
-        $currentpermalink = $firstdir;
+        // not "/@SLUG", so find the permalink's "first" directory
+        // for example, it would be "page" for "/page/@SLUG"
+        $currentpermalink = substr($currentpermalink, 1, strpos(substr($currentpermalink, 1), "/"));
     }
+    // else, permalink structure is "/@SLUG", so it would
     remove_directory("../" . $currentpermalink);
 }
 
@@ -50,19 +51,19 @@ function create_permalink_structure()
 }
 
 // Credit: https://stackoverflow.com/a/3338133
-function remove_directory($toremove)
+function remove_directory($directory)
 {
-    if (is_dir($toremove)) {
-        $objects = scandir($toremove);
-        foreach ($objects as $object) {
-            if ($object != "." && $object != "..") {
-                if (is_dir($toremove . "/" . $object))
-                    remove_directory($toremove . "/" . $object);
+    if (is_dir($directory)) {
+        $contents = scandir($directory);
+        foreach ($contents as $file) {
+            if ($file != "." && $file != "..") {
+                if (is_dir($directory . "/" . $file))
+                    remove_directory($directory . "/" . $file);
                 else
-                    unlink($toremove . "/" . $object);
+                    unlink($directory . "/" . $file);
             }
         }
-        rmdir($toremove);
+        rmdir($directory);
     }
 }
 

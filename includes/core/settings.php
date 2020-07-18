@@ -7,7 +7,7 @@ class ApplicationSettings
     public static $storageFilePath = "../data-storage/app/";
     public static $storageFileName = "settings.json";
     public static $permalinkStructure = "";
-    public static $protectedDirectories = array(".idea", "dashboard", "data-storage", "editor", "includes", "resources", "settings", "submit", "viewer");
+    public static $protectedDirectories = array(".idea", "dashboard", "data-storage", "editor", "includes", "resources", "settings", "action", "viewer");
 
     static function set_defaults()
     {
@@ -40,6 +40,7 @@ class ApplicationSettings
     }
     static function get_url_permalink_for_slug($slug)
     {
+        // make sure permalink structure is set
         settings_check(true);
         return str_replace("@SLUG", $slug, ApplicationSettings::$permalinkStructure);
     }
@@ -52,11 +53,11 @@ function settings_check($set = false)
         return;
     }
     ApplicationSettings::$didLoad = true;
-    $settingsjson = ApplicationSettings::$storageFilePath . ApplicationSettings::$storageFileName;
-    if (file_exists($settingsjson)) {
-        // all good
+    $storageFileFullPath = ApplicationSettings::$storageFilePath . ApplicationSettings::$storageFileName;
+    if (file_exists($storageFileFullPath)) {
+        // the json file exists, so we're all good to set the values from it
         if ($set) {
-            ApplicationSettings::set_values(file_get_contents($settingsjson));
+            ApplicationSettings::set_values(file_get_contents($storageFileFullPath));
         }
         return;
     }
@@ -64,7 +65,7 @@ function settings_check($set = false)
 
     ApplicationSettings::set_defaults();
 
-    $file = fopen($settingsjson, "w");
+    $file = fopen($storageFileFullPath, "w");
     if ($file === false) {
         return;
     }

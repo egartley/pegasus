@@ -1,19 +1,17 @@
 <!DOCTYPE html>
 <head>
     <?php
-    require_once '../includes/core/min-header.php';
-    require_once '../includes/html-builder/toolbar.php';
-    require_once '../includes/core/settings.php';
+        require_once '../includes/core/min-header.php';
+        require_once '../includes/html-builder/toolbar.php';
+        require_once '../includes/core/settings.php';
 
-    settings_check(true);
+        settings_check(true);
 
-    get_stylesheet_link("toolbar.css");
-    get_stylesheet_link("application.css");
+        get_stylesheet("toolbar.css");
     ?>
     <title>Settings</title>
     <script src="/resources/js/jquery.js" type="application/javascript"></script>
     <script src="/resources/js/settings.js" type="application/javascript"></script>
-    <script src="/resources/js/general.js" type="application/javascript"></script>
     <style type="text/css">
         div.description > span {
             color: #555555;
@@ -48,7 +46,7 @@ echo get_generic_toolbar_html("Settings")
                     <input type="text" id="permalinktextbox" spellcheck="false" autocomplete="off" max="2000">
                 </div>
                 <div class="description">
-                    <span>Pages are publicly accessible by their permalink, which must include their slug with "@SLUG". Additional variables cannot be used.</span>
+                    <span>Pages are publicly accessible by their permalink. This must include their slug by using "@SLUG". For example, "/page/@SLUG" or simply "/@SLUG".</span>
                 </div>
                 <div>
                     <button id="permalinkapply">Apply</button>
@@ -65,7 +63,7 @@ echo get_generic_toolbar_html("Settings")
                     </div>
                 </div>
                 <div class="description">
-                    <span>Choose a theme to be used. This affects all pages.</span>
+                    <span>Choose a color scheme to be used across all pages.</span>
                 </div>
             </div>
         </div>

@@ -9,7 +9,7 @@ class Page
     public static $maxNumberOfPages = 5000;
     public static $emptyContentRawJSON = "{\"modules\":[{\"type\":\"section-content\",\"value\":[{\"type\":\"paragraph\",\"value\":[{\"type\":\"plain\",\"value\":\"Type anything\"}]}]}],\"infobox\":{\"heading\":\"Infobox\",\"image\":{\"file\":\"/resources/png/infobox-default.png\",\"caption\":\"Add your own image\"},\"items\":[{\"type\":\"property\",\"label\":\"Property\",\"value\":\"Value\"}]}}";
     public static $defaultTitle = "Untitled";
-    public static $defaultDateFormat = "F jS, Y, \a\\t g:i A";
+    public static $defaultDateFormat = "F jS, Y, \a\\t g:i A (T)";
 
     public $filePath = "";
     public $metaFilePath = "";
@@ -75,16 +75,19 @@ class Page
     public static function action_save($post)
     {
         // ex. "/editor/?action=save&id=2" POST
-        $p = get_page($post["id"]);
-        // save meta and content
-        $p->write_meta(array(
+        $page = get_page($post["id"]);
+        // save meta and content files
+        $page->write_meta(array(
             "title" => $post["title"], // updated title
-            "id" => $p->id, // id doesn't change
+            "id" => $page->id, // id doesn't change
             "slug" => $post["slug"], // updated slug
-            "created" => $p->created, // created doesn't change
+            "created" => $page->created, // created doesn't change
             "updated" => strtotime("now") // updated just now
         ));
-        $p->write_content($post);
+        $page->load_meta_from_file();
+        $page->write_content($post);
+        // write to published page
+        $page->write_permalink_index_html($post["slug"]);
     }
 
     public function get_url_slug_from_title()
@@ -225,13 +228,13 @@ class Page
 
     function write_permalink_index_html(string $customslug)
     {
-        $indexhtml = fopen(ApplicationSettings::get_php_permalink_for_slug($customslug) . "/index.html", "w");
-        if ($indexhtml === false) {
+        $indexFile = fopen(ApplicationSettings::get_php_permalink_for_slug($customslug) . "/index.php", "w");
+        if ($indexFile === false) {
             return;
         }
         require_once '../includes/html-builder/published-page.php';
-        fwrite($indexhtml, get_published_page_html($this));
-        fclose($indexhtml);
+        fwrite($indexFile, get_published_page_html($this));
+        fclose($indexFile);
     }
 
     /**

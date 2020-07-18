@@ -166,13 +166,11 @@ function initEditor() {
     });
 
     $("div.options-dialog div.dialog-content button#slugapply").on("click", function () {
-        // TODO: sanitize input
-        // get the inputted slug
+        // TODO: sanitize input (then remove from action php)
         var newslug = $("div.options-dialog div.dialog-content input#sluginput").val();
-        // set it to hidden meta
         setHiddenMeta("slug", newslug);
         $("div.options-dialog div.dialog-content span#slugstatustext").html("Submitting new slug...");
-        $.post("/submit/", {
+        $.post("/action/", {
             action: "updateslug",
             id: getHiddenMeta("id"),
             value: newslug,
@@ -416,6 +414,9 @@ function action_save() {
             setToolbarStatusText(strings[3]);
         }, 1000);
     });
+
+    // update editor page title
+    $("head > title").html("Editing \"" + $("div.page-title").html() + "\"")
 }
 
 function key(e, code) {

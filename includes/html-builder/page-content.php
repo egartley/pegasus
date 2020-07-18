@@ -204,17 +204,15 @@ function page_content_html(array $content, Page $page, bool $edit)
  * @param $edit
  * @return string
  */
-function get_page_content_html(Page $page, $edit)
+function get_page_content_html(Page $page, bool $edit)
 {
     if ($page == null) {
         return "The page supplied to get_page_content_html was null";
     }
     $rawjsonstring = $page->get_content_rawjson();
     if ($rawjsonstring != null) {
-        // was able to get raw json
         return page_content_html(json_decode($rawjsonstring, true), $page, $edit);
     } else {
-        // could not get raw json
         return "Could not get content HTML (make sure the page exists and has content)";
     }
 }

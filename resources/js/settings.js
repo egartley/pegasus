@@ -4,7 +4,7 @@ $(document).ready(function () {
         var input = $("input#permalinktextbox").val();
 
         $("span#permalinkapplystatustext").html("Changing permalinks...");
-        $.post("/submit/", {
+        $.post("/action/", {
             action: "updatepermalink",
             value: input
         }).done(function (data) {
