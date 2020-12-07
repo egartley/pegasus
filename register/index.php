@@ -25,10 +25,17 @@
         $password = mysqli_real_escape_string($connection, stripslashes($_REQUEST["password"]));
         try {
             $uid = random_int(100000, 999999);
+            $check = mysqli_query($connection,"SELECT * FROM `users_v0` WHERE uid=" . $uid);
+            while (mysqli_num_rows($check) > 0) {
+                # ensure no duplicate uid's
+                $uid = random_int(100000, 999999);
+                $check = mysqli_query($connection,"SELECT * FROM `users_v0` WHERE uid=" . $uid);
+            }
         } catch (Exception $e) {
             $uid = 1;
             echo "<p>Error while generating the UID: " . $e->getMessage() . "</p>";
         }
+        # NOTE: allow duplicate usernames?
         $query = "INSERT into `users_v0` (`uid`, `username`, `password`, `creation`, `lastlogin`) VALUES (" . $uid
             . ", '$username', '" . password_hash($password, PASSWORD_DEFAULT)
             . "', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP())";

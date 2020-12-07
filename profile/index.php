@@ -11,7 +11,14 @@
 
     require_once "../includes/core/check-auth.php";
 
-    var_dump($_SESSION);
+    $user = $_SESSION["user"];
+
+    echo "<p>Username: " . $user["username"] . " (" . $user["uid"] . ")<br>";
+    echo "Creation: " . $user["creation"] . "<br>";
+    echo "Last login: " . $user["lastlogin"] . "<br><br>";
+
+    echo "<a href=\"/dashboard/\">Dashboard</a><br>";
+    echo "<a href=\"/logout/\">Logout</a></p>";
 
     ?>
 </div>

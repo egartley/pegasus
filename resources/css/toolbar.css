@@ -23,6 +23,23 @@ div.toolbar > div:not(.delimiter):not(.toolbar-spinner) {
     height: 28px
 }
 
+div.profile-chooser {
+    display: flex;
+    margin-left: auto
+}
+
+div.profile-chooser > span#icon {
+    background-color: lightgrey;
+    border-radius: 14px;
+    margin-right: 14px
+}
+
+div.profile-chooser > span#name {
+    font-size: 13px;
+    margin-right: 6px;
+    cursor: default
+}
+
 div.static-text,
 div.general-link {
     height: initial !important

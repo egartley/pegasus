@@ -35,7 +35,17 @@
             $result = mysqli_query($connection, "UPDATE `users_v0` SET lastlogin=CURRENT_TIMESTAMP() WHERE uid=" . $user["uid"]);
             if ($result) {
                 $_SESSION["user"] = $user;
-                header("Location: /profile/");
+                mysqli_close($connection);
+                if (isset($_GET["r"])) {
+                    $validurl = filter_var(urldecode($_GET["r"]), FILTER_SANITIZE_URL);
+                    if ($validurl !== false) {
+                        header("Location: " . $validurl);
+                    } else {
+                        header("Location: /profile/");
+                    }
+                } else {
+                    header("Location: /profile/");
+                }
             } else {
                 echo "<p>Could not update last login. Please try <a href=\"/login\">logging in</a> again.</p>";
             }

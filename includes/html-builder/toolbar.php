@@ -1,5 +1,10 @@
 <?php
 
+function get_profile_chooser_html()
+{
+    return "<div class=\"profile-chooser static-icon\"><span id=\"name\">" . $_SESSION["user"]["username"] . "</span><span id=\"icon\"></span></div>";
+}
+
 function get_editing_toolbar_html()
 {
     return "
@@ -25,7 +30,7 @@ function get_editing_toolbar_html()
     <div class=\"delimiter\"></div>
     
     <div class=\"toolbar-status\"><span>Ready</span></div>
-    <div class=\"toolbar-spinner hidden\"></div>
+    <div class=\"toolbar-spinner hidden\"></div>" . get_profile_chooser_html() . "
 </div>";
 }
 
@@ -43,6 +48,6 @@ function get_generic_toolbar_html($current)
         $html .= "><a href=\"/" . strtolower($link) . "/\">" . $link . "</a></span></div>
 ";
     }
-    return $html . "
+    return $html . get_profile_chooser_html() . "
 </div>";
 }

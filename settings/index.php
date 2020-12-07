@@ -5,12 +5,15 @@
         require_once '../includes/html-builder/toolbar.php';
         require_once '../includes/core/settings.php';
 
+        require_once "../includes/core/check-auth.php";
+
         settings_check(true);
 
         get_stylesheet("toolbar.css");
     ?>
     <title>Settings</title>
     <script src="/resources/js/jquery.js" type="application/javascript"></script>
+    <script src="/resources/js/toolbar.js" type="application/javascript"></script>
     <script src="/resources/js/settings.js" type="application/javascript"></script>
     <style type="text/css">
         div.description > span {

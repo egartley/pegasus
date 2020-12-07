@@ -16,6 +16,7 @@ function page_content_html(array $content, Page $page, bool $edit)
 <script src=\"/resources/js/page.js\" type=\"application/javascript\"></script>";
     if ($edit) {
         $html .= "
+<script src=\"/resources/js/toolbar.js\" type=\"application/javascript\"></script>
 <script src=\"/resources/js/editor.js\" type=\"application/javascript\"></script>";
     }
 

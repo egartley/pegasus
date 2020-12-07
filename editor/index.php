@@ -7,6 +7,8 @@
         require_once '../includes/html-builder/page-content.php';
         require_once '../includes/core/page.php';
 
+        require_once "../includes/core/check-auth.php";
+
         get_stylesheet("toolbar.css");
         get_stylesheet("page-content.css");
 
