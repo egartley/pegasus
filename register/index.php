@@ -23,13 +23,19 @@
         $connection = connection_logindb();
         $username = mysqli_real_escape_string($connection, stripslashes($_REQUEST["username"]));
         $password = mysqli_real_escape_string($connection, stripslashes($_REQUEST["password"]));
+        # check if users table exists
+        $tablecheck = mysqli_query($connection, "DESCRIBE `users_v0`");
+        if ($tablecheck == FALSE) {
+            # create the table
+            $table = mysqli_query($connection, "CREATE TABLE IF NOT EXISTS `users_v0` (`uid` int(6) NOT NULL, `username` varchar(32) NOT NULL, `password` varchar(256) NOT NULL, `creation` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, `lastlogin` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (`uid`))");
+        }
         try {
             $uid = random_int(100000, 999999);
-            $check = mysqli_query($connection,"SELECT * FROM `users_v0` WHERE uid=" . $uid);
+            $check = mysqli_query($connection, "SELECT * FROM `users_v0` WHERE uid=" . $uid);
             while (mysqli_num_rows($check) > 0) {
                 # ensure no duplicate uid's
                 $uid = random_int(100000, 999999);
-                $check = mysqli_query($connection,"SELECT * FROM `users_v0` WHERE uid=" . $uid);
+                $check = mysqli_query($connection, "SELECT * FROM `users_v0` WHERE uid=" . $uid);
             }
         } catch (Exception $e) {
             $uid = 1;
