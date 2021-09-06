@@ -17,41 +17,20 @@
         exit;
     }
 
-    # Derived from: https://webdevtrick.com/login-system-php-mysql/
     if (!$displayform) {
-        require_once '../includes/core/login-db.php';
-        $connection = connection_logindb();
+        require_once '../includes/core/mysql-main.php';
+        $connection = get_mysql_login_connection();
         $username = mysqli_real_escape_string($connection, stripslashes($_REQUEST["username"]));
         $password = mysqli_real_escape_string($connection, stripslashes($_REQUEST["password"]));
-        # check if users table exists
-        $tablecheck = mysqli_query($connection, "DESCRIBE `users_v0`");
-        if ($tablecheck == FALSE) {
-            # create the table
-            $table = mysqli_query($connection, "CREATE TABLE IF NOT EXISTS `users_v0` (`uid` int(6) NOT NULL, `username` varchar(32) NOT NULL, `password` varchar(256) NOT NULL, `creation` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, `lastlogin` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (`uid`))");
-        }
-        try {
-            $uid = random_int(100000, 999999);
-            $check = mysqli_query($connection, "SELECT * FROM `users_v0` WHERE uid=" . $uid);
-            while (mysqli_num_rows($check) > 0) {
-                # ensure no duplicate uid's
-                $uid = random_int(100000, 999999);
-                $check = mysqli_query($connection, "SELECT * FROM `users_v0` WHERE uid=" . $uid);
-            }
-        } catch (Exception $e) {
-            $uid = 1;
-            echo "<p>Error while generating the UID: " . $e->getMessage() . "</p>";
-        }
-        # NOTE: allow duplicate usernames?
-        $query = "INSERT into `users_v0` (`uid`, `username`, `password`, `creation`, `lastlogin`) VALUES (" . $uid
-            . ", '$username', '" . password_hash($password, PASSWORD_DEFAULT)
-            . "', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP())";
-        $result = mysqli_query($connection, $query);
+        check_login_db($connection);
+        $uid = get_new_uid($connection);
+        $result = create_new_user($connection, $uid, $username, $password);
         if ($result) {
             echo "<p>Successful registration. Please <a href=\"/login\">login</a> to proceed.</p>";
         } else {
             echo "<p>Something went wrong. Try again.</p>";
         }
-        mysqli_close($connection);
+        end_connection($connection);
     } else {
         echo "<form class=\"register\" action=\"\" method=\"post\"><h1>Register</h1>
     <input style=\"display:block\" type=\"text\" name=\"username\" placeholder=\"Username\" required autofocus/>
